@@ -5,6 +5,8 @@
 	 * @version		2012-11-15-1
 	 */
 	
+	namespace Heymaster\Logger;
+	
 	interface ILogger
 	{
 		public function log($str);
