@@ -2,29 +2,46 @@
 	/** HeyMaster runner
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-15-1
+	 * @version		2012-11-15-2
 	 */
 	
 	require __DIR__ . '/libs/Php-Cli/Cli.php';
 	require __DIR__ . '/libs/Neon/Neon.php';
 	require __DIR__ . '/libs/Nette/loader.php';
+	
 	require __DIR__ . '/src/Heymaster.php';
 	require __DIR__ . '/src/Cli/Cli.php';
+	require __DIR__ . '/src/Logger/ILogger.php';
+	require __DIR__ . '/src/Logger/DefaultLogger.php';
+	require __DIR__ . '/src/Git/IGit.php';
+	require __DIR__ . '/src/Git/Git.php';
 	
 	use Heymaster\Cli\Cli;
+	
+	$logger = new Heymaster\Logger\DefaultLogger;
 	
 	if(($args = Cli::parseParams($_SERVER['argv'])) !== FALSE)
 	{
 		if(isset($args[0]))
 		{
-			$config = Neon::decode(file_get_contents($args[0]));
+			$config = file_get_contents($args[0]);
 			
-			$heymaster = new Heymaster($config);
-			$heymaster->build();
+			if($config === FALSE)
+			{
+				$logger->error('Konfiguracni soubor nenalezen');
+				exit(100);
+			}
+			
+			$config = Neon::decode();
+			$git = new Heymaster\Git\Git;
+			$root = getcwd();
+			
+			$heymaster = new Heymaster($config, $logger, $git, is_string($root) ? $root : NULL);
+			$heymaster->build((isset($args['tag']) && is_string($args['tag'])) ? $args['tag'] : NULL);
 		}
 		else
 		{
-			Cli::error('Musite predat cestu ke konfiguracnimu souboru!');
+			$logger->error('Musite predat cestu ke konfiguracnimu souboru!');
 		}
 		
 		exit;
