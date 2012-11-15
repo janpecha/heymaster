@@ -1,0 +1,41 @@
+<?php
+	/** HeyMaster runner
+	 * 
+	 * @author		Jan Pecha, <janpecha@email.cz>
+	 * @version		2012-11-15-1
+	 */
+	
+	require __DIR__ . '/libs/Php-Cli/Cli.php';
+	require __DIR__ . '/libs/Neon/Neon.php';
+	require __DIR__ . '/libs/Nette/loader.php';
+	require __DIR__ . '/src/Heymaster.php';
+	require __DIR__ . '/src/Cli/Cli.php';
+	
+	use Heymaster\Cli\Cli;
+	
+	if(($args = Cli::parseParams($_SERVER['argv'])) !== FALSE)
+	{
+		if(isset($args[0]))
+		{
+			$config = Neon::decode(file_get_contents($args[0]));
+			
+			$heymaster = new Heymaster($config);
+			$heymaster->build();
+		}
+		else
+		{
+			Cli::error('Musite predat cestu ke konfiguracnimu souboru!');
+		}
+		
+		exit;
+	}
+?>
+
+HeyMaster Tool (2012-11-01-1)
+*****************************
+
+Usage:
+	php -f /path/to/heymaster.phpc -- heymaster.neon
+	OR
+	heymaster heymaster.neon (see file bin/readme.md)
+
