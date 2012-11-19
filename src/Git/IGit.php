@@ -10,7 +10,7 @@
 	interface IGit
 	{
 		public function tag($name);
-		public function merge($brach, $intoThis = FALSE);
+		public function merge($brach);
 		public function branchCreate($name, $checkout = FALSE);
 		public function branchRemove($name);
 		public function checkout($name);
