@@ -2,7 +2,7 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-25-1
+	 * @version		2012-11-25-2
 	 */
 	
 	namespace Heymaster;
@@ -16,7 +16,7 @@
 		public $message;
 		
 		/** @var  bool */
-		public $output;
+		public $output = TRUE;
 		
 		
 		public function set($key, $value)
