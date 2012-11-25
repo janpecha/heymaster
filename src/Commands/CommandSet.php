@@ -2,7 +2,7 @@
 	/** Command Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-19-1
+	 * @version		2012-11-25-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -10,8 +10,9 @@
 	use Nette\Object,
 		Heymaster\Heymaster;
 	
-	abstract class Command extends Object
+	abstract class CommandSet extends Object
 	{
+		/** @var  Heymaster\Heymaster */
 		protected $heymaster;
 		
 		
