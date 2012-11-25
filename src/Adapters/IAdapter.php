@@ -12,7 +12,12 @@
 		/**
 		 * @param	string
 		 * @return	array|FALSE
+		 * @todo	2012-11-25  melo by vyhazovat vyjimku
 		 */
 		public function load($filename);
+	}
+	
+	class Exception extends \Exception
+	{
 	}
 
