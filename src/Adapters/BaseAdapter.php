@@ -2,14 +2,15 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-25-1
+	 * @version		2012-11-25-2
 	 */
 	
 	namespace Heymaster\Adapters;
 	
 	use Heymaster\Config,
 		Heymaster\Section,
-		Heymaster\Action;
+		Heymaster\Action,
+		Heymaster\Command;
 	
 	abstract class BaseAdapter extends \Nette\Object implements IAdapter
 	{
@@ -46,6 +47,16 @@
 		public static function createAction()
 		{
 			return new Action;
+		}
+		
+		
+		
+		/**
+		 * @return	Heymaster\Command
+		 */
+		public static function createCommand()
+		{
+			return new Command;
 		}
 	}
 
