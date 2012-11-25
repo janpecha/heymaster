@@ -17,13 +17,14 @@
 		const SECTION_BEFORE = 'before',
 			SECTION_AFTER = 'after';
 		
-		const KEY_ACTIONS = 'actions';
+		const KEY_ACTIONS = 'actions',
+			KEY_RUNNABLE = 'run';
 		
 		
 		/**
 		 * @return	array
 		 */
-		public static function createConfig()
+		public static function createConfiguration()
 		{
 			$config = array(
 				'config' => new Config,
@@ -41,12 +42,22 @@
 		
 		
 		
+		public static function createConfig()
+		{
+			return new Config;
+		}
+		
+		
+		
 		/**
 		 * @return	Heymaster\Action
 		 */
 		public static function createAction()
 		{
-			return new Action;
+			$action = new Action;
+			$action->config = self::createConfig();
+			
+			return $action;
 		}
 		
 		
@@ -56,7 +67,10 @@
 		 */
 		public static function createCommand()
 		{
-			return new Command;
+			$command = new Command;
+			$command->config = self::createConfig();
+			
+			return $command;
 		}
 	}
 
