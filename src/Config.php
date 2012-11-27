@@ -33,7 +33,13 @@
 					return;
 			}
 			
-			throw new \Exception("Neznama konfiguracni volba '$key'");
+			throw new ConfigUnknowException("Neznama konfiguracni volba '$key'");
 		}
+	}
+	
+	
+	
+	class ConfigUnknowException extends \Exception
+	{
 	}
 
