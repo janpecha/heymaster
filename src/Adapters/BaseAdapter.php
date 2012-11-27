@@ -2,7 +2,7 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-25-2
+	 * @version		2012-11-27-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -34,8 +34,8 @@
 				),
 			);
 			
-			$config['sections'][self::SECTION_BEFORE]->name = $self::SECTION_BEFORE;
-			$config['sections'][self::SECTION_AFTER]->name = $self::SECTION_AFTER;
+			$config['sections'][self::SECTION_BEFORE]->name = self::SECTION_BEFORE;
+			$config['sections'][self::SECTION_AFTER]->name = self::SECTION_AFTER;
 			
 			return $config;
 		}
