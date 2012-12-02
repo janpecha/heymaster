@@ -2,7 +2,7 @@
 	/** IGit interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-1
+	 * @version		2012-12-02-2
 	 */
 	
 	namespace Heymaster\Git;
@@ -20,7 +20,7 @@
 		 * @param	array|NULL
 		 * @throws	Heymaster\Git\GitException
 		 */
-		public function merge($brach, $options = NULL);
+		public function merge($branch, $options = NULL);
 		
 		/**
 		 * @param	string

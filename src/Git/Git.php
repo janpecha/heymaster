@@ -2,7 +2,7 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-1
+	 * @version		2012-12-02-2
 	 */
 	
 	namespace Heymaster\Git;
@@ -19,9 +19,9 @@
 		
 		
 		
-		public function merge($brach, $options)
+		public function merge($branch, $options = NULL)
 		{
-			$this->run("git merge $brach", $options);
+			$this->run("git merge", $options, $branch);
 			return $this;
 		}
 		
@@ -74,17 +74,27 @@
 		
 		
 		
-		protected function run($cmd, $options = NULL)
+		protected function run($cmd/*, $options = NULL*/)
 		{
-			if(is_array($options))
+			$args = func_get_args();
+			$cmd = array();
+			
+			foreach($args as $arg)
 			{
-				foreach($options as $key => $value)
+				if(is_array($arg))
 				{
-					$cmd .= " $key $value";
+					foreach($options as $key => $value)
+					{
+						$cmd[] = "$key $value";
+					}
+				}
+				elseif(is_scalar($arg) && !is_bool($arg))
+				{
+					$cmd[] = $arg;
 				}
 			}
 			
-			$success = system($cmd, $ret);
+			$success = system(implode(' ', $cmd), $ret);
 			
 			if($success === FALSE || $ret !== 0)
 			{
