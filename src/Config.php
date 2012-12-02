@@ -2,7 +2,7 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-1
+	 * @version		2012-12-02-2
 	 */
 	
 	namespace Heymaster;
@@ -19,6 +19,12 @@
 		public $output = TRUE;
 		
 		
+		/**
+		 * @param	string
+		 * @param	mixed
+		 * @throws	Heymaster\ConfigUnknowException
+		 * @return	void
+		 */
 		public function set($key, $value)
 		{
 			switch($key)
@@ -34,6 +40,20 @@
 			}
 			
 			throw new ConfigUnknowException("Neznama konfiguracni volba '$key'");
+		}
+		
+		
+		
+		/**
+		 * @return	array
+		 */
+		public function toArray()
+		{
+			return array(
+				'root' => $this->root,
+				'message' => $this->message,
+				'output' => $this->output,
+			);
 		}
 	}
 	
