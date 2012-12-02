@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-11-25-1 */
+/** @version	2012-12-02-1 */
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';
@@ -29,7 +29,7 @@ Assert::true($config->output);
 
 
 // message (string value)
-Assert::null($config->message);
+Assert::false($config->message);
 
 $config->set('message', 'Hello!!!');
 Assert::same($config->message, 'Hello!!!');

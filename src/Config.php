@@ -2,7 +2,7 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-25-2
+	 * @version		2012-12-02-1
 	 */
 	
 	namespace Heymaster;
@@ -13,7 +13,7 @@
 		public $root;
 		
 		/** @var  string|FALSE */
-		public $message;
+		public $message = FALSE;
 		
 		/** @var  bool */
 		public $output = TRUE;
