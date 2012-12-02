@@ -2,7 +2,7 @@
 	/** Heymaster File Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-1
+	 * @version		2012-12-02-2
 	 */
 	
 	namespace Heymaster\Configs;
@@ -27,6 +27,16 @@
 				default:
 					parent::set($key, $value);
 			}
+		}
+		
+		
+		
+		public function toArray()
+		{
+			$ret = parent::toArray();
+			$ret['branch'] = $this->branch;
+			
+			return $ret;
 		}
 	}
 	
