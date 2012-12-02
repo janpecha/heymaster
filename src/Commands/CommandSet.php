@@ -1,8 +1,8 @@
 <?php
-	/** Command Class
+	/** Command Set Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-25-1
+	 * @version		2012-11-27-1
 	 */
 	
 	namespace Heymaster\Commands;
