@@ -2,7 +2,7 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-27-1
+	 * @version		2012-12-02-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -10,7 +10,8 @@
 	use Heymaster\Config,
 		Heymaster\Section,
 		Heymaster\Action,
-		Heymaster\Command;
+		Heymaster\Command,
+		Heymaster\Configs\FileConfig;
 	
 	abstract class BaseAdapter extends \Nette\Object implements IAdapter
 	{
@@ -27,7 +28,7 @@
 		public static function createConfiguration()
 		{
 			$config = array(
-				'config' => new Config,
+				'config' => new FileConfig,
 				'sections' => array(
 					self::SECTION_BEFORE => new Section,
 					self::SECTION_AFTER => new Section,
