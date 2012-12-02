@@ -2,7 +2,7 @@
 	/** IGit interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-27-1
+	 * @version		2012-12-02-1
 	 */
 	
 	namespace Heymaster\Git;
@@ -17,9 +17,10 @@
 		
 		/**
 		 * @param	string
+		 * @param	array|NULL
 		 * @throws	Heymaster\Git\GitException
 		 */
-		public function merge($brach);
+		public function merge($brach, $options = NULL);
 		
 		/**
 		 * @param	string
@@ -39,6 +40,18 @@
 		 * @throws	Heymaster\Git\GitException
 		 */
 		public function checkout($name);
+		
+		/** Removes file.
+		 * @param	string
+		 * @throws	Heymaster\Git\GitException
+		 */
+		public function remove($file);
+		
+		/**
+		 * @param	string
+		 * @throws	Heymaster\Git\GitException
+		 */
+		public function commit($message);
 	}
 	
 	
