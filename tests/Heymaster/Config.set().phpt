@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-02-1 */
+/** @version	2012-12-02-2 */
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';
@@ -19,7 +19,7 @@ Assert::same($config->root, '');
 
 
 // output (bool value)
-Assert::true($config->output);
+Assert::null($config->output);
 
 $config->set('output', FALSE);
 Assert::false($config->output);
