@@ -12,7 +12,7 @@
 		/** @var  string */
 		public $name;
 		
-		/** @var  bool */
+		/** @var  bool TODO: ??vyclenit do samostatne ActionConfig???*/
 		public $runnable = TRUE;
 		
 		/** @var  string|NULL TODO: ?? */
