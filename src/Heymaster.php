@@ -162,7 +162,7 @@
 			
 			$this->logger->log("Prenasim zmeny do hlavni vetve '$masterBranch'...");
 			$this->logger->log('...vytvarim seznam souboru');
-			$fileList = $this->getFileList();
+			$fileList = $this->getFileList($this->root);
 			
 			$this->logger->log('...prepinam se na hlavni vetev');
 			$this->git->checkout($masterBranch);
@@ -176,7 +176,7 @@
 			$this->git->branchRemove($tempBranchName);
 			
 			$this->logger->log('...odstranuji prebytecne soubory v hlavni vetvi');
-			$fileListMaster = $this->getFileList();
+			$fileListMaster = $this->getFileList($this->root);
 			$toRemove = array_diff_key($fileListMaster, $fileList);
 			
 			$this->removeFiles($toRemove, TRUE);
@@ -342,11 +342,11 @@
 		protected function getFileList($dir)	// ?ok
 		{
 			$res = array();
-			$iterator = dir(".$dir");
+			$iterator = dir($dir);
 			
 			while(FALSE !== ($entry = $iterator->read()))
 			{
-				$path = ".$dir/$entry";
+				$path = "$dir/$entry";
 				
 				if($entry == '.' || $entry == '..' || '.git')
 				{
