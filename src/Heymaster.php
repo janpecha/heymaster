@@ -339,7 +339,7 @@
 		 * @author	Jan Pecha, 2012
 		 * @return	array  [(string)filepath => (int)0]
 		 */
-		protected function getFileList($directory)	// ?ok
+		protected function getFileList($dir)	// ?ok
 		{
 			$res = array();
 			$iterator = dir(".$dir");
