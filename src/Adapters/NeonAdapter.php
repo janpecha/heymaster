@@ -2,7 +2,7 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-27-1
+	 * @version		2012-12-04-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -22,7 +22,7 @@
 		 */
 		public function load($filename)
 		{
-			$res = Neon::decode(file_get_contents($file));
+			$res = \Neon::decode(file_get_contents($file));
 			
 			if(is_array($res))
 			{
