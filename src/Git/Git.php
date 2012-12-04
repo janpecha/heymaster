@@ -2,7 +2,7 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-2
+	 * @version		2012-12-04-1
 	 */
 	
 	namespace Heymaster\Git;
@@ -83,7 +83,7 @@
 			{
 				if(is_array($arg))
 				{
-					foreach($options as $key => $value)
+					foreach($arg as $key => $value)
 					{
 						$cmd[] = "$key $value";
 					}
