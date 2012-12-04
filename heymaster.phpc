@@ -36,7 +36,7 @@
 				$git = new Heymaster\Git\Git;
 				$root = getcwd();
 			
-				$heymaster = new Heymaster($logger, $git, is_string($root) ? $root : NULL);
+				$heymaster = new Heymaster\Heymaster($logger, $git, is_string($root) ? $root : NULL);
 				// register commands
 				Commands\CoreCommands::install($heymaster);
 #				Commands\PhpCommands::install($heymaster);
