@@ -22,7 +22,7 @@
 		 */
 		public function load($filename)
 		{
-			$res = \Neon::decode(file_get_contents($file));
+			$res = \Neon::decode(file_get_contents($filename));
 			
 			if(is_array($res))
 			{
