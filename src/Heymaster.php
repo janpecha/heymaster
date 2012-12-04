@@ -125,7 +125,7 @@
 			self::checkValid($configuration);
 			
 			$this->configuration = $configuration;
-			$this->configuration->inherit($this->root, 'root');
+			$this->configuration['config']->inherit($this->root, 'root');
 			$masterBranch = $this->configuration['config']->branch;
 			
 			if(!is_string($masterBranch) && $masterBranch === '')
@@ -235,7 +235,7 @@
 					
 					foreach($action->commands as $command)
 					{
-						$command->inherit($action->config);
+						$command->config->inherit($action->config);
 						$this->printMessage($command->config, $command->name);
 						$this->processCommand($command, $action->mask);
 					}
