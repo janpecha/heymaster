@@ -22,17 +22,17 @@
 	{
 		if(isset($args[0]))
 		{
-			$adapter = new Heymaster\Adapters\NeonAdapter;
-			$configuration = $adapter->load($args[0]);
-			
-			if($configuration === FALSE)
-			{
-				$logger->error('Konfiguracni soubor nenalezen');
-				exit(100);
-			}
-			
 			try
 			{
+				$adapter = new Heymaster\Adapters\NeonAdapter;
+				$configuration = $adapter->load($args[0]);
+			
+				if($configuration === FALSE)
+				{
+					$logger->error('Konfiguracni soubor nenalezen');
+					exit(100);
+				}
+				
 				$git = new Heymaster\Git\Git;
 				$root = getcwd();
 			
