@@ -2,12 +2,14 @@
 	/** Heymaster
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-03-1
+	 * @version		2012-12-04-1
 	 */
 	
 	namespace Heymaster;
 	
-	use Heymaster\Utils\Finder;
+	use Heymaster\Utils\Finder,
+		Heymaster\Logger\ILogger,
+		Heymaster\Git\IGit;
 	
 	class Heymaster extends \Nette\Object
 	{
