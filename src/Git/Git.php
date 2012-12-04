@@ -94,7 +94,8 @@
 				}
 			}
 			
-			$success = system(implode(' ', $cmd), $ret);
+			$cmd = implode(' ', $cmd);
+			$success = system($cmd, $ret);
 			
 			if($success === FALSE || $ret !== 0)
 			{
