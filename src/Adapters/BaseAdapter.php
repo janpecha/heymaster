@@ -2,7 +2,7 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-2
+	 * @version		2012-12-04-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -30,8 +30,8 @@
 			$config = array(
 				'config' => new FileConfig,
 				'sections' => array(
-					self::SECTION_BEFORE => new Section,
-					self::SECTION_AFTER => new Section,
+					self::SECTION_BEFORE => self::createSection(),
+					self::SECTION_AFTER => self::createSection(),
 				),
 			);
 			
@@ -74,6 +74,19 @@
 			$command->config = self::createConfig();
 			
 			return $command;
+		}
+		
+		
+		
+		/**
+		 * @return	Heymaster\Command
+		 */
+		public static function createSection()
+		{
+			$section = new Section;
+			$section->config = self::createConfig();
+			
+			return $section;
 		}
 	}
 
