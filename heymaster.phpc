@@ -2,7 +2,7 @@
 	/** Heymaster runner
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-03-1
+	 * @version		2012-12-06-1
 	 */
 	
 #	error_reporting(0);
@@ -49,7 +49,7 @@
 			}
 			catch(Exception $e)
 			{
-				$logger->error($e->getMessage() . '(' . $e->getLine() . ': ' . $e->getFile() . ')');
+				$logger->error($e->getMessage() . "\n (". $e->getLine() . ': ' . $e->getFile() . ')');
 				exit(500);	// pouzit $e->getCode() ???
 			}
 		}
