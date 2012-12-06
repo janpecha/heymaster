@@ -2,7 +2,7 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-04-1
+	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -173,7 +173,7 @@
 		
 		/**
 		 * @param	string
-		 * @return	string[]	['name' => (string), 'description' => (FALSE|string)]
+		 * @return	array	['name' => (string), 'description' => (FALSE|string)]
 		 */
 		public static function extractCommandName($str)
 		{

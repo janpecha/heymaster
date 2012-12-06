@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-4
+	 * @version		2012-12-06-5
 	 */
 	
 	namespace Heymaster;
@@ -29,7 +29,7 @@
 		/** @var  string */
 		protected $root;
 		
-		/** @var  array  name => handler */
+		/** @var  array  'name' => handler */
 		protected $commands = array();
 		
 		/** @var  array */
@@ -37,6 +37,11 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Logger\ILogger
+		 * @param	Heymaster\Git\IGit
+		 * @param	string
+		 */
 		public function __construct(ILogger $logger, IGit $git, $root) // ok
 		{
 			$this->logger = $logger;
@@ -58,6 +63,7 @@
 		
 		/**
 		 * @param	string
+		 * @param	callback  (Heymaster\Command $cmd, string $mask)
 		 * @return	$this
 		 */
 		public function addCommand($name, $callback) // ok
@@ -287,6 +293,11 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @return	void
+		 */
 		protected function processCommand(Command $command, $mask) // ??ok
 		{
 			if($command->callback === NULL)
@@ -306,8 +317,7 @@
 		
 		/**
 		 * @param	string
-		 * @author	David Grudl, 2009
-		 * @author	Jan Pecha, 2012
+		 * @author	David Grudl, 2009  (modified by Jan Pecha, 2012)
 		 * @return	array  [(string)filepath => (int)0]
 		 */
 		protected function getFileList($dir)	// ?ok

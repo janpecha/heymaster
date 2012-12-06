@@ -2,7 +2,7 @@
 	/** Heymaster File Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-2
+	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster\Configs;
@@ -16,6 +16,11 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	mixed
+		 * @return	void
+		 */
 		public function set($key, $value)
 		{
 			switch($key)
@@ -31,6 +36,9 @@
 		
 		
 		
+		/**
+		 * @return	array
+		 */
 		public function toArray()
 		{
 			$ret = parent::toArray();

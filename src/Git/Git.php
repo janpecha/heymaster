@@ -97,6 +97,11 @@
 		
 		
 		
+		/**
+		 * @param	string|array
+		 * @return	void
+		 * @throws	Heymaster\Git\GitException
+		 */
 		protected function run($cmd/*, $options = NULL*/)
 		{
 			$args = func_get_args();

@@ -2,7 +2,7 @@
 	/** Heymaster File & Directory Finder
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-03-1
+	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster\Utils;
@@ -11,6 +11,10 @@
 	
 	class Finder extends NFinder
 	{
+		/**
+		 * @param	string|string[]
+		 * @return	void
+		 */
 		public function mask($masks)
 		{
 			if(!is_array($masks))

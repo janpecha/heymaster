@@ -2,7 +2,7 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-04-1
+	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -20,6 +20,7 @@
 		
 		const KEY_ACTIONS = 'actions',
 			KEY_RUNNABLE = 'run';
+		
 		
 		
 		/**
@@ -45,6 +46,9 @@
 		
 		
 		
+		/**
+		 * @return	Heymaster\Config
+		 */
 		public static function createConfig()
 		{
 			return new Config;
@@ -79,7 +83,7 @@
 		
 		
 		/**
-		 * @return	Heymaster\Command
+		 * @return	Heymaster\Section
 		 */
 		public static function createSection()
 		{

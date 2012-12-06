@@ -2,7 +2,7 @@
 	/** Command Set Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-27-1
+	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -17,6 +17,9 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Heymaster
+		 */
 		public function __construct(Heymaster $heymaster)
 		{
 			$this->heymaster = $heymaster;
