@@ -9,7 +9,8 @@
 	
 	use Heymaster\Utils\Finder,
 		Heymaster\Logger\ILogger,
-		Heymaster\Git\IGit;
+		Heymaster\Git\IGit,
+		Heymaster\Git\GitException;
 	
 	class Heymaster extends \Nette\Object
 	{
@@ -135,6 +136,14 @@
 			
 			$this->logger->success('...ok');
 			
+			$oldBranch = FALSE;
+			
+			try
+			{
+				$oldBranch = $this->git->branchName();
+			}
+			catch(GitException $e) {}
+			
 			$this->logger->log('Vytvarim nove sestaveni...');
 			$date = date('YmdHis');
 			$tempBranchName = 'heymaster-build-branch-' . $date;
@@ -169,7 +178,7 @@
 			
 			$this->logger->log('...provadim merge do hlavni vetve');
 			$this->git->merge($tempBranchName, array(
-				'-s' => 'ours',
+				'-X' => 'theirs',
 			));
 			
 			$this->logger->log("...odstranuji docasnou vetev '$tempBranchName'");
@@ -200,6 +209,17 @@
 				$this->logger->warn('Nebyl urcen zadny tag pro oznaceni aktualniho sestaveni v hlavni vetvi.');
 			}
 			
+			// Checkout on old branch
+			if(is_string($oldBranch))
+			{
+				$this->git->checkout($oldBranch);
+			}
+			else
+			{
+				$this->logger->warn('Nepodarilo se prepnout na puvodni vetev, provedte to prosim rucne.');
+				$this->logger->warn("Aktulni vetev je: $masterBranch");
+			}
+			
 			$this->logger->success('Hotovo.');
 		}
 		
@@ -228,19 +248,22 @@
 		 */
 		protected function process(Section $section) // ??ok
 		{
-			foreach($section->actions as $action)
+			if(is_array($section->actions))
 			{
-				$action->config->inherit($section->config);
-				
-				if($action->runnable)
+				foreach($section->actions as $action)
 				{
-					$this->printMessage($action->config, $action->name);
-					
-					foreach($action->commands as $command)
+					$action->config->inherit($section->config);
+				
+					if($action->runnable)
 					{
-						$command->config->inherit($action->config);
-						$this->printMessage($command->config, $command->name);
-						$this->processCommand($command, $action->mask);
+						$this->printMessage($action->config, $action->name);
+					
+						foreach($action->commands as $command)
+						{
+							$command->config->inherit($action->config);
+							$this->printMessage($command->config, $command->name);
+							$this->processCommand($command, $action->mask);
+						}
 					}
 				}
 			}
