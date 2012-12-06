@@ -2,7 +2,7 @@
 	/** Heymaster
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-04-1
+	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster;
@@ -181,7 +181,10 @@
 			
 			$this->removeFiles($toRemove, TRUE);
 			
-			$this->git->commit("[$date] Removed unnecessary files and directories.");
+			if(count($toRemove))
+			{
+				$this->git->commit("[$date] Removed unnecessary files and directories.");
+			}
 			
 			$this->processSectionBlock(self::KEY_AFTER);
 			
