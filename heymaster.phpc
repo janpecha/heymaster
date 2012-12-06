@@ -2,7 +2,7 @@
 	/** Heymaster runner
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
+	 * @version		2012-12-06-2
 	 */
 	
 #	error_reporting(0);
@@ -70,4 +70,12 @@ Usage:
 	php -f /path/to/heymaster.phpc -- heymaster.neon
 	OR
 	heymaster heymaster.neon (see file bin/readme.md)
+
+
+Parameters:
+	--tag <name>	tag name
+
+
+Examples:
+	php -f /path/to/heymaster.phpc -- heymaster.neon --tag "new-build"
 
