@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-3
+	 * @version		2012-12-06-4
 	 */
 	
 	namespace Heymaster;
@@ -109,12 +109,31 @@
 		/**
 		 * @param	string
 		 * @param	bool
-		 * @param	bool	is it important operation? TODO: ??useful??
-		 * @return	Heymaster\Utils\Finder
+		 * @return	void
+		 * @throws	UnexpectedValueException
 		 */
-		public function runExternal($cmd, $showOutput = FALSE, $fatal = TRUE)
+		public function runExternal($cmd, $showOutput = FALSE)
 		{
+			if(is_array($cmd))
+			{
+				$cmd = self::formatShellCommand($cmd);
+			}
 			
+			$returnCode = FALSE;
+			
+			if($showOutput)
+			{
+				passthru($cmd, $returnCode);
+			}
+			else
+			{
+				exec($cmd, $output, $returnCode);
+			}
+			
+			if($returnCode !== 0)
+			{
+				throw new \UnexpectedValueException('Prikaz skoncil chybou ' . $returnCode . ': ' . $cmd, $returnCode);
+			}
 		}
 		
 		
@@ -373,6 +392,48 @@
 			{
 				$this->logger->log($message);
 			}
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 * @return	string  escaped string
+		 */
+		public static function escapeShellArgument($arg)
+		{
+			return escapeshellarg($arg);
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]
+		 * @return	string
+		 */
+		protected static function formatShellCommand($cmd)
+		{
+			if(!is_array($cmd))
+			{
+				$cmd = func_get_args();
+			}
+			
+			$name = array_shift($cmd);
+			$args = array();
+			
+			foreach($cmd as $key => $value)
+			{
+				$arg = '';
+				
+				if(is_string($key))
+				{
+					$arg = $key . ' ';
+				}
+				
+				$args[] = $arg . self::escapeShellArgument($value);
+			}
+			
+			return $name . ' ' . implode($args);
 		}
 		
 		
