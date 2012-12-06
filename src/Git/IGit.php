@@ -2,7 +2,7 @@
 	/** IGit interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-2
+	 * @version		2012-12-06-3
 	 */
 	
 	namespace Heymaster\Git;
@@ -64,6 +64,14 @@
 		 * @throws	Heymaster\Git\GitException
 		 */
 		public function remove($file);
+		
+		
+		
+		/** Add file.
+		 * @param	string
+		 * @throws	Heymaster\Git\GitException
+		 */
+		public function add($file);
 		
 		
 		

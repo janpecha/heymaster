@@ -2,7 +2,7 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
+	 * @version		2012-12-06-2
 	 */
 	
 	namespace Heymaster\Git;
@@ -84,6 +84,14 @@
 		public function remove($file)
 		{
 			$this->run("git rm $file");
+			return $this;
+		}
+		
+		
+		
+		public function add($file)
+		{
+			$this->run("git add $file");
 			return $this;
 		}
 		
