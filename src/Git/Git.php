@@ -2,7 +2,7 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-2
+	 * @version		2012-12-06-3
 	 */
 	
 	namespace Heymaster\Git;
@@ -13,7 +13,7 @@
 	{
 		public function tag($name)
 		{
-			$this->run("git tag $name");
+			$this->run("git tag", $name);
 			return $this;
 		}
 		
@@ -30,7 +30,7 @@
 		public function branchCreate($name, $checkout = FALSE)
 		{
 			// git branch $name
-			$this->run("git branch $name");
+			$this->run("git branch", $name);
 			
 			if($checkout)
 			{
@@ -44,7 +44,9 @@
 		
 		public function branchRemove($name)
 		{
-			$this->run("git branch -d $name");
+			$this->run("git branch", array(
+				'-d' => $name,
+			));
 			return $this;
 		}
 		
@@ -75,7 +77,7 @@
 		
 		public function checkout($name)
 		{
-			$this->run("git checkout $name");
+			$this->run("git checkout", $name);
 			return $this;
 		}
 		
@@ -83,7 +85,7 @@
 		
 		public function remove($file)
 		{
-			$this->run("git rm $file");
+			$this->run("git rm", $file);
 			return $this;
 		}
 		
@@ -91,7 +93,7 @@
 		
 		public function add($file)
 		{
-			$this->run("git add $file");
+			$this->run("git add", $file);
 			return $this;
 		}
 		
@@ -99,7 +101,9 @@
 		
 		public function commit($message)
 		{
-			$this->run("git commit -m \"$message\"");
+			$this->run("git commit", array(
+				'-m' => $message,
+			));
 			return $this;
 		}
 		
@@ -115,22 +119,31 @@
 			$args = func_get_args();
 			$cmd = array();
 			
+			$programName = array_shift($args);
+			
 			foreach($args as $arg)
 			{
 				if(is_array($arg))
 				{
 					foreach($arg as $key => $value)
 					{
-						$cmd[] = "$key $value";
+						$_c = '';
+						
+						if(is_string($key))
+						{
+							$_c = "$key ";
+						}
+						
+						$cmd[] = $_c . escapeshellarg($value);
 					}
 				}
 				elseif(is_scalar($arg) && !is_bool($arg))
 				{
-					$cmd[] = $arg;
+					$cmd[] = escapeshellarg($arg);
 				}
 			}
 			
-			$cmd = implode(' ', $cmd);
+			$cmd = "$programName " . implode(' ', $cmd);
 			$success = system($cmd, $ret);
 			
 			if($success === FALSE || $ret !== 0)
