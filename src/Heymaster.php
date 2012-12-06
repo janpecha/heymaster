@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-5
+	 * @version		2012-12-06-6
 	 */
 	
 	namespace Heymaster;
@@ -175,6 +175,11 @@
 			}
 			catch(GitException $e) {}
 			
+			if($oldBranch === $masterBranch)
+			{
+				throw new InvalidException("Nelze pokracovat, protoze jste na vetvi, do ktere chcete prenest zmeny.");
+			}
+			
 			// Init
 			$this->logger->log('Vytvarim nove sestaveni...');
 			$date = date('YmdHis');
@@ -189,6 +194,9 @@
 			$this->logger->log('Zpracovavam konfiguraci...');
 			
 			$this->processSectionBlock(self::KEY_BEFORE);
+			
+			$this->git->add('.');
+			$this->git->commit("[$date] Record changes.");
 			
 			$this->logger->log("Prenasim zmeny do hlavni vetve '$masterBranch'...");
 			$this->logger->log('...vytvarim seznam souboru');
@@ -278,12 +286,12 @@
 				
 					if($action->runnable)
 					{
-						$this->printMessage($action->config, $action->name);
+						$this->printMessage($action->config, 'Akce: ' . $action->name);
 					
 						foreach($action->commands as $command)
 						{
 							$command->config->inherit($action->config);
-							$this->printMessage($command->config, $command->name);
+							$this->printMessage($command->config, 'Prikaz: ' . $command->name);
 							$this->processCommand($command, $action->mask);
 						}
 					}
