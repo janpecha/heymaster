@@ -1,8 +1,10 @@
 <?php
 	/** Heymaster
+	 *
+	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
+	 * @version		2012-12-06-2
 	 */
 	
 	namespace Heymaster;
@@ -24,9 +26,6 @@
 		/** @var  Heymaster\Git\IGit */
 		protected $git;
 		
-#		/** @var  Heymaster\IFileManipulator */
-#		protected $manipulator;
-		
 		/** @var  string */
 		protected $root;
 		
@@ -42,7 +41,6 @@
 		{
 			$this->logger = $logger;
 			$this->git = $git;
-#			$this->manipulator = $manipulator;
 			$this->root = (string)$root;
 		}
 		
@@ -66,24 +64,10 @@
 		
 		
 		
-#		/**
-#		 * @param	string
-#		 * @return	Nette\Utils\Finder
-#		 */
-#		public function browseFiles($mask, $dir = NULL)
-#		{
-#			$finder = Finder::findFiles($mask);
-#			
-#			if(is_string($dir))
-#			{
-#				$finder->from($dir);
-#			}
-#			
-#			return $finder;
-#		}
-		
-		
-		
+		/**
+		 * @param	string|string[]
+		 * @return	Heymaster\Utils\Finder
+		 */
 		public function findFiles($mask)
 		{
 			if(!is_array($mask))
@@ -96,6 +80,10 @@
 		
 		
 		
+		/**
+		 * @param	string|string[]
+		 * @return	Heymaster\Utils\Finder
+		 */
 		public function findDirectories($mask)
 		{
 			if(!is_array($mask))
@@ -108,6 +96,12 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	bool
+		 * @param	bool	is it important operation? TODO: ??useful??
+		 * @return	Heymaster\Utils\Finder
+		 */
 		public function runExternal($cmd, $showOutput = FALSE, $fatal = TRUE)
 		{
 			
@@ -122,6 +116,7 @@
 		 */
 		public function build(array $configuration, $gitTag = NULL) // ??OK
 		{
+			// Check configuration
 			$this->logger->log('Kontroluji konfiguraci...');
 			self::checkValid($configuration);
 			
@@ -136,6 +131,7 @@
 			
 			$this->logger->success('...ok');
 			
+			// Get current (development) branch
 			$oldBranch = FALSE;
 			
 			try
@@ -144,30 +140,20 @@
 			}
 			catch(GitException $e) {}
 			
+			// Init
 			$this->logger->log('Vytvarim nove sestaveni...');
 			$date = date('YmdHis');
 			$tempBranchName = 'heymaster-build-branch-' . $date;
 			
+			// Create temp branch
 			$this->logger->log("Vytvarim docasnou vetev '$tempBranchName' a provadim checkout...");
 			$this->git->branchCreate($tempBranchName, TRUE);
 			$this->logger->success('...ok');
 			
+			// Process configuration
 			$this->logger->log('Zpracovavam konfiguraci...');
 			
 			$this->processSectionBlock(self::KEY_BEFORE);
-#			
-#			// before commands
-#			$this->printMessage($this->config[self::KEY_BEFORE], self::KEY_BEFORE);
-#			$this->process($this->config[self::KEY_BEFORE]);
-#			
-#			// after commands
-#			if(isset($this->config[self::KEY_AFTER]))
-#			{
-#				$this->printMessage($this->config[self::KEY_AFTER], self::KEY_AFTER);
-#				$this->process($this->config[self::KEY_AFTER]);
-#			}
-#			
-#			$this->checkout($this->config['branch']);
 			
 			$this->logger->log("Prenasim zmeny do hlavni vetve '$masterBranch'...");
 			$this->logger->log('...vytvarim seznam souboru');
@@ -220,6 +206,7 @@
 				$this->logger->warn("Aktulni vetev je: $masterBranch");
 			}
 			
+			// Done.
 			$this->logger->success('Hotovo.');
 		}
 		
@@ -285,77 +272,6 @@
 			
 			call_user_func($command->callback, $command, $mask);
 		}
-		
-		
-		
-#		/**
-#		 * @param	string
-#		 * @return	string
-#		 */
-#		protected function extractName($commandName)
-#		{
-#			if(($pos = strpos($commandName, ' ')) !== FALSE)
-#			{
-#				return substr($commandName, 0, $pos);
-#			}
-#			
-#			return $commandName;
-#		}
-		
-		
-		
-#		/**
-#		 * @param	string
-#		 * @param	array
-#		 * @param	bool
-#		 * @param	string
-#		 * @return	void
-#		 */
-#		protected function runCommand($name, $params, $printOutput, $root)
-#		{
-#			if(!isset($this->commands[$name]))
-#			{
-#				throw new \Exception("Prikaz '$name' neexistuje.");
-#			}
-#			
-#			$params = array(
-#				'name' => $name,
-#				'output' => $printOutput,
-#				'params' => $params,
-#				'root' => $root,
-#			);
-#			
-#			call_user_func($this->commands[$name], $params);
-#		}
-		
-		
-		
-#		protected function generateAbsoluteRoot($action)
-#		{
-#			//;(isset($action['root']) ? $action['root'] : $this->config['root']);
-#			$root = NULL;
-#			
-#			if(isset($action['root']))
-#			{
-#				$root = $action['root'];
-#				
-#				if($root[0] !== '/')
-#				{
-##					return realpath($root);
-##				}
-##				else
-##				{
-#					$root = $this->config['root'] . '/' . $root;
-##					return realpath($this->config['root'] . '/' . $root);
-#				}
-#			}
-#			else
-#			{
-#				$root = $this->config['root'];
-#			}
-#			
-#			return realpath($root);
-#		}
 		
 		
 		
@@ -447,14 +363,6 @@
 			{
 				$this->logger->log($message);
 			}
-#			if(isset($category['message']) && is_scalar($category['message']))
-#			{
-#				$this->logger->log($category['message']);
-#			}
-#			else
-#			{
-#				$this->logger->log("Running '$categoryName'...");
-#			}
 		}
 		
 		
