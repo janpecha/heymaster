@@ -2,7 +2,7 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-04-1
+	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster\Git;
@@ -46,6 +46,29 @@
 		{
 			$this->run("git branch -d $name");
 			return $this;
+		}
+		
+		
+		
+		public function branchName()
+		{
+			$output = array();
+			$exitCode = NULL;
+			
+			exec('git branch', $output, $exitCode);
+			
+			if($exitCode === 0 && is_array($output))
+			{
+				foreach($output as $line)
+				{
+					if($line[0] === '*')
+					{
+						return trim(substr($line, 1));
+					}
+				}
+			}
+			
+			throw new GitException('Pokus o ziskani jmena aktualni vetvi selhal.');
 		}
 		
 		
