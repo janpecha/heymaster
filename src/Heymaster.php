@@ -351,7 +351,7 @@
 			{
 				$path = "$dir/$entry";
 				
-				if($entry == '.' || $entry == '..' || '.git')
+				if($entry == '.' || $entry == '..' || $entry == '.git')
 				{
 					continue;
 				}
@@ -366,12 +366,12 @@
 				#}
 				elseif(is_dir($path))
 				{
-					$list["$dir/$entry/"] = 0;//TRUE;
-					$list += $this->getFileList("$dir/$entry");
+					$res["$dir/$entry/"] = 0;//TRUE;
+					$res += $this->getFileList("$dir/$entry");
 				}
 				elseif(is_file($path))
 				{
-					$list["$dir/$entry"] = 0;//md5_file($this->preprocess($path));
+					$res["$dir/$entry"] = 0;//md5_file($this->preprocess($path));
 				}
 			}
 			
