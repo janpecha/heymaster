@@ -34,6 +34,7 @@
 		 * @param	Heymaster\Command
 		 * @param	string
 		 * @throws	UnexpectedValueException
+		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
 		public function commandRun(Command $command, $mask)
@@ -84,22 +85,7 @@
 		
 		public function commandTouch(array $params)
 		{
-			if(isset($params['params']))
-			{
-				if(!is_array($params['params']))
-				{
-					$params['params'] = array($params['params']);
-				}
-				
-				foreach($params['params'] as $filename)
-				{
-					file_put_contents(($filename[0] === '/') ? $filename : $params['root'] . '/' . $filename, '');
-				}
-			}
-			else
-			{
-				throw new \Exception("Spatne parametry pro prikaz '{$params['name']}'");
-			}
+		
 		}
 		
 		
