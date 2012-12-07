@@ -8,7 +8,8 @@
 	namespace Heymaster\Commands;
 	
 	use Nette\Object,
-		Heymaster\Command;
+		Heymaster\Command,
+		Heymaster\InvalidException;
 	
 	class CoreCommands extends CommandSet
 	{
@@ -31,51 +32,44 @@
 		
 		/**
 		 * @param	Heymaster\Command
-		 * @param	array
+		 * @param	string
+		 * @throws	UnexpectedValueException
 		 * @return	void
 		 */
 		public function commandRun(Command $command, $mask)
 		{
 			$success = FALSE;
-			$throw = isset($params['fatal']) ? $params['fatal'] : TRUE;
+			$throw = isset($command->params['fatal']) ? $command->params['fatal'] : TRUE;
+			static $keys = array('cmd', 'command', 0);
 			
-			if(is_string($params['params']))
+			$cmd = FALSE;
+			
+			foreach($keys as $key)
 			{
-				$success = $this->run($params['params'], NULL, $params['output']);
-			}
-			elseif(is_array($params['params']))
-			{
-				$index = NULL;
-				
-				if(isset($params['params']['cmd']))
+				if(isset($command->params[$key]))
 				{
-					$command = $params['params']['cmd'];
+					$cmd = $command->params[$key];
+					break;
 				}
-				elseif(isset($params['params']['command']))
-				{
-					$command = $params['params']['command'];
-				}
-				elseif(isset($params['params'][0]))
-				{
-					$command = $params['params'][0];
-				}
-				else
-				{
-					throw new \Exception('Chybejici parametr pro ' . $params['name'] . '().');
-				}
-				
-				unset($params['params'][$index]);
-				
-				$success = $this->run($command, $params['params'], $params['output']);
-			}
-			else
-			{
-				throw new \Exception("Spatne parametry pro prikaz '{$params['name']}'");
 			}
 			
-			if(!$success && $throw)
+			if($cmd === FALSE)
 			{
-				throw new \Exception("Prikaz '{$params['name']}' selhal.");
+				throw new InvalidException('Neni urceno, ktery prikaz se ma spustit!');
+			}
+			
+			$commandName = $cmd;
+			
+			if(is_array($cmd))
+			{
+				$commandName = reset($cmd);
+			}
+			
+			$success = $this->heymaster->runner->run($cmd);
+			
+			if($success !== 0 && $throw)
+			{
+				throw new \UnexpectedValueException("Prikaz '{$commandName}' selhal.");
 			}
 		}
 		
@@ -127,69 +121,6 @@
 		public function commandRemoveContent(array $params)
 		{
 			
-		}
-		
-		
-		
-		/**
-		 * @param	string
-		 * @param	string[]|NULL
-		 * @param	bool
-		 * @return	void
-		 */
-		protected function run($command, $params = NULL, $printOutput = FALSE)
-		{
-			$params = self::formatRunParams($params);
-			
-			if($printOutput)
-			{
-				passthru($command . ' ' . $params);
-			}
-			else
-			{
-				exec($command . ' ' . $params);
-			}
-		}
-		
-		
-		
-		/**
-		 * @param	array|string
-		 * @return	string
-		 */
-		protected static function formatRunParams($params)
-		{
-			if(is_array($params))
-			{
-				$ret = array();
-				
-				foreach($params as $name => $value)
-				{
-					if(is_string($name))
-					{
-						$cmd = '-' . $name . ' ';
-						
-						if(is_array($value))
-						{
-							$cmd .= implode(' ', $value);
-						}
-						else
-						{
-							$cmd .= $value;
-						}
-						
-						$ret[] = $cmd;
-					}
-					else
-					{
-						$ret[] = $value;
-					}
-				}
-				
-				return implode(' ', $ret);
-			}
-			
-			return (string)$params;
 		}
 	}
 
