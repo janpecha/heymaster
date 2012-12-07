@@ -34,9 +34,10 @@
 				}
 				
 				$git = new Heymaster\Git\Git;
+				$runner = new Heymaster\Cli\Runner;
 				$root = getcwd();
 			
-				$heymaster = new Heymaster\Heymaster($logger, $git, is_string($root) ? $root : NULL);
+				$heymaster = new Heymaster\Heymaster($logger, $git, $runner, is_string($root) ? $root : NULL);
 				// register commands
 				Commands\CoreCommands::install($heymaster);
 #				Commands\PhpCommands::install($heymaster);

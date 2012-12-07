@@ -2,7 +2,7 @@
 	/** Heymaster Loader
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-03-1
+	 * @version		2012-12-07-1
 	 */
 	
 	require __DIR__ . '/src/exceptions.php';
@@ -20,6 +20,8 @@
 	require __DIR__ . '/src/Adapters/NeonAdapter.php';
 	
 	require __DIR__ . '/src/Cli/Cli.php';
+	require __DIR__ . '/src/Cli/IRunner.php';
+	require __DIR__ . '/src/Cli/Runner.php';
 	require __DIR__ . '/src/Logger/ILogger.php';
 	require __DIR__ . '/src/Logger/DefaultLogger.php';
 	

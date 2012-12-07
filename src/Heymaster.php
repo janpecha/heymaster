@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-6
+	 * @version		2012-12-07-1
 	 */
 	
 	namespace Heymaster;
@@ -12,7 +12,8 @@
 	use Heymaster\Utils\Finder,
 		Heymaster\Logger\ILogger,
 		Heymaster\Git\IGit,
-		Heymaster\Git\GitException;
+		Heymaster\Git\GitException,
+		Heymaster\Cli\IRunner;
 	
 	class Heymaster extends \Nette\Object
 	{
@@ -25,6 +26,9 @@
 		
 		/** @var  Heymaster\Git\IGit */
 		protected $git;
+		
+		/** @var  Heymaster\Cli\IRunner */
+		protected $runner;
 		
 		/** @var  string */
 		protected $root;
@@ -40,12 +44,14 @@
 		/**
 		 * @param	Heymaster\Logger\ILogger
 		 * @param	Heymaster\Git\IGit
+		 * @param	Heymaster\Cli\IRunner
 		 * @param	string
 		 */
-		public function __construct(ILogger $logger, IGit $git, $root) // ok
+		public function __construct(ILogger $logger, IGit $git, IRunner $runner, $root) // ok
 		{
 			$this->logger = $logger;
 			$this->git = $git;
+			$this->runner = $runner;
 			$this->root = (string)$root;
 		}
 		
@@ -57,6 +63,16 @@
 		public function getRoot()
 		{
 			return $this->root;
+		}
+		
+		
+		
+		/**
+		 * @return	string|NULL
+		 */
+		public function getRunner()
+		{
+			return $this->runner;
 		}
 		
 		
@@ -113,33 +129,13 @@
 		
 		
 		/**
-		 * @param	string
-		 * @param	bool
-		 * @return	void
-		 * @throws	UnexpectedValueException
+		 * @param	string|string[]
+		 * @param	bool|var
+		 * @return	int  return code
 		 */
-		public function runExternal($cmd, $showOutput = FALSE)
+		public function runExternal($cmd, &$output = FALSE)
 		{
-			if(is_array($cmd))
-			{
-				$cmd = self::formatShellCommand($cmd);
-			}
-			
-			$returnCode = FALSE;
-			
-			if($showOutput)
-			{
-				passthru($cmd, $returnCode);
-			}
-			else
-			{
-				exec($cmd, $output, $returnCode);
-			}
-			
-			if($returnCode !== 0)
-			{
-				throw new \UnexpectedValueException('Prikaz skoncil chybou ' . $returnCode . ': ' . $cmd, $returnCode);
-			}
+			return $this->runner->run($cmd, $output);
 		}
 		
 		
@@ -410,48 +406,6 @@
 			{
 				$this->logger->log($message);
 			}
-		}
-		
-		
-		
-		/**
-		 * @param	string
-		 * @return	string  escaped string
-		 */
-		public static function escapeShellArgument($arg)
-		{
-			return escapeshellarg($arg);
-		}
-		
-		
-		
-		/**
-		 * @param	string|string[]
-		 * @return	string
-		 */
-		protected static function formatShellCommand($cmd)
-		{
-			if(!is_array($cmd))
-			{
-				$cmd = func_get_args();
-			}
-			
-			$name = array_shift($cmd);
-			$args = array();
-			
-			foreach($cmd as $key => $value)
-			{
-				$arg = '';
-				
-				if(is_string($key))
-				{
-					$arg = $key . ' ';
-				}
-				
-				$args[] = $arg . self::escapeShellArgument($value);
-			}
-			
-			return $name . ' ' . implode($args);
 		}
 		
 		
