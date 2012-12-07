@@ -76,35 +76,60 @@
 		
 		
 		
-		public function commandMerge(array $params)
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @return	void
+		 */
+		public function commandMerge(Command $command, $mask)
 		{
 		
 		}
 		
 		
 		
-		public function commandTouch(array $params)
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @return	void
+		 */
+		public function commandTouch(Command $command, $mask)
 		{
 		
 		}
 		
 		
 		
-		public function commandSymlinks(array $params)
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @return	void
+		 */
+		public function commandSymlinks(Command $command, $mask)
 		{
 			
 		}
 		
 		
 		
-		public function commandRemove(array $params)
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @return	void
+		 */
+		public function commandRemove(Command $command, $mask)
 		{
 			
 		}
 		
 		
 		
-		public function commandRemoveContent(array $params)
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @return	void
+		 */
+		public function commandRemoveContent(Command $command, $mask)
 		{
 			
 		}
