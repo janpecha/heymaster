@@ -20,7 +20,7 @@
 			$heymaster->addCommand('call', array($me, 'commandRun'));
 			$heymaster->addCommand('run', array($me, 'commandRun'));
 #			$heymaster->addCommand('merge', array($me, 'commandMerge'));
-#			$heymaster->addCommand('touch', array($me, 'commandTouch'));
+			$heymaster->addCommand('touch', array($me, 'commandTouch'));
 #			$heymaster->addCommand('symlinks', array($me, 'commandSymlinks'));
 #			$heymaster->addCommand('remove', array($me, 'commandRemove'));
 #			$heymaster->addCommand('removeContent', array($me, 'commandRemoveContent'));
@@ -91,11 +91,45 @@
 		/**
 		 * @param	Heymaster\Command
 		 * @param	string
+		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
 		public function commandTouch(Command $command, $mask)
 		{
-		
+			if(!isset($command->params['mask']) && !isset($command->params['masks']))
+			{
+				throw new InvalidException('Neni nastavena maska.');
+			}
+			
+			$masks = isset($command->params['mask']) ? $command->params['mask'] : $command->params['masks'];
+			$force = (isset($command->params['force'])) ? (bool)$command->params['force'] : FALSE; // Hodnota TRUE smaze obsah souboru
+			
+			$flags = $force ? 0 : \FILE_APPEND;
+			
+			if(!is_array($masks))
+			{
+				$masks = array($masks);
+			}
+			
+			foreach($masks as $fileMask)
+			{
+				$filename = basename($fileMask);
+				$directory = substr($fileMask, 0, -strlen($filename));
+				
+				if($directory === '')
+				{
+					$directory = '*';
+				}
+				// TODO: create directories
+				
+				foreach($this->heymaster->findDirectories($directory)
+					->from($command->config->root)
+					->exclude('.git') as $dir)
+				{
+					$touchFileName = $dir . "/$filename";
+					file_put_contents($touchFileName, '', $flags);
+				}
+			}
 		}
 		
 		
