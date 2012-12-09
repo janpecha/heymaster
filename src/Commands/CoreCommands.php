@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-07-1
+	 * @version		2012-12-09-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -19,7 +19,7 @@
 			
 			$heymaster->addCommand('call', array($me, 'commandRun'));
 			$heymaster->addCommand('run', array($me, 'commandRun'));
-#			$heymaster->addCommand('merge', array($me, 'commandMerge'));
+			$heymaster->addCommand('merge', array($me, 'commandMerge'));
 			$heymaster->addCommand('touch', array($me, 'commandTouch'));
 #			$heymaster->addCommand('symlinks', array($me, 'commandSymlinks'));
 #			$heymaster->addCommand('remove', array($me, 'commandRemove'));
@@ -79,11 +79,30 @@
 		/**
 		 * @param	Heymaster\Command
 		 * @param	string
+		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
 		public function commandMerge(Command $command, $mask)
 		{
-		
+			if(!isset($command->params['mask']) && !isset($command->params['masks']))
+			{
+				throw new InvalidException('Neni nastavena maska pro vstupni soubory.');
+			}
+			
+			if(!isset($command->params['name']))
+			{
+				throw new InvalidException('Neni urcen soubor, do ktereho se maji spojit pozadavane soubory.');
+			}
+			
+			$masks = isset($command->params['mask']) ? $command->params['mask'] : $command->params['masks'];
+			$name = $command->params['name'];
+			
+			foreach($this->heymaster->findFiles($masks)
+				->from($command->config->root)
+					->mask($mask) as $file)
+			{
+				file_put_contents($command->config->root . "/$name", file_get_contents($file), \FILE_APPEND);
+			}
 		}
 		
 		
