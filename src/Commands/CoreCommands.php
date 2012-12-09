@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-2
+	 * @version		2012-12-09-4
 	 */
 	
 	namespace Heymaster\Commands;
@@ -222,28 +222,10 @@
 			
 			$finder = $this->heymaster->find($masks)
 				->filter($isLink);
-#				->filter(function($file) {
-#					return $file->isLink();
-#					if(!$file->isLink())
-#					{
-#						return FALSE;
-#					}
-#					
-##					$linkrealpath = $file->getRealPath();
-##					$parent = $file->getPathInfo();
-##					$realpath = $parent->getRealPath() . '/' . $file->getBasename();
-##					var_dump($linkrealpath);
-##					var_dump($realpath);
-##					return $linkrealpath === $realpath;
-#					
-#					return TRUE;
-#					
-#					#$path = (string)$file->getPathname();
-#					#return $path !== substr($file->getRealPath(), -strlen($path));
-#				});
 			
 			$finder->in($dir)
 				->filter($isLink);
+				
 			return $finder;
 		}
 		
