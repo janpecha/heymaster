@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-07-1
+	 * @version		2012-12-09-1
 	 */
 	
 	namespace Heymaster;
@@ -192,7 +192,11 @@
 			$this->processSectionBlock(self::KEY_BEFORE);
 			
 			$this->git->add('.');
-			$this->git->commit("[$date] Record changes.");
+			
+			if($this->git->isChanges())
+			{
+				$this->git->commit("[$date] Record changes.");
+			}
 			
 			$this->logger->log("Prenasim zmeny do hlavni vetve '$masterBranch'...");
 			$this->logger->log('...vytvarim seznam souboru');
