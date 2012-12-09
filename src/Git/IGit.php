@@ -2,7 +2,7 @@
 	/** IGit interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-3
+	 * @version		2012-12-09-2
 	 */
 	
 	namespace Heymaster\Git;
@@ -80,6 +80,13 @@
 		 * @throws	Heymaster\Git\GitException
 		 */
 		public function commit($message);
+		
+		
+		
+		/**
+		 * @return	bool
+		 */
+		public function isChanges();
 	}
 	
 	

@@ -2,7 +2,7 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-1
+	 * @version		2012-12-09-2
 	 */
 	
 	namespace Heymaster\Git;
@@ -105,6 +105,18 @@
 				'-m' => $message,
 			));
 			return $this;
+		}
+		
+		
+		
+		/**
+		 * @return	bool
+		 */
+		public function isChanges()
+		{
+			$lastLine = exec('git status');
+			
+			return (strpos($lastLine, 'nothing to commit')) === FALSE; // FALSE => changes
 		}
 		
 		
