@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-2
+	 * @version		2012-12-09-3
 	 */
 	
 	namespace Heymaster;
@@ -387,7 +387,10 @@
 			
 			foreach($list as $file => $value)
 			{
-				$this->git->remove($file);
+				if(file_exists($file))
+				{
+					$this->git->remove($file);
+				}
 			}
 		}
 		
