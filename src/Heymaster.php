@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-3
+	 * @version		2012-12-09-4
 	 */
 	
 	namespace Heymaster;
@@ -92,6 +92,22 @@
 			$this->commands[$name] = $callback;
 			
 			return $this;
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]
+		 * @return	Heymaster\Utils\Finder
+		 */
+		public function find($mask)
+		{
+			if(!is_array($mask))
+			{
+				$mask = func_get_args();
+			}
+			
+			return Finder::find($mask);
 		}
 		
 		
