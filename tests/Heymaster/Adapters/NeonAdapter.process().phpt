@@ -1,19 +1,19 @@
 <?php
-/** @version	2012-12-02-1 */
+/** @version	2012-12-09-1 */
 
 use Tester\Assert;
 
-require __DIR__ . '/bootstrap.php';
+require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/../../src/Config.php';
-require __DIR__ . '/../../src/Command.php';
-require __DIR__ . '/../../src/Action.php';
-require __DIR__ . '/../../src/Section.php';
-require __DIR__ . '/../../src/Configs/FileConfig.php';
+require __DIR__ . '/../../../src/Config.php';
+require __DIR__ . '/../../../src/Command.php';
+require __DIR__ . '/../../../src/Action.php';
+require __DIR__ . '/../../../src/Section.php';
+require __DIR__ . '/../../../src/Configs/FileConfig.php';
 
-require __DIR__ . '/../../src/Adapters/IAdapter.php';
-require __DIR__ . '/../../src/Adapters/BaseAdapter.php';
-require __DIR__ . '/../../src/Adapters/NeonAdapter.php';
+require __DIR__ . '/../../../src/Adapters/IAdapter.php';
+require __DIR__ . '/../../../src/Adapters/BaseAdapter.php';
+require __DIR__ . '/../../../src/Adapters/NeonAdapter.php';
 
 class Adapter extends Heymaster\Adapters\NeonAdapter
 {
