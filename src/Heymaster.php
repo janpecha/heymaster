@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-1
+	 * @version		2012-12-09-2
 	 */
 	
 	namespace Heymaster;
@@ -142,7 +142,7 @@
 		
 		/**
 		 * @param	array
-		 * @param	string|NULL  tag name
+		 * @param	string|NULL|TRUE  tag name, no tag, auto tag
 		 * @return	void
 		 */
 		public function build(array $configuration, $gitTag = NULL) // ??OK
@@ -227,6 +227,11 @@
 			$this->processSectionBlock(self::KEY_AFTER);
 			
 			// Create tag
+			if($gitTag === TRUE)
+			{
+				$gitTag = "build-$tag";
+			}
+			
 			if(is_string($gitTag))
 			{
 				$this->logger->log("Oznacuji sestaveni pomoci tagu '$gitTag'...");

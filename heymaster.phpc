@@ -2,7 +2,7 @@
 	/** Heymaster runner
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-2
+	 * @version		2012-12-09-1
 	 */
 	
 #	error_reporting(0);
@@ -36,16 +36,22 @@
 				$git = new Heymaster\Git\Git;
 				$runner = new Heymaster\Cli\Runner;
 				$root = getcwd();
-			
+				
 				$heymaster = new Heymaster\Heymaster($logger, $git, $runner, is_string($root) ? $root : NULL);
-				// register commands
+				// Register commands
 				Commands\CoreCommands::install($heymaster);
 #				Commands\PhpCommands::install($heymaster);
 #				Commands\JsCommands::install($heymaster);
 #				Commands\CssCommands::install($heymaster);
 				
-				// build
-				$tag = (isset($args['tag']) && is_string($args['tag'])) ? $args['tag'] : NULL;
+				// Build
+				$tag = NULL;
+				
+				if(isset($args['tag']) && ($args['tag'] === TRUE || is_string($args['tag'])))
+				{
+					$tag = $args['tag'];
+				}
+				
 				$heymaster->build($configuration, $tag);
 			}
 			catch(Exception $e)
@@ -64,7 +70,7 @@
 	}
 ?>
 
-Heymaster (2012-12-03-1)
+Heymaster (2012-12-09-1)
 *****************************
 
 Usage:
@@ -74,7 +80,7 @@ Usage:
 
 
 Parameters:
-	--tag <name>	tag name
+	--tag [<name>]	tag name
 
 
 Examples:
