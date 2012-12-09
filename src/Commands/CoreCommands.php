@@ -59,6 +59,7 @@
 				throw new InvalidException('Neni urceno, ktery prikaz se ma spustit!');
 			}
 			
+			// Ziskani jmena spousteneho souboru pro pripadne vyhozeni vyjimky
 			$commandName = $cmd;
 			
 			if(is_array($cmd))
@@ -66,6 +67,7 @@
 				$commandName = reset($cmd);
 			}
 			
+			// Spusteni prikazu
 			$success = $this->heymaster->runner->run($cmd);
 			
 			if($success !== 0 && $throw)
@@ -158,9 +160,26 @@
 		 * @param	string
 		 * @return	void
 		 */
-		public function commandSymlinks(Command $command, $mask)
+		public function commandSymlinks(Command $command, $mask) // ??OK
 		{
+			if(!isset($command->params['mask']) && !isset($command->params['masks']))
+			{
+				throw new InvalidException('Neni nastavena maska.');
+			}
 			
+			$masks = isset($command->params['mask']) ? $command->params['mask'] : $command->params['masks'];
+			
+			/*foreach($this->heymaster->find($masks)
+				->in($command->config->root)
+					->mask($masks)->mask($mask) as $file)
+			*/
+			foreach($this->findSymlinks($command->config->root, $masks, $mask) as $file)
+			{
+				$realpath = $file->getRealPath();
+				
+				$this->unlink($file);
+				$this->copy($realpath, $file);
+			}
 		}
 		
 		
@@ -183,6 +202,70 @@
 		 * @return	void
 		 */
 		public function commandRemoveContent(Command $command, $mask)
+		{
+			
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 * @param	string|string[]
+		 * @param	string|string[]
+		 * @return	Heymaster\Utils\Finder
+		 */
+		protected function findSymlinks($dir, $masks, $actionMasks)
+		{
+			$isLink = function ($file) {
+				return $file->isLink();
+			};
+			
+			$finder = $this->heymaster->find($masks)
+				->filter($isLink);
+#				->filter(function($file) {
+#					return $file->isLink();
+#					if(!$file->isLink())
+#					{
+#						return FALSE;
+#					}
+#					
+##					$linkrealpath = $file->getRealPath();
+##					$parent = $file->getPathInfo();
+##					$realpath = $parent->getRealPath() . '/' . $file->getBasename();
+##					var_dump($linkrealpath);
+##					var_dump($realpath);
+##					return $linkrealpath === $realpath;
+#					
+#					return TRUE;
+#					
+#					#$path = (string)$file->getPathname();
+#					#return $path !== substr($file->getRealPath(), -strlen($path));
+#				});
+			
+			$finder->in($dir)
+				->filter($isLink);
+			return $finder;
+		}
+		
+		
+		
+		/**
+		 * @param	SplFileInfo
+		 * @return	void
+		 */
+		protected function unlink(\SplFileInfo $file)
+		{
+			
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 * @param	SplFileInfo	TODO: ??|| string
+		 * @return	void
+		 */
+		protected function copy($realpath, \SplFileInfo $file)
 		{
 			
 		}
