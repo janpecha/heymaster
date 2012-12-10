@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-10-2
+	 * @version		2012-12-10-3
 	 */
 	
 	namespace Heymaster\Commands;
@@ -96,19 +96,21 @@
 				throw new InvalidException('Neni nastavena maska pro vstupni soubory.');
 			}
 			
-			if(!isset($command->params['name']))
+			if(!isset($command->params['file']) || !is_string($command->params['file']))
 			{
 				throw new InvalidException('Neni urcen soubor, do ktereho se maji spojit pozadavane soubory.');
 			}
 			
 			$masks = isset($command->params['mask']) ? $command->params['mask'] : $command->params['masks'];
-			$name = $command->params['name'];
+			$filename = $command->params['file'];
+			$recursive = isset($command->params['recursive']) ? (bool)$command->params['recursive'] : TRUE;
 			
-			foreach($this->heymaster->findFiles($masks)
-				->from($command->config->root)
-					->mask($mask) as $file)
+			#foreach($this->heymaster->findFiles($masks)
+			#		->mask($mask)
+			#	->from($command->config->root) as $file)
+			foreach($this->findFilesForMerge($masks, $mask, $command->config->root, $recursive) as $file)
 			{
-				file_put_contents($command->config->root . "/$name", file_get_contents($file), \FILE_APPEND);
+				file_put_contents($command->config->root . "/$filename", file_get_contents($file) . "\n", \FILE_APPEND);
 			}
 		}
 		
@@ -231,6 +233,32 @@
 			$finder->in($dir)
 				->filter($isLink);
 				
+			return $finder;
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]
+		 * @param	string|string[]
+		 * @param	string
+		 * @param	bool
+		 * @return	Heymaster\Utils\Finder
+		 */
+		protected function findFilesForMerge($masks, $actionMasks, $root, $recursive = TRUE)
+		{
+			$finder = $this->heymaster->findFiles($masks)
+				->mask($actionMasks);
+			
+			if($recursive)
+			{
+				$finder->from($root);
+			}
+			else
+			{
+				$finder->in($root);
+			}
+			
 			return $finder;
 		}
 		
