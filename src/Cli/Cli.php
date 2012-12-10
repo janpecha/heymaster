@@ -2,13 +2,17 @@
 	/** Cli
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-15-1
+	 * @version		2012-12-10-1
 	 */
 	
 	namespace Heymaster\Cli;
 	
 	class Cli extends \Cz\Cli
 	{
+		const COLOR_ERROR = '1;31';
+		
+		
+		
 		/**
 		 * @param	string[]	of arguments
 		 * @return	array|FALSE
