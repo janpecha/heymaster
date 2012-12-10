@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-10-1
+	 * @version		2012-12-10-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -73,7 +73,7 @@
 			}
 			
 			// Spusteni prikazu
-			$success = $this->heymaster->runner->run($cmd);
+			$success = $this->heymaster->runner->run($cmd, (bool)$command->config->output);
 			
 			if($success !== 0 && $throw)
 			{
