@@ -2,7 +2,7 @@
 	/** Heymaster File & Directory Finder
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
+	 * @version		2012-12-09-1
 	 */
 	
 	namespace Heymaster\Utils;
@@ -31,6 +31,8 @@
 						&& (!$pattern || preg_match($pattern, '/' . strtr($file->getSubPathName(), '\\', '/')));
 				});
 			}
+			
+			return $this;
 		}
 		
 		
