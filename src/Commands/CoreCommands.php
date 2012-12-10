@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-4
+	 * @version		2012-12-10-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -54,17 +54,22 @@
 				}
 			}
 			
-			if($cmd === FALSE)
+			if($cmd === FALSE || !is_string($cmd))
 			{
-				throw new InvalidException('Neni urceno, ktery prikaz se ma spustit!');
+				throw new InvalidException('Neni urceno, ktery prikaz se ma spustit, nebo prikaz neni retezec!');
 			}
 			
 			// Ziskani jmena spousteneho souboru pro pripadne vyhozeni vyjimky
 			$commandName = $cmd;
 			
-			if(is_array($cmd))
+			#if(is_array($cmd))
+			#{
+			#	$commandName = reset($cmd);
+			#}
+			
+			if($cmd[0] === '/' || substr($cmd, 0, 2) === './' || substr($cmd, 0, 3) === '../')
 			{
-				$commandName = reset($cmd);
+				$cmd = $command->config->root . '/' . $cmd;
 			}
 			
 			// Spusteni prikazu
