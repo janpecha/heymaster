@@ -40,6 +40,8 @@ $core = new CoreCommands;
 $command = new Heymaster\Command;
 $command->params = array();
 $command->name = 'TestCommand';
+$command->config = new stdClass;
+$command->config->output = TRUE;
 
 Assert::throws(function() use ($core, $command) {
 	$core->commandRun($command, '');
