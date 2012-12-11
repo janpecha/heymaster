@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-4
+	 * @version		2012-12-11-1
 	 */
 	
 	namespace Heymaster;
@@ -159,9 +159,10 @@
 		/**
 		 * @param	array
 		 * @param	string|NULL|TRUE  tag name, no tag, auto tag
+		 * @param	bool
 		 * @return	void
 		 */
-		public function build(array $configuration, $gitTag = NULL) // ??OK
+		public function build(array $configuration, $gitTag = NULL, $isTest = FALSE) // ??OK
 		{
 			// Check configuration
 			$this->logger->log('Kontroluji konfiguraci...');
@@ -211,7 +212,20 @@
 			
 			if($this->git->isChanges())
 			{
-				$this->git->commit("[$date] Record changes.");
+				$this->git->commit("[$date] Record changes.", array(
+					'-a'
+				));
+			}
+			
+			if($isTest)
+			{
+				$this->logger->info("Testovaci rezim - HOTOVO."
+					. "\n\t- zustavam na vetvi '$tempBranchName'"
+					. "\n\t- neprenasim zmeny do hlavni vetve"
+					. "\n\t- nelze spustit sekci 'after'"
+					. "\n\t- pro smazani teto vetve se presunte na jinou vetev a spuste prikaz:"
+					. "\n\t  > git branch -D '$tempBranchName'");
+				return;
 			}
 			
 			$this->logger->log("Prenasim zmeny do hlavni vetve '$masterBranch'...");
