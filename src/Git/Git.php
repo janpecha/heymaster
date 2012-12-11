@@ -2,7 +2,7 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-2
+	 * @version		2012-12-11-1
 	 */
 	
 	namespace Heymaster\Git;
@@ -99,9 +99,14 @@
 		
 		
 		
-		public function commit($message)
+		public function commit($message, $params = NULL)
 		{
-			$this->run("git commit", array(
+			if(!is_array($params))
+			{
+				$params = array();
+			}
+			
+			$this->run("git commit", $params, array(
 				'-m' => $message,
 			));
 			return $this;

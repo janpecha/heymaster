@@ -2,7 +2,7 @@
 	/** IGit interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-2
+	 * @version		2012-12-11-1
 	 */
 	
 	namespace Heymaster\Git;
@@ -77,9 +77,10 @@
 		
 		/**
 		 * @param	string
+		 * @param	string[]  param => value
 		 * @throws	Heymaster\Git\GitException
 		 */
-		public function commit($message);
+		public function commit($message, $params = NULL);
 		
 		
 		
