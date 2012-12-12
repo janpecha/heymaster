@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-12-1
+	 * @version		2012-12-12-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -324,27 +324,6 @@
 			
 			return $finder;
 		}
-		
-		
-		
-#		/**
-#		 * @param	string|string[]
-#		 * @param	string|string[]
-#		 * @param	string
-#		 * @return	Heymaster\Utils\Finder
-#		 */
-#		protected function findAll($mask, $actionMask, $root/*, /*??*//*TRUE/*child first*/)
-#		{
-#			$finder = $this->heymaster->find($mask)
-#				->mask($actionMask);
-#			
-#			$finder->from($root)
-#				->mask($mask)
-#				->mask($actionMask)
-#				->exclude('.git');
-#			
-#			return $finder;
-#		}
 		
 		
 		
