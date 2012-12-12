@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-12-3
+	 * @version		2012-12-12-4
 	 */
 	
 	namespace Heymaster\Commands;
@@ -431,12 +431,7 @@
 			}
 			elseif(is_dir($from))
 			{
-				/*$r = */@mkdir($to, 0777, TRUE); // adresar uz muze existovat
-				
-#				if($r === FALSE)
-#				{
-#					throw new \RuntimeException("Pri vytvareni adresare '$to' doslo k chybe!");
-#				}
+				@mkdir($to, 0777, TRUE); // adresar uz muze existovat
 				
 				$this->unlink($to, TRUE); // remove content
 				
