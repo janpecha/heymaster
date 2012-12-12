@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-12-2
+	 * @version		2012-12-12-3
 	 */
 	
 	namespace Heymaster\Commands;
@@ -387,7 +387,6 @@
 		{
 			$file = (string)$file;
 			
-			#if($file->isFile())
 			if(is_file($file))
 			{
 				if($onlyContent)
@@ -396,7 +395,6 @@
 					return;
 				}
 			}
-			#elseif($file->isDir())
 			elseif(is_dir($file))
 			{
 				// browse child
