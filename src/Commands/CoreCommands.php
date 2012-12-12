@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-10-3
+	 * @version		2012-12-11-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -21,9 +21,9 @@
 			$heymaster->addCommand('run', array($me, 'commandRun'));
 			$heymaster->addCommand('merge', array($me, 'commandMerge'));
 			$heymaster->addCommand('touch', array($me, 'commandTouch'));
-#			$heymaster->addCommand('symlinks', array($me, 'commandSymlinks'));
-#			$heymaster->addCommand('remove', array($me, 'commandRemove'));
-#			$heymaster->addCommand('removeContent', array($me, 'commandRemoveContent'));
+			$heymaster->addCommand('symlinks', array($me, 'commandSymlinks'));
+			$heymaster->addCommand('remove', array($me, 'commandRemove'));
+			$heymaster->addCommand('removeContent', array($me, 'commandRemoveContent'));
 			
 			return $me;
 		}
@@ -142,17 +142,21 @@
 			foreach($masks as $fileMask)
 			{
 				$filename = basename($fileMask);
-				$directory = substr($fileMask, 0, -strlen($filename));
+				$directory = trim(substr($fileMask, 0, -strlen($filename)), '/');
 				
 				if($directory === '')
 				{
-					$directory = '*';
+					//$directory = '*'; // TODO: je to dobre???
+					$touchFileName = $command->config->root . "/$filename";
+					file_put_contents($touchFileName, '', $flags);
+					continue;
 				}
 				// TODO: create directories
 				
-				foreach($this->heymaster->findDirectories($directory)
-					->from($command->config->root)
-					->exclude('.git') as $dir)
+				#foreach($this->heymaster->findDirectories($directory)
+				#	->from($command->config->root)
+				#	->exclude('.git') as $dir)
+				foreach($this->findDirectories($directory, $mask, $command->config->root) as $dir)
 				{
 					$touchFileName = $dir . "/$filename";
 					file_put_contents($touchFileName, '', $flags);
@@ -180,13 +184,11 @@
 				->in($command->config->root)
 					->mask($masks)->mask($mask) as $file)
 			*/
-			foreach($this->findSymlinks($command->config->root, $masks, $mask) as $file)
-			{
-				$realpath = $file->getRealPath();
-				
-				$this->unlink($file);
-				$this->copy($realpath, $file);
-			}
+			// Find files
+			$this->processSymlinks($masks, $mask, $command->config->root, FALSE);
+			
+			// Find dirs
+			$this->processSymlinks($masks, $mask, $command->config->root, TRUE);
 		}
 		
 		
@@ -198,7 +200,7 @@
 		 */
 		public function commandRemove(Command $command, $mask)
 		{
-			
+			$this->processRemove($command, $mask, FALSE);
 		}
 		
 		
@@ -210,7 +212,59 @@
 		 */
 		public function commandRemoveContent(Command $command, $mask)
 		{
+			$this->processRemove($command, $mask, TRUE);
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]
+		 * @param	string|string[]
+		 * @param	string  find only files or only dirs
+		 * @param	bool
+		 * @return	void
+		 */
+		protected function processSymlinks($mask, $actionMask, $root, $findDirs = FALSE)
+		{
+			foreach($this->findSymlinks($mask, $actionMask, $root, $findDirs) as $file)
+			{
+				$from = $file->getRealPath();
+				$to = (string)$file;
+				
+				$this->unlink($file);
+				$this->copy($from, $to);
+			}
+		}
+		
+		
+		
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @param	bool
+		 * @return	void
+		 */
+		protected function processRemove(Command $command, $actionMask, $onlyContent = FALSE)
+		{
+			if(!isset($command->params['mask']) && !isset($command->params['masks']))
+			{
+				throw new InvalidException('Neni nastavena maska.');
+			}
 			
+			$masks = isset($command->params['mask']) ? $command->params['mask'] : $command->params['masks'];
+			$ignore = isset($command->params['ignore']) ? $command->params['ignore'] : FALSE;
+			
+			// Remove files
+			foreach($this->findFiles($masks, $actionMask, $command->config->root, $ignore, /*??*/TRUE/*child first*/) as $item)
+			{
+				$this->unlink($item, $onlyContent);
+			}
+			
+			// Remove dirs
+			foreach($this->findDirectories($masks, $actionMask, $command->config->root, $ignore, /*??*/TRUE/*child first*/) as $item)
+			{
+				$this->unlink($item, $onlyContent);
+			}
 		}
 		
 		
@@ -219,20 +273,36 @@
 		 * @param	string
 		 * @param	string|string[]
 		 * @param	string|string[]
+		 * @param	bool
 		 * @return	Heymaster\Utils\Finder
 		 */
-		protected function findSymlinks($dir, $masks, $actionMasks)
+		protected function findSymlinks($masks, $actionMasks, $dir, $findDirs = FALSE)
 		{
-			$isLink = function ($file) {
-				return $file->isLink();
-			};
+			$finder = NULL;
 			
-			$finder = $this->heymaster->find($masks)
+			if($findDirs)
+			{
+				$finder = $this->heymaster->findDirectories($masks);
+			}
+			else
+			{
+				$finder = $this->heymaster->findFiles($masks);	
+			}
+			
+			$finder->mask($actionMasks)
+				->filter(array($this, 'isLink'));
+			
+			$finder->in($dir);
+			#	->filter($isLink);
+				/*$finder = $this->heymaster->find($masks)
+				->mask($actionMasks)
 				->filter($isLink);
 			
 			$finder->in($dir)
+				->mask($masks)
+				->mask($actionMasks)
 				->filter($isLink);
-				
+				//->filter($isLink);*/
 			return $finder;
 		}
 		
@@ -259,30 +329,165 @@
 				$finder->in($root);
 			}
 			
+			$finder->exclude('.git');
+			
+			return $finder;
+		}
+		
+		
+		
+#		/**
+#		 * @param	string|string[]
+#		 * @param	string|string[]
+#		 * @param	string
+#		 * @return	Heymaster\Utils\Finder
+#		 */
+#		protected function findAll($mask, $actionMask, $root/*, /*??*//*TRUE/*child first*/)
+#		{
+#			$finder = $this->heymaster->find($mask)
+#				->mask($actionMask);
+#			
+#			$finder->from($root)
+#				->mask($mask)
+#				->mask($actionMask)
+#				->exclude('.git');
+#			
+#			return $finder;
+#		}
+		
+		
+		
+		/**
+		 * @param	string|string[]
+		 * @param	string|string[]
+		 * @param	string
+		 * @param	string|string[]|FALSE
+		 * @return	Heymaster\Utils\Finder
+		 */
+		protected function findFiles($mask, $actionMask, $root, $exclude = FALSE/*, /*??*//*TRUE/*child first*/)
+		{
+			$finder = $this->heymaster->findFiles($mask)
+				->mask($actionMask);
+			
+			if($exclude !== FALSE)
+			{
+				$finder->exclude($exclude);
+			}
+			
+			$finder->from($root)
+				->exclude('.git');
+			
 			return $finder;
 		}
 		
 		
 		
 		/**
-		 * @param	SplFileInfo
-		 * @return	void
+		 * @param	string|string[]
+		 * @param	string|string[]
+		 * @param	string
+		 * @param	string|string[]|FALSE
+		 * @return	Heymaster\Utils\Finder
 		 */
-		protected function unlink(\SplFileInfo $file)
+		protected function findDirectories($mask, $actionMask, $root, $exclude = FALSE/*, /*??*//*TRUE/*child first*/)
 		{
+			$finder = $this->heymaster->findDirectories($mask)
+				->mask($actionMask)
+				->exclude('.git');
 			
+			if($exclude !== FALSE)
+			{
+				$finder->exclude($exclude);
+			}
+			
+			$finder->from($root)
+				->exclude('.git');
+			
+			return $finder;
 		}
 		
 		
 		
 		/**
 		 * @param	string
-		 * @param	SplFileInfo	TODO: ??|| string
+		 * @param	bool
 		 * @return	void
 		 */
-		protected function copy($realpath, \SplFileInfo $file)
+		protected function unlink($file, $onlyContent = FALSE)
 		{
+			$file = (string)$file;
 			
+			#if($file->isFile())
+			if(is_file($file))
+			{
+				if($onlyContent)
+				{
+					file_put_contents((string)$file, '');
+					return;
+				}
+			}
+			#elseif($file->isDir())
+			elseif(is_dir($file))
+			{
+				// browse child
+				foreach($this->heymaster->find('*')->in($file)->childFirst() as $item)
+				{
+					$this->unlink($item, FALSE);
+				}
+				
+				if($onlyContent)
+				{
+					return;
+				}
+				
+				rmdir($file);
+				return;
+			}
+			
+			unlink($file);
+		}
+		
+		
+		
+		/**
+		 * @param	string	from
+		 * @param	string	to
+		 * @return	void
+		 */
+		protected function copy($from, $to)
+		{
+			// TODO: co se symlinky, ted se symlinky nezachovaji, ale zkopiruje se to, na co ukazuji - je to OK??
+			if(is_file($from))
+			{
+				copy($from, $to);
+			}
+			elseif(is_dir($from))
+			{
+				/*$r = */@mkdir($to, 0777, TRUE); // adresar uz muze existovat
+				
+#				if($r === FALSE)
+#				{
+#					throw new \RuntimeException("Pri vytvareni adresare '$to' doslo k chybe!");
+#				}
+				
+				$this->unlink($to, TRUE); // remove content
+				
+				foreach($this->heymaster->find('*')->in($from) as $file)
+				{
+					$this->copy((string)$file, $to . '/' . $file->getBasename());
+				}
+			}
+		}
+		
+		
+		
+		/**
+		 * @param	SplFileInfo
+		 * @return	bool
+		 */
+		public static function isLink($file)
+		{
+			return $file->isLink();
 		}
 	}
 
