@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-11-1
+	 * @version		2012-12-12-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -293,16 +293,7 @@
 				->filter(array($this, 'isLink'));
 			
 			$finder->in($dir);
-			#	->filter($isLink);
-				/*$finder = $this->heymaster->find($masks)
-				->mask($actionMasks)
-				->filter($isLink);
 			
-			$finder->in($dir)
-				->mask($masks)
-				->mask($actionMasks)
-				->filter($isLink);
-				//->filter($isLink);*/
 			return $finder;
 		}
 		
