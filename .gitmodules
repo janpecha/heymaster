@@ -1,3 +1,6 @@
 [submodule "libs/Php-Cli"]
 	path = libs/Php-Cli
 	url = git://github.com/czproject/phpcli.git
+[submodule "tools/Tester"]
+	path = tools/Tester
+	url = git://github.com/nette/tester.git
