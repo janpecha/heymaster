@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-13-1
+	 * @version		2012-12-13-2
 	 */
 	
 	namespace Heymaster;
@@ -76,6 +76,16 @@
 		public function getRunner()
 		{
 			return $this->runner;
+		}
+		
+		
+		
+		/**
+		 * @return	string|NULL
+		 */
+		public function getLogger()
+		{
+			return $this->logger;
 		}
 		
 		
