@@ -1,0 +1,3 @@
+[submodule "libs/Php-Cli"]
+	path = libs/Php-Cli
+	url = git://github.com/czproject/phpcli.git
