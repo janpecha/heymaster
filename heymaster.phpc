@@ -2,7 +2,7 @@
 	/** Heymaster runner
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-13-2
+	 * @version		2012-12-13-3
 	 */
 	
 #	error_reporting(0);
@@ -45,7 +45,7 @@
 				Commands\CoreCommands::install($heymaster);
 				Commands\PhpCommands::install($heymaster);
 #				Commands\JsCommands::install($heymaster);
-#				Commands\CssCommands::install($heymaster);
+				Commands\CssCommands::install($heymaster);
 				
 				// Build
 				$tag = NULL;
@@ -80,7 +80,7 @@
 	}
 ?>
 
-Heymaster (2012-12-13-2)
+Heymaster (2012-12-13-3)
 ************************
 
 Usage:

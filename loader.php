@@ -34,5 +34,5 @@
 	require __DIR__ . '/src/Commands/CoreCommands.php';
 	require __DIR__ . '/src/Commands/PhpCommands.php';
 #	require __DIR__ . '/src/Commands/JsCommands.php';
-#	require __DIR__ . '/src/Commands/CssCommands.php';
+	require __DIR__ . '/src/Commands/CssCommands.php';
 
