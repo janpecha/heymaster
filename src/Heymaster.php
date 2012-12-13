@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-11-1
+	 * @version		2012-12-13-1
 	 */
 	
 	namespace Heymaster;
@@ -38,6 +38,9 @@
 		
 		/** @var  array */
 		protected $configuration;
+		
+		/** @var  bool */
+		private $testingMode;
 		
 		
 		
@@ -73,6 +76,16 @@
 		public function getRunner()
 		{
 			return $this->runner;
+		}
+		
+		
+		
+		/**
+		 * @return	bool|NULL
+		 */
+		public function isTestingMode()
+		{
+			return $this->testingMode;
 		}
 		
 		
@@ -164,6 +177,8 @@
 		 */
 		public function build(array $configuration, $gitTag = NULL, $isTest = FALSE) // ??OK
 		{
+			$this->testingMode = (bool)$isTest;
+			
 			// Check configuration
 			$this->logger->log('Kontroluji konfiguraci...');
 			self::checkValid($configuration);
