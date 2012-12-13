@@ -2,7 +2,7 @@
 	/** Heymaster Loader
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-07-1
+	 * @version		2012-12-13-1
 	 */
 	
 	require __DIR__ . '/src/exceptions.php';
@@ -32,7 +32,7 @@
 	
 	require __DIR__ . '/src/Commands/CommandSet.php';
 	require __DIR__ . '/src/Commands/CoreCommands.php';
-#	require __DIR__ . '/src/Commands/PhpCommands.php';
+	require __DIR__ . '/src/Commands/PhpCommands.php';
 #	require __DIR__ . '/src/Commands/JsCommands.php';
 #	require __DIR__ . '/src/Commands/CssCommands.php';
 
