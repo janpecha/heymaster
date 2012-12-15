@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-12-4
+	 * @version		2012-12-15-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -24,6 +24,7 @@
 			$heymaster->addCommand('symlinks', array($me, 'commandSymlinks'));
 			$heymaster->addCommand('remove', array($me, 'commandRemove'));
 			$heymaster->addCommand('removeContent', array($me, 'commandRemoveContent'));
+			$heymaster->addCommand('replace', array($me, 'commandReplace'));
 			
 			return $me;
 		}
@@ -213,6 +214,41 @@
 		public function commandRemoveContent(Command $command, $mask)
 		{
 			$this->processRemove($command, $mask, TRUE);
+		}
+		
+		
+		
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @throws	Heymaster\InvalidException
+		 * @return	void
+		 */
+		public function commandReplace(Command $command, $actionMask)
+		{
+			if(!isset($command->params['files']) || !is_array($command->params['files']))
+			{
+				throw new InvalidException('Nejsou urceny soubory k nahrazeni.');
+			}
+			
+			foreach($command->params['files'] as $key => $value)
+			{
+				if(!is_string($key) || !is_string($value))
+				{
+					throw new InvalidException('Spatna hodnota - ' . $key . ': ' . $value);
+				}
+				
+				$what = $this->command->root . '/' . $key;
+				$to = $value;
+				
+				if($to[0] !== '/') // NOT absolute path
+				{
+					$to = $this->command->root . $to;
+				}
+				
+				$this->unlink($what);
+				$this->copy($to, $what);
+			}
 		}
 		
 		
