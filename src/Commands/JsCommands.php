@@ -3,7 +3,7 @@
 	 * REQUIRE JsShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-15-1
+	 * @version		2012-12-15-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -23,6 +23,7 @@
 			$me = new static($heymaster);
 			
 			$heymaster->addCommand('Js::compress', array($me, 'commandCompress'));
+			$heymaster->addCommand('Js::compile', array($me, 'commandCompile'));
 			
 			return $me;
 		}
@@ -48,6 +49,35 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Command
+		 * @param	string
+		 * @throws	Heymaster\InvalidException
+		 * @return	void
+		 */
+		public function commandCompile(Command $command, $actionMask)
+		{
+			if(!isset($command->params['file']))
+			{
+				throw new InvalidException('Neni urceno jmeno souboru, do ktereho se ma kompilovat.');
+			}
+			
+			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
+			$recursive = isset($command->params['recursive']) ? (bool)$command->params['recursive'] : TRUE;
+			$filename = $command->params['file'];
+			
+			$delimeter = '';
+			
+			foreach($this->findFilesForMerge($mask, $actionMask, $command->config->root, $recursive) as $file)
+			{
+				$content = file_get_contents($file);
+				file_put_contents($filename, $delimiter . jsShrink($content), \FILE_APPEND);
+				$delimeter = "\n;";
+			}
+		}
+		
+		
+		
 		public function findFiles($mask, $actionMask, $root)
 		{
 			$finder = $this->heymaster->findFiles($mask)
@@ -55,6 +85,34 @@
 			
 			$finder->from($root)
 				->exclude('.git');
+			
+			return $finder;
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]
+		 * @param	string|string[]
+		 * @param	string
+		 * @param	bool
+		 * @return	Heymaster\Utils\Finder
+		 */
+		protected function findFilesForMerge($masks, $actionMasks, $root, $recursive = TRUE)
+		{
+			$finder = $this->heymaster->findFiles($masks)
+				->mask($actionMasks);
+			
+			if($recursive)
+			{
+				$finder->from($root);
+			}
+			else
+			{
+				$finder->in($root);
+			}
+			
+			$finder->exclude('.git');
 			
 			return $finder;
 		}
