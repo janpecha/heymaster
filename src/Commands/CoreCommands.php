@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-15-1
+	 * @version		2012-12-16-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -414,7 +414,7 @@
 		
 		
 		
-		/**
+		/** Removes symlink, file or directory.
 		 * @param	string
 		 * @param	bool
 		 * @return	void
@@ -423,7 +423,10 @@
 		{
 			$file = (string)$file;
 			
-			if(is_file($file))
+			if(is_link($file))
+			{
+			}
+			elseif(is_file($file))
 			{
 				if($onlyContent)
 				{

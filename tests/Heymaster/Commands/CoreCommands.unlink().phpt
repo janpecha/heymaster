@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-11-1 */
+/** @version	2012-12-16-1 */
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -94,6 +94,28 @@ $testDir = $tempDir . '/testovaci';
 $core->copy(__DIR__ . '/files', $testDir);
 $core->unlink($testDir, FALSE);
 Assert::same(array(), export(Heymaster\Utils\Finder::find('*')->from($tempDir)));
+
+
+purge($tempDir);
+$filename = $tempDir . '/any-test-file.txt';
+$linkname = $tempDir . '/my-link';
+file_put_contents($filename, "Lorem ipsum\ndolor sit amet.");
+symlink($filename, $linkname);
+$core->unlink($linkname);
+Assert::same(array(
+	$filename,
+), export(Heymaster\Utils\Finder::find('*')->from($tempDir)));
+
+
+purge($tempDir);
+$dirname = $tempDir . '/my-dir';
+$linkname = $tempDir . '/my-link';
+mkdir($dirname, 0777);
+symlink($dirname, $linkname);
+$core->unlink($linkname);
+Assert::same(array(
+	$dirname,
+), export(Heymaster\Utils\Finder::find('*')->from($tempDir)));
 
 
 purge($tempDir);
