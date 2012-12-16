@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-16-1
+	 * @version		2012-12-17-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -238,12 +238,12 @@
 					throw new InvalidException('Spatna hodnota - ' . $key . ': ' . $value);
 				}
 				
-				$what = $this->command->root . '/' . $key;
+				$what = $command->config->root . '/' . $key;
 				$to = $value;
 				
 				if($to[0] !== '/') // NOT absolute path
 				{
-					$to = $this->command->root . $to;
+					$to = $command->config->root . $to;
 				}
 				
 				$this->unlink($what);
