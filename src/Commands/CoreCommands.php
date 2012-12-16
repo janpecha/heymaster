@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-17-1
+	 * @version		2012-12-17-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -243,7 +243,7 @@
 				
 				if($to[0] !== '/') // NOT absolute path
 				{
-					$to = $command->config->root . $to;
+					$to = $command->config->root . '/' . $to;
 				}
 				
 				$this->unlink($what);
