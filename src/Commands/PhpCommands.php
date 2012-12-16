@@ -3,7 +3,7 @@
 	 * REQUIRE PhpShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-13-2
+	 * @version		2012-12-17-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -129,7 +129,7 @@
 		
 		protected static function createPhpShrink()
 		{
-			$shrink = new PhpShrink;
+			$shrink = new \PhpShrink;
 			$shrink->useNamespaces = TRUE;
 			
 			return $shrink;
