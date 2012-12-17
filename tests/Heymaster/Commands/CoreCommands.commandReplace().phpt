@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-17-1 */
+/** @version	2012-12-17-2 */
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -32,6 +32,18 @@ file_put_contents($file1, "Lorem ipsum\ndolor sit\namet");
 mkdir($dir, 0777);
 file_put_contents($file2, 'Ahoj');
 
+$core->commandReplace($command, '');
+$content = file_get_contents($file1);
+unlink($file1);
+unlink($file2);
+rmdir($dir);
+Assert::same('Ahoj', $content);
+
+
+// Neexistujici soubor testovaci.html
+# REMOVED: file_put_contents($file1, "Lorem ipsum\ndolor sit\namet");
+mkdir($dir, 0777);
+file_put_contents($file2, 'Ahoj');
 $core->commandReplace($command, '');
 $content = file_get_contents($file1);
 unlink($file1);
