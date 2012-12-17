@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-17-3
+	 * @version		2012-12-17-4
 	 */
 	
 	namespace Heymaster\Commands;
@@ -477,7 +477,7 @@
 			{
 				$ignore = array($ignore);
 			}
-			else
+			elseif(!is_array($ignore))
 			{
 				$ignore = array();
 			}
