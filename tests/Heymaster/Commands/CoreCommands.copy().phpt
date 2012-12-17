@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-11-1 */
+/** @version	2012-12-17-1 */
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -67,9 +67,9 @@ class Heymaster extends \Heymaster\Heymaster
 
 class CoreCommands extends \Heymaster\Commands\CoreCommands
 {
-	public function copy($from, $to)
+	public function copy($from, $to, $ignore = NULL)
 	{
-		return parent::copy($from, $to);
+		return parent::copy($from, $to, $ignore);
 	}
 }
 

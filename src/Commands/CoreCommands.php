@@ -464,10 +464,29 @@
 		/**
 		 * @param	string	from
 		 * @param	string	to
+		 * @param	string|string[] list of names to ignore
 		 * @return	void
 		 */
-		protected function copy($from, $to)
+		protected function copy($from, $to, $ignore = NULL)
 		{
+			if($ignore === NULL)
+			{
+				$ignore = array('.git');
+			}
+			elseif(is_string($ignore))
+			{
+				$ignore = array($ignore);
+			}
+			else
+			{
+				$ignore = array();
+			}
+			
+			if(in_array(basename($from), $ignore))
+			{
+				return;
+			}
+			
 			// TODO: co se symlinky, ted se symlinky nezachovaji, ale zkopiruje se to, na co ukazuji - je to OK??
 			if(is_file($from))
 			{
@@ -481,7 +500,7 @@
 				
 				foreach($this->heymaster->find('*')->in($from) as $file)
 				{
-					$this->copy((string)$file, $to . '/' . $file->getBasename());
+					$this->copy((string)$file, $to . '/' . $file->getBasename(), $ignore);
 				}
 			}
 		}
