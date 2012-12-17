@@ -2,7 +2,7 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-02-3
+	 * @version		2012-12-17-1
 	 */
 	
 	namespace Heymaster;
@@ -76,14 +76,14 @@
 				
 				if($property === 'root')
 				{
-					$value = self::expandRoot($value, $this->root);
+					$value = self::expandRoot($this->root, $value);
 				}
 				
 				$this->set($property, $value);
 			}
 			elseif($config instanceof static)
 			{
-				$this->root = self::expandRoot($config->root, $this->root);
+				$this->root = self::expandRoot($this->root, $config->root);
 				$this->output = $config->output;
 			}
 		}
