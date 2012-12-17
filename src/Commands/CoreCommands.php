@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-17-2
+	 * @version		2012-12-17-3
 	 */
 	
 	namespace Heymaster\Commands;
@@ -422,6 +422,11 @@
 		protected function unlink($file, $onlyContent = FALSE)
 		{
 			$file = (string)$file;
+			
+			if(!file_exists($file))
+			{
+				return;
+			}
 			
 			if(is_link($file))
 			{
