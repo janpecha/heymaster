@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-17-2 */
+/** @version	2012-12-17-3 */
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,10 +28,11 @@ $command->config->root = TEMP_DIR;
 $file1 = TEMP_DIR . '/testovaci.html';
 $file2 = TEMP_DIR . '/slozka/zdroj.html';
 $dir = TEMP_DIR . '/slozka';
+
+// Normalni situace
 file_put_contents($file1, "Lorem ipsum\ndolor sit\namet");
 mkdir($dir, 0777);
 file_put_contents($file2, 'Ahoj');
-
 $core->commandReplace($command, '');
 $content = file_get_contents($file1);
 unlink($file1);
@@ -42,6 +43,22 @@ Assert::same('Ahoj', $content);
 
 // Neexistujici soubor testovaci.html
 # REMOVED: file_put_contents($file1, "Lorem ipsum\ndolor sit\namet");
+mkdir($dir, 0777);
+file_put_contents($file2, 'Ahoj');
+$core->commandReplace($command, '');
+$content = file_get_contents($file1);
+unlink($file1);
+unlink($file2);
+rmdir($dir);
+Assert::same('Ahoj', $content);
+
+
+// Absolutni cesta
+$command->params['files'] = array(
+	'testovaci.html' => $file2,
+);
+
+file_put_contents($file1, "Lorem ipsum\ndolor sit\namet");
 mkdir($dir, 0777);
 file_put_contents($file2, 'Ahoj');
 $core->commandReplace($command, '');
