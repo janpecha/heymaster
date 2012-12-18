@@ -3,7 +3,7 @@
 	 * REQUIRE PhpShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-17-1
+	 * @version		2012-12-18-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -109,7 +109,7 @@
 				$shrink->addFile((string)$file);
 			}
 			
-			file_put_contents($command->config->root . '/' . $file, $shrink->getOutput());
+			file_put_contents(self::generatePath((string)$file, $command->config->root), $shrink->getOutput());
 		}
 		
 		
@@ -133,6 +133,18 @@
 			$shrink->useNamespaces = TRUE;
 			
 			return $shrink;
+		}
+		
+		
+		
+		public static function generatePath($filePath, $root)
+		{
+			if($filePath[0] !== '/') // NOT ABSOLUTE PATH
+			{
+				return $root . '/' . $filePath;
+			}
+			
+			return $filePath;
 		}
 	}
 
