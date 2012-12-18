@@ -3,7 +3,7 @@
 	 * REQUIRE JsShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-15-2
+	 * @version		2012-12-18-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -67,6 +67,7 @@
 			$filename = $command->params['file'];
 			
 			$delimeter = '';
+			file_put_contents($filename);
 			
 			foreach($this->findFilesForMerge($mask, $actionMask, $command->config->root, $recursive) as $file)
 			{
