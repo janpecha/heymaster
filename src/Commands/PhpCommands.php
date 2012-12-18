@@ -3,7 +3,7 @@
 	 * REQUIRE PhpShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-1
+	 * @version		2012-12-18-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -109,7 +109,7 @@
 				$shrink->addFile((string)$file);
 			}
 			
-			file_put_contents(self::generatePath((string)$file, $command->config->root), $shrink->getOutput());
+			file_put_contents(self::generatePath($outputFile, $command->config->root), $shrink->getOutput());
 		}
 		
 		
