@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-17-1 */
+/** @version	2012-12-18-1 */
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -28,9 +28,9 @@ class Heymaster extends \Heymaster\Heymaster
 
 class CoreCommands extends \Heymaster\Commands\CoreCommands
 {
-	public function findFiles($mask, $actionMask, $root, $exclude = FALSE/*, /*??*//*TRUE/*child first*/)
+	public function findFiles($mask, $actionMask, $root, $exclude = FALSE, $childFirst = FALSE)
 	{
-		return parent::findFiles($mask, $actionMask, $root, $exclude/*, /*??*//*TRUE/*child first*/);
+		return parent::findFiles($mask, $actionMask, $root, $exclude, $childFirst);
 	}
 }
 

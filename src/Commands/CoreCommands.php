@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-1
+	 * @version		2012-12-18-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -370,7 +370,7 @@
 		 * @param	string|string[]|FALSE
 		 * @return	Heymaster\Utils\Finder
 		 */
-		protected function findFiles($mask, $actionMask, $root, $exclude = FALSE/*, /*??*//*TRUE/*child first*/)
+		protected function findFiles($mask, $actionMask, $root, $exclude = FALSE, $childFirst = FALSE)
 		{
 			$finder = $this->heymaster->findFiles($mask)
 				->mask($actionMask);
@@ -382,6 +382,11 @@
 			
 			$finder->from($root)
 				->exclude('.git');
+			
+			if($childFirst)
+			{
+				$finder->childFirst();
+			}
 			
 			return $finder;
 		}
@@ -395,7 +400,7 @@
 		 * @param	string|string[]|FALSE
 		 * @return	Heymaster\Utils\Finder
 		 */
-		protected function findDirectories($mask, $actionMask, $root, $exclude = FALSE/*, /*??*//*TRUE/*child first*/)
+		protected function findDirectories($mask, $actionMask, $root, $exclude = FALSE, $childFirst = FALSE)
 		{
 			$finder = $this->heymaster->findDirectories($mask)
 				->mask($actionMask)
@@ -408,6 +413,11 @@
 			
 			$finder->from($root)
 				->exclude('.git');
+			
+			if($childFirst)
+			{
+				$finder->childFirst();
+			}
 			
 			return $finder;
 		}
