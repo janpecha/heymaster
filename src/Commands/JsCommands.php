@@ -3,7 +3,7 @@
 	 * REQUIRE JsShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-1
+	 * @version		2012-12-18-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -66,8 +66,9 @@
 			$recursive = isset($command->params['recursive']) ? (bool)$command->params['recursive'] : TRUE;
 			$filename = $command->params['file'];
 			
-			$delimeter = '';
-			file_put_contents($filename);
+			$delimiter = '';
+			$filename = $command->config->root . '/' . $filename;
+			file_put_contents($filename, '');
 			
 			foreach($this->findFilesForMerge($mask, $actionMask, $command->config->root, $recursive) as $file)
 			{
