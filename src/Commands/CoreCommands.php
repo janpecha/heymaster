@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-3
+	 * @version		2012-12-18-4
 	 */
 	
 	namespace Heymaster\Commands;
@@ -113,9 +113,12 @@
 			
 			file_put_contents($filename, '');
 			
-			foreach($this->findFilesForMerge($masks, $mask, $command->config->root, $recursive) as $file)
+			foreach($masks as $oneMask)
 			{
-				file_put_contents($filename, file_get_contents($file) . "\n", \FILE_APPEND);
+				foreach($this->findFilesForMerge($oneMask, $mask, $command->config->root, $recursive) as $file)
+				{
+					file_put_contents($filename, file_get_contents($file) . "\n", \FILE_APPEND);
+				}
 			}
 		}
 		
