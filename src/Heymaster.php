@@ -4,7 +4,7 @@
 	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-13-2
+	 * @version		2012-12-18-1
 	 */
 	
 	namespace Heymaster;
@@ -351,7 +351,7 @@
 						foreach($action->commands as $command)
 						{
 							$command->config->inherit($action->config);
-							$this->printMessage($command->config, 'Prikaz: ' . $command->name);
+							$this->printMessage($command->config, 'Prikaz: ' . $command->name . ' (' . $command->description . ')');
 							$this->processCommand($command, $action->mask);
 						}
 					}
