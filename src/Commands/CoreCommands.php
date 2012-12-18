@@ -2,7 +2,7 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-17-4
+	 * @version		2012-12-18-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -430,6 +430,7 @@
 			
 			if(is_link($file))
 			{
+				// remove link - see end of method => 'unlink($file);'
 			}
 			elseif(is_file($file))
 			{
@@ -490,6 +491,7 @@
 			// TODO: co se symlinky, ted se symlinky nezachovaji, ale zkopiruje se to, na co ukazuji - je to OK??
 			if(is_file($from))
 			{
+				@mkdir(dirname($to), 0777, TRUE); // adresar uz muze existovat
 				copy($from, $to);
 			}
 			elseif(is_dir($from))
