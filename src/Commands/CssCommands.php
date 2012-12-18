@@ -3,7 +3,7 @@
 	 * REQUIRE CssMinifier!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-13-1
+	 * @version		2012-12-18-1
 	 */
 	
 	namespace Heymaster\Commands;
@@ -38,7 +38,7 @@
 		public function commandCompress(Command $command, $actionMask)
 		{
 			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
-			$minifier = new CssMinifier;
+			$minifier = new \CssMinifier;
 			
 			foreach($this->findFiles($mask, $actionMask, $command->config->root) as $file)
 			{
