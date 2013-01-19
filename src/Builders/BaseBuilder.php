@@ -2,7 +2,7 @@
 	/** Heymaster Abstract Base Builder
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-1
+	 * @version		2013-01-19-2
 	 */
 	
 	namespace Heymaster\Builders;
@@ -11,6 +11,9 @@
 	{
 		/** @var  bool */
 		protected $testingMode = FALSE;
+		
+		/** @var  string */
+		protected $tag;
 		
 		
 		
@@ -22,6 +25,16 @@
 		{
 			$this->testingMode = (bool)$active;
 			return $this;
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 */
+		public function startup($tag)
+		{
+			$this->tag = (string)$tag;
 		}
 	}
 	
