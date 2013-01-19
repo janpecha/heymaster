@@ -7,6 +7,8 @@
 	
 	namespace Heymaster\Builders;
 	
+	use Heymaster\Configs\FileConfig;
+	
 	abstract class BaseBuilder extends \Nette\Object implements IBuilder
 	{
 		/** @var  bool */
@@ -31,8 +33,9 @@
 		
 		/**
 		 * @param	string
+		 * @param	Heymaster\Configs\FileConfig
 		 */
-		public function startup($tag)
+		public function startup($tag, FileConfig $fileConfig)
 		{
 			$this->tag = (string)$tag;
 		}

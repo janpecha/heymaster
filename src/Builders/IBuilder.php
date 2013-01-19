@@ -7,6 +7,8 @@
 	
 	namespace Heymaster\Builders;
 	
+	use Heymaster\Configs\FileConfig;
+	
 	interface IBuilder
 	{
 		/**
@@ -18,8 +20,9 @@
 		
 		/**
 		 * @param	string
+		 * @param	Heymaster\Configs\FileConfig
 		 */
-		public function startup($tag);
+		public function startup($tag, FileConfig $fileConfig);
 		
 		
 		
