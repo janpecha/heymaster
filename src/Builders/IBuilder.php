@@ -2,7 +2,7 @@
 	/** Heymaster Builder Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-1
+	 * @version		2013-01-19-3
 	 */
 	
 	namespace Heymaster\Builders;
@@ -23,6 +23,10 @@
 		 * @param	Heymaster\Configs\FileConfig
 		 */
 		public function startup($tag, FileConfig $fileConfig);
+		
+		
+		
+		public function preprocess();
 		
 		
 		
