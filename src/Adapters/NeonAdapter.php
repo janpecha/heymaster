@@ -2,7 +2,7 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-1
+	 * @version		2013-01-19-2
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -157,15 +157,21 @@
 			{
 				$command = self::createCommand();
 				
-				if(!is_array($value))
+				if(is_int($key)) // simple command syntax
+				{
+					$command->name = $value;
+				}
+				elseif(is_array($value)) // complex command syntax
+				{
+					$extractedName = self::extractCommandName($key);
+					$command->name = $extractedName['name'];
+					$command->description = $extractedName['description'];
+					$command->params = $value;
+				}
+				else
 				{
 					throw new Exception("Prikaz '$key' v akci '$parentName' je prazdny, nebo neni validni.");
 				}
-				
-				$extractedName = self::extractCommandName($key);
-				$command->name = $extractedName['name'];
-				$command->description = $extractedName['description'];
-				$command->params = $value;
 				
 				$res[] = $command;
 			}

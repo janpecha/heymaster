@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-09-1 */
+/** @version	2013-01-19-1 */
 
 use Tester\Assert,
 	Tester\Dumper;
@@ -52,4 +52,31 @@ Assert::same('command', $res[0]->name);
 Assert::same('first', $res[0]->params['arg0']);
 Assert::same('second', $res[0]->params['arg1']);
 Assert::same('with a description', $res[0]->description);
+
+// simple command syntax
+$res = $adapter->processCommands(array(
+	'my-name',
+	'super-name',
+), 'no parent');
+
+Assert::same(2, count($res));
+Assert::same('my-name', $res[0]->name);
+Assert::same('super-name', $res[1]->name);
+
+
+// simple & complex command syntax
+$res = $adapter->processCommands(array(
+	'my-name',
+	'super' => array(
+		'arg0' => 'value',
+	),
+	'super-name',
+), 'no parent');
+
+Assert::same(3, count($res));
+Assert::same('my-name', $res[0]->name);
+Assert::same('super', $res[1]->name);
+Assert::same('value', $res[1]->params['arg0']);
+Assert::same('super-name', $res[2]->name);
+
 
