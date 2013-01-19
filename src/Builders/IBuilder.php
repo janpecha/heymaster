@@ -2,7 +2,7 @@
 	/** Heymaster Builder Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-3
+	 * @version		2013-01-19-4
 	 */
 	
 	namespace Heymaster\Builders;
@@ -27,6 +27,13 @@
 		
 		
 		public function preprocess();
+		
+		
+		
+		/**
+		 * Spusteno po zpracovani sekce 'before', ale pred sekci 'after'
+		 */
+		public function postprocess();
 		
 		
 		
