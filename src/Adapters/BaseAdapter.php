@@ -2,7 +2,7 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
+	 * @version		2013-01-19-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -20,6 +20,32 @@
 		
 		const KEY_ACTIONS = 'actions',
 			KEY_RUNNABLE = 'run';
+			
+		/** @var  string[] */
+		protected $warnings = array();
+		
+		
+		
+		// Warns
+		/**
+		 * @param	string
+		 * @return	$this  fluent interface
+		 */
+		public function addWarning($msg)
+		{
+			$this->warnings[] = (string)$msg;
+			return $this;
+		}
+		
+		
+		
+		/**
+		 * @return	string[]
+		 */
+		public function getWarnings()
+		{
+			return $this->warnings;
+		}
 		
 		
 		

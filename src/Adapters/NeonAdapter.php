@@ -2,7 +2,7 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
+	 * @version		2013-01-19-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -52,7 +52,7 @@
 					}
 					elseif($value !== NULL)
 					{
-						throw new \UnexpectedValueException("Sekce '$key' je prazdna, nebo nevalidni.");
+						throw new \UnexpectedValueException("Sekce '$key' neni validni.");
 					}
 				}
 				else
@@ -75,7 +75,6 @@
 		{
 			foreach($array as $key => $value)
 			{
-				// TODO: THIS IS BAD :\ pokud bychom ale odchytavali jednu konkretni vyjimku, tak by to takhle mohlo byt
 				try
 				{
 					$section->config->set($key, $value);
@@ -86,9 +85,14 @@
 					{
 						throw new Exception("Zdvojeny klic - akce '$key' je v konfiguracnim souboru uvedena dvakrat.");
 					}
+					elseif($value === NULL) // empty value (NULL) is ignored
+					{
+						$this->addWarning("Akce '$key' v sekci '{$section->name}' je prazdna.");
+						continue;
+					}
 					elseif(!is_array($value))
 					{
-						throw new Exception("Akce '$key' v sekci '{$section->name}' je prazdna, nebo nevalidni.");
+						throw new Exception("Akce '$key' v sekci '{$section->name}' neni validni.");
 					}
 					
 					$section->actions[$key] = $this->processAction($key, $value);
