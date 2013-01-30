@@ -2,7 +2,7 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-2
+	 * @version		2013-01-25-2
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -40,7 +40,7 @@
 		 */
 		protected function process(array $array)
 		{
-			$res = self::createConfiguration();
+			$configuration = self::createConfiguration();
 			
 			foreach($array as $key => $value)
 			{
@@ -48,7 +48,7 @@
 				{
 					if(is_array($value))
 					{
-						$this->processSection($value, $res['sections'][$key]);
+						$this->processSection($value, $configuration['sections'][$key]);
 					}
 					elseif($value !== NULL)
 					{
@@ -57,11 +57,18 @@
 				}
 				else
 				{
-					$res['config']->set($key, $value);
+					try
+					{
+						$configuration['config']->set($key, $value);
+					}
+					catch(ConfigUnknowException $e) // container parameter
+					{
+						$configuration['parameters'][$key] = $value;
+					}
 				}
 			}
 			
-			return $res;
+			return $configuration;
 		}
 		
 		
