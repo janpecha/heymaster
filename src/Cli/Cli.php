@@ -1,8 +1,8 @@
 <?php
-	/** Cli
+	/** Cli Helper
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-10-1
+	 * @version		2013-01-30-1
 	 */
 	
 	namespace Heymaster\Cli;
@@ -75,7 +75,7 @@
 								$params[$lastName][] = $argument;
 							}
 						
-							$lastName = NULL;
+							#$lastName = NULL;
 						}
 					}
 				}
