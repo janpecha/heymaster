@@ -1,5 +1,5 @@
 <?php
-/** @version	2013-02-01-1 */
+/** @version	2013-02-01-2 */
 
 require __DIR__ . '/../../tools/Tester/Tester/bootstrap.php';
 require __DIR__ . '/../../libs/Nette/loader.php';
@@ -12,7 +12,5 @@ Tester\Helpers::purge(TEMP_DIR);
 
 if (extension_loaded('xdebug'))
 {
-	$file = __DIR__ . '/../coverage.dat';
-	@unlink($file);
-	Tester\CodeCoverage\Collector::start($file);
+	Tester\CodeCoverage\Collector::start(__DIR__ . '/../coverage.dat');
 }
