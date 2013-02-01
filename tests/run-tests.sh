@@ -1,5 +1,5 @@
 #!/bin/bash
 
-../tools/Tester/Tester/tester -p php -j 20 -c "xdebug.ini"
+./run-tests-cmd.sh
 read -p "Press [Enter] key to exit..."
 
