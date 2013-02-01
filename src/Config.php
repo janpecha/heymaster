@@ -2,7 +2,7 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-17-1
+	 * @version		2013-02-01-1
 	 */
 	
 	namespace Heymaster;
@@ -74,7 +74,7 @@
 					$value = $config->$property;
 				}
 				
-				if($property === 'root')
+				if($property === 'root')	// TODO: co kdyz, chci zdedit celou hodnotu, ne ji jen expandovat?
 				{
 					$value = self::expandRoot($this->root, $value);
 				}
@@ -83,7 +83,7 @@
 			}
 			elseif($config instanceof static)
 			{
-				$this->root = self::expandRoot($this->root, $config->root);
+				$this->root = self::expandRoot($this->root, $config->root); // TODO: viz vyse
 				$this->output = $config->output;
 			}
 		}
@@ -91,6 +91,8 @@
 		
 		
 		/** Rozsiri relativni cestu v prvnim parametru o hodnotu druheho parametru
+		 *  Cesta musi existovat.
+		 * 
 		 * @param	string
 		 * @param	string
 		 * @return	string
