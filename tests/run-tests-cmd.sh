@@ -7,7 +7,10 @@ fi
 
 ../tools/Tester/Tester/tester -p php -j 20 -c "xdebug.ini"
 
-if [ -f coverage.dat ]
+if [ $? -eq 0 ]
 then
-	./coverage.sh --noenter
+	if [ -f coverage.dat ]
+	then
+		./coverage.sh --noenter
+	fi
 fi
