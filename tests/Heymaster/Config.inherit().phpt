@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-17-1 */
+/** @version	2013-02-01-1 */
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';
@@ -39,4 +39,15 @@ $config->output = FALSE;
 $config->inherit($config2, 'root');
 Assert::same(__DIR__ . '/Commands/files', $config->root);
 Assert::false($config->output);
+
+// inherit all
+$config->root = FALSE;
+$config->output = FALSE;
+$config->message = 'Hey hello!';
+
+$config->inherit($config2);
+
+Assert::same(__DIR__, $config->root);
+Assert::true($config->output);
+Assert::same('Hey hello!', $config->message);
 
