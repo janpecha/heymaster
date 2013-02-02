@@ -3,7 +3,6 @@
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../../../src/exceptions.php';
 require __DIR__ . '/../../../src/Heymaster.php';
 require __DIR__ . '/../../../src/Utils/Finder.php';
 require __DIR__ . '/../../../src/Commands/CommandSet.php';

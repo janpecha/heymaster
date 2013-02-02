@@ -1,9 +1,8 @@
 <?php
-/** @version	2013-02-01-1 */
+/** @version	2013-02-02-1 */
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/../../src/exceptions.php';
 require __DIR__ . '/../../src/Config.php';
 
 
