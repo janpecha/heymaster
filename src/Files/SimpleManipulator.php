@@ -2,7 +2,7 @@
 	/** Heymaster Simple Files Manipulator
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-1
+	 * @version		2013-02-02-1
 	 */
 	
 	namespace Heymaster\Files;
@@ -34,6 +34,10 @@
 			if($dir === NULL)
 			{
 				$dir = $this->rootDir;
+			}
+			elseif(is_string($dir) && $dir[0] !== '/') // relative paths
+			{
+				$dir = $this->rootDir . '/' . $dir;
 			}
 			
 			$res = array();
