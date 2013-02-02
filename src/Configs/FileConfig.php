@@ -2,7 +2,7 @@
 	/** Heymaster File Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
+	 * @version		2013-02-02-1
 	 */
 	
 	namespace Heymaster\Configs;
@@ -11,8 +11,8 @@
 	
 	class FileConfig extends Config
 	{
-		/** @var  string */
-		public $branch = 'master';
+		/** @var  bool */
+		public $inherit = FALSE;
 		
 		
 		
@@ -25,8 +25,8 @@
 		{
 			switch($key)
 			{
-				case 'branch':
-					$this->$key = (string)$value;
+				case 'inherit':
+					$this->$key = (bool)$value;
 					return;
 				
 				default:
@@ -42,7 +42,7 @@
 		public function toArray()
 		{
 			$ret = parent::toArray();
-			$ret['branch'] = $this->branch;
+			$ret['inherit'] = (bool)$this->inherit;
 			
 			return $ret;
 		}
