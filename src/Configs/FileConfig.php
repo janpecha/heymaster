@@ -2,7 +2,7 @@
 	/** Heymaster File Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-02-1
+	 * @version		2013-02-02-2
 	 */
 	
 	namespace Heymaster\Configs;
@@ -13,6 +13,9 @@
 	{
 		/** @var  bool */
 		public $inherit = FALSE;
+		
+		/** @var  string */
+		public $builder;
 		
 		
 		
@@ -29,6 +32,10 @@
 					$this->$key = (bool)$value;
 					return;
 				
+				case 'builder':
+					$this->$key = (string)$value;
+					return;
+				
 				default:
 					parent::set($key, $value);
 			}
@@ -43,6 +50,7 @@
 		{
 			$ret = parent::toArray();
 			$ret['inherit'] = (bool)$this->inherit;
+			$ret['builder'] = (string)$this->builder;
 			
 			return $ret;
 		}

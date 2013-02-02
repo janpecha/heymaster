@@ -1,5 +1,5 @@
 <?php
-/** @version	2013-02-02-1 */
+/** @version	2013-02-02-2 */
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -17,4 +17,10 @@ Assert::true($config->inherit);
 
 $config->set('inherit', FALSE);
 Assert::false($config->inherit);
+
+// builder
+Assert::null($config->builder);
+
+$config->set('builder', 'git');
+Assert::same('git', $config->builder);
 
