@@ -1,17 +1,18 @@
 <?php
-/** @version	2013-02-02-1 */
+/** @version	2013-02-04-1 */
 use Tester\Assert,
 	Heymaster\Files\SimpleManipulator;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../../../src/Files/SimpleManipulator.php';
 
-$imageDir = __DIR__ . '/files/images';
+$fixtures = __DIR__ . '/../fixtures';
+$imageDir = $fixtures . '/files/images';
 
-$manipulator = new SimpleManipulator(__DIR__ /*root dir*/);
+$manipulator = new SimpleManipulator($fixtures /*root dir*/);
 $images = array(
-	__DIR__ . '/files/images/gif.php' => 0,
-	__DIR__ . '/files/images/icon.gif' => 0,
+	$fixtures . '/files/images/gif.php' => 0,
+	$fixtures . '/files/images/icon.gif' => 0,
 );
 
 Assert::same($images, $manipulator->getFileList($imageDir));
@@ -19,12 +20,12 @@ Assert::same($images, $manipulator->getFileList($imageDir));
 $manipulator = new SimpleManipulator($imageDir);
 Assert::same($images, $manipulator->getFileList());
 
-$manipulator = new SimpleManipulator(__DIR__);
+$manipulator = new SimpleManipulator($fixtures);
 Assert::same($images, $manipulator->getFileList('files/images'));
 
 
-$manipulator = new SimpleManipulator(__DIR__);
-$filesDir = __DIR__ . '/files/subdir';
+$manipulator = new SimpleManipulator($fixtures);
+$filesDir = $fixtures . '/files/subdir';
 $files = array(
 	"$filesDir/subdir3/" => 0,
 	"$filesDir/subdir3/data.txt" => 0,
@@ -40,6 +41,6 @@ $files = array(
 	"$filesDir/robots.txt" => 0,
 	"$filesDir/index.php" => 0,
 );
-Assert::same($files, $manipulator->getFileList('files/subdir'));
+Assert::same($files, $manipulator->getFileList($fixtures . '/files/subdir'));
 
 

@@ -1,17 +1,18 @@
 <?php
-/** @version	2013-02-02-1 */
+/** @version	2013-02-04-1 */
 use Tester\Assert,
 	Heymaster\Files\SimpleManipulator;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../../../src/Files/SimpleManipulator.php';
 
-$imageDir = __DIR__ . '/files/images';
+$fixtures = __DIR__ . '/../fixtures';
+$imageDir = $fixtures . '/files/images';
 
-$manipulator = new SimpleManipulator(__DIR__ /*root dir*/);
+$manipulator = new SimpleManipulator($fixtures /*root dir*/);
 $images = array(
-	__DIR__ . '/files/images/gif.php' => 0,
-	__DIR__ . '/files/images/icon.gif' => 0,
+	$fixtures . '/files/images/gif.php' => 0,
+	$fixtures . '/files/images/icon.gif' => 0,
 );
 
 $result = array();
@@ -30,7 +31,7 @@ $manipulator->removeFiles($images, FALSE, $dummyUnlink);
 $manipulator->removeFiles($images, $result);
 
 
-$filesDir = __DIR__ . '/files/subdir';
+$filesDir = $fixtures . '/files/subdir';
 $files = array(
 	"$filesDir/subdir3/" => 0,
 	"$filesDir/subdir3/data.txt" => 0,
