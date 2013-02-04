@@ -1,9 +1,8 @@
 <?php
-/** @version	2013-02-02-1 */
+/** @version	2013-02-04-1 */
 
 require __DIR__ . '/../../tools/Tester/Tester/bootstrap.php';
 require __DIR__ . '/../../libs/Nette/loader.php';
-require __DIR__ . '/../../src/exceptions.php';
 
 
 // create temporary directory
@@ -15,3 +14,5 @@ if (extension_loaded('xdebug'))
 {
 	Tester\CodeCoverage\Collector::start(__DIR__ . '/../coverage.dat');
 }
+
+require __DIR__ . '/../../src/exceptions.php';
