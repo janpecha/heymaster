@@ -2,46 +2,51 @@
 	/** Heymaster Builder Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-4
+	 * @version		2013-02-05-1
 	 */
 	
 	namespace Heymaster\Builders;
-	
-	use Heymaster\Configs\FileConfig;
 	
 	interface IBuilder
 	{
 		/**
 		 * @param	bool
 		 */
-		public function setTestingMode($active);
+		function setTestingMode($testingMode);
 		
 		
 		
 		/**
 		 * @param	string
-		 * @param	Heymaster\Configs\FileConfig
+		 * @param	Heymaster\Scopes\Scope
 		 */
-		public function startup($tag, FileConfig $fileConfig);
+		function startup($tag, Scope $scope);
 		
 		
 		
-		public function preprocess();
+		/**
+		 * @return	void
+		 */
+		function preprocess();
 		
 		
 		
 		/**
 		 * Spusteno po zpracovani sekce 'before', ale pred sekci 'after'
 		 */
-		public function postprocess();
+		function postprocess();
 		
 		
 		
-		public function finish();
+		/**
+		 * @return	void
+		 */
+		function finish();
 	}
 	
 	
 	
-	class Exception extends \Exception
+	class BuilderException extends \Exception
 	{
 	}
+
