@@ -9,7 +9,8 @@
 	use Nette,
 		Heymaster\Logger\ILogger,
 		Heymaster\InvalidException,
-		Heymaster\Section;
+		Heymaster\Section,
+		Nette\Config\Helpers;
 	
 	class Scope extends Nette\Object
 	{
@@ -42,6 +43,9 @@
 		
 		/** @var  bool */
 		private $testingMode = FALSE;
+		
+		/** @var  array */
+		private $parameters = array();
 		
 		
 		
@@ -151,6 +155,45 @@
 			
 			$this->after = $after;
 			return $this;
+		}
+		
+		
+		
+		public function addParameters(array $params)
+		{
+			$this->parameters = Helpers::merge($params, $this->parameters);
+			return $this;
+		}
+		
+		
+		
+		public function getParameters()
+		{
+			return $this->parameters;
+		}
+		
+		
+		
+		/**
+		 * @param	string  name of parameter
+		 * @param	mixed|NULL  default value (optional parameter), NULL => required parameter
+		 * @param	string|NULL  error message
+		 * @return	mixed
+		 */
+		public function getParameter($name, $default = NULL, $message = NULL)
+		{
+			$name = (string)$name;
+			if(!isset($this->parameters[$name]))
+			{
+				if($default !== NULL)
+				{
+					return $default;
+				}
+				
+				throw new InvalidException($message !== NULL ? (string)$message : "Parameter $name is required.");
+			}
+			
+			return $this->parameters[$name];
 		}
 		
 		
