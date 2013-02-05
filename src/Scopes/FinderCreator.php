@@ -2,7 +2,7 @@
 	/** Heymaster Finder Creator
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-04-1
+	 * @version		2013-02-05-1
 	 */
 	
 	namespace Heymaster\Scopes;
@@ -94,7 +94,7 @@
 				$masks = func_get_args();
 			}
 			
-			$this->dirMasks = array_merge($this->dirMasks, $masks);
+			$this->fileMasks = array_merge($this->fileMasks, $masks);
 			return $this;
 		}
 		
@@ -207,7 +207,7 @@
 			}
 			
 			$finder->mask($this->dirMasks);
-			$finder->exclude($this->fileExclude);
+			$finder->exclude($this->dirExclude);
 			self::applyFilters($finder, $this->dirFilters);
 			
 			return $finder;
