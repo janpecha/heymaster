@@ -2,7 +2,7 @@
 	/** Heymaster File & Directory Finder
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-09-1
+	 * @version		2013-02-05-1
 	 */
 	
 	namespace Heymaster\Utils;
@@ -22,7 +22,7 @@
 				$masks = func_get_args();
 			}
 			
-			$pattern = self::buildPattern($masks);
+			$pattern = self::ownBuildPattern($masks);
 			
 			if($pattern)
 			{
@@ -44,7 +44,7 @@
 		 * @author	David Grudl
 		 * @link	http://api.nette.org/2.0.7/source-Utils.Finder.php.html#176
 		 */
-		protected static function buildPattern($masks)
+		protected static function ownBuildPattern($masks)
 		{
 			$pattern = array();
 			// TODO: accept regexp
