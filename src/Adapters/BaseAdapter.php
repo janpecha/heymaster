@@ -2,7 +2,7 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-1
+	 * @version		2013-02-06-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -19,10 +19,21 @@
 			SECTION_AFTER = 'after';
 		
 		const KEY_ACTIONS = 'actions',
-			KEY_RUNNABLE = 'run';
+			KEY_RUNNABLE = 'run',
+			KEY_PARAMETERS = 'parameters';
 			
 		/** @var  string[] */
 		protected $warnings = array();
+		
+		/** @var  array */
+		protected $configuration;
+		
+		
+		
+		public function load($file)
+		{
+			$this->configuration = self::createConfiguration();
+		}
 		
 		
 		
@@ -49,25 +60,43 @@
 		
 		
 		
+		protected function addParameter($name, $value)
+		{
+			if(!isset($this->configuration[self::KEY_PARAMETERS]))
+			{
+				throw new AdapterException('Adapter neni pripraven, nelze pridat parametr.');
+			}
+			
+			$parts = explode('.', $name);
+			$first = array_shift($parts);
+			$parent = &$this->configuration[self::KEY_PARAMETERS][$first];
+			
+			foreach($parts as $part)
+			{
+				$parent = &$parent[$part];
+			}
+			
+			$parent = $value;
+			return $this;
+		}
+		
+		
+		
 		/**
 		 * @return	array
 		 */
 		public static function createConfiguration()
 		{
-			$config = array(
-				'config' => new FileConfig,
+			return array(
+				'root' => NULL,
+				'inherit' => FALSE,
+				'output' => FALSE,
+				'parameters' => array(),
 				'sections' => array(
-					self::SECTION_BEFORE => self::createSection(),
-					self::SECTION_AFTER => self::createSection(),
+					self::SECTION_BEFORE => array(),
+					self::SECTION_AFTER => array(),
 				),
 			);
-			
-			$config['config']->output = TRUE;
-			
-			$config['sections'][self::SECTION_BEFORE]->name = self::SECTION_BEFORE;
-			$config['sections'][self::SECTION_AFTER]->name = self::SECTION_AFTER;
-			
-			return $config;
 		}
 		
 		
@@ -104,19 +133,6 @@
 			$command->config = self::createConfig();
 			
 			return $command;
-		}
-		
-		
-		
-		/**
-		 * @return	Heymaster\Section
-		 */
-		public static function createSection()
-		{
-			$section = new Section;
-			$section->config = self::createConfig();
-			
-			return $section;
 		}
 	}
 
