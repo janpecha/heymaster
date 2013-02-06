@@ -2,7 +2,7 @@
 	/** Heymaster Abstract Base Builder
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-2
+	 * @version		2013-02-06-1
 	 */
 	
 	namespace Heymaster\Builders;
@@ -23,7 +23,7 @@
 		 * @param	bool
 		 * @return	$this
 		 */
-		public function setTestingMode($active)
+		public function setTestingMode($active = TRUE)
 		{
 			$this->testingMode = (bool)$active;
 			return $this;
@@ -33,11 +33,10 @@
 		
 		/**
 		 * @param	string
-		 * @param	Heymaster\Configs\FileConfig
 		 */
-		public function startup($tag, FileConfig $fileConfig)
+		public function startup($tag)
 		{
-			$this->tag = (string)$tag;
+			$this->tag = $tag;
 		}
 	}
 	

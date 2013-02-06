@@ -2,13 +2,20 @@
 	/** Heymaster Builder Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-05-1
+	 * @version		2013-02-05-2
 	 */
 	
 	namespace Heymaster\Builders;
 	
 	interface IBuilder
 	{
+		/**
+		 * @param	array
+		 */
+		function setParameters(array $parameters);
+		
+		
+		
 		/**
 		 * @param	bool
 		 */
@@ -18,9 +25,8 @@
 		
 		/**
 		 * @param	string
-		 * @param	Heymaster\Scopes\Scope
 		 */
-		function startup($tag, Scope $scope);
+		function startup($tag);
 		
 		
 		
