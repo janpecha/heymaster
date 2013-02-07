@@ -1,5 +1,5 @@
 <?php
-/** @version	2013-01-19-1 */
+/** @version	2013-02-07-1 */
 
 use Tester\Assert,
 	Heymaster\Adapters\BaseAdapter;
@@ -7,7 +7,6 @@ use Tester\Assert,
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/../../../src/Adapters/IAdapter.php';
-require __DIR__ . '/../../../src/Adapters/AdapterException.php';
 require __DIR__ . '/../../../src/Adapters/BaseAdapter.php';
 
 class Adapter extends BaseAdapter
