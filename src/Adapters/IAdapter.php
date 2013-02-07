@@ -2,7 +2,7 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-25-1
+	 * @version		2013-02-07-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -17,7 +17,7 @@
 		public function load($filename);
 	}
 	
-	class Exception extends \Exception
+	class AdapterException extends \Exception
 	{
 	}
 
