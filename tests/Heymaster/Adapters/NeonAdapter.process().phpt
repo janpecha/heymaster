@@ -1,15 +1,9 @@
 <?php
-/** @version	2012-12-09-1 */
+/** @version	2013-02-07-1 */
 
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
-
-require __DIR__ . '/../../../src/Config.php';
-require __DIR__ . '/../../../src/Command.php';
-require __DIR__ . '/../../../src/Action.php';
-require __DIR__ . '/../../../src/Section.php';
-require __DIR__ . '/../../../src/Configs/FileConfig.php';
 
 require __DIR__ . '/../../../src/Adapters/IAdapter.php';
 require __DIR__ . '/../../../src/Adapters/BaseAdapter.php';
@@ -17,20 +11,33 @@ require __DIR__ . '/../../../src/Adapters/NeonAdapter.php';
 
 class Adapter extends Heymaster\Adapters\NeonAdapter
 {
+	public function getConfiguration()
+	{
+		return $this->configuration;
+	}
+	
+	
 	public function process(array $array)
 	{
+		$this->configuration = self::createConfiguration();
 		return parent::process($array);
+	}
+	
+	
+	public static function createConfiguration()
+	{
+		return parent::createConfiguration();
 	}
 }
 
 $adapter = new Adapter;
 
 // Config
-$res = $adapter->process(array(
+$adapter->process(array(
 	'output' => FALSE,
 ));
 
-Assert::false($res['config']->output);
+Assert::false($adapter->configuration['output']);
 
 
 // Invalid content of section
@@ -38,36 +45,63 @@ Assert::throws(function () use ($adapter) {
 	$adapter->process(array(
 		'before' => 10,
 	));
-}, 'UnexpectedValueException');
+}, 'Heymaster\\Adapters\\AdapterException');
 
 Assert::throws(function () use ($adapter) {
 	$adapter->process(array(
 		'before' => FALSE,
 	));
-}, 'UnexpectedValueException');
+}, 'Heymaster\\Adapters\\AdapterException');
 
 Assert::throws(function () use ($adapter) {
 	$adapter->process(array(
 		'before' => 'Hello!',
 	));
-}, 'UnexpectedValueException');
+}, 'Heymaster\\Adapters\\AdapterException');
 
 
 Assert::throws(function () use ($adapter) {
 	$adapter->process(array(
 		'after' => 10,
 	));
-}, 'UnexpectedValueException');
+}, 'Heymaster\\Adapters\\AdapterException');
 
 Assert::throws(function () use ($adapter) {
 	$adapter->process(array(
 		'after' => FALSE,
 	));
-}, 'UnexpectedValueException');
+}, 'Heymaster\\Adapters\\AdapterException');
 
 Assert::throws(function () use ($adapter) {
 	$adapter->process(array(
 		'after' => 'Hello!',
 	));
-}, 'UnexpectedValueException');
+}, 'Heymaster\\Adapters\\AdapterException');
+
+
+// Unknow config option
+Assert::throws(function () use ($adapter) {
+	$adapter->process(array(
+		'unknow-config-option' => 'Hello!',
+	));
+}, 'Heymaster\\Adapters\\AdapterException');
+
+
+// Parameters
+$adapter->process(array(
+	'parameters' => array(
+		'git.branch' => 'my-branch',
+	),
+));
+
+Assert::same('my-branch', $adapter->configuration['parameters']['git']['branch']);
+
+// NULL section
+$adapter->process(array(
+	'before' => NULL,
+	'after' => NULL,
+));
+
+Assert::same($adapter::createConfiguration(), $adapter->configuration);
+
 
