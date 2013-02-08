@@ -2,7 +2,7 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-06-1
+	 * @version		2013-02-08-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -20,7 +20,17 @@
 		
 		const KEY_ACTIONS = 'actions',
 			KEY_RUNNABLE = 'run',
-			KEY_PARAMETERS = 'parameters';
+			KEY_PARAMETERS = 'parameters',
+			KEY_ROOT = 'root',
+			KEY_OUTPUT = 'output',
+			KEY_MESSAGE = 'message',
+			KEY_INHERIT = 'inherit',
+			KEY_SECTIONS = 'sections',
+			KEY_COMMANDS = 'commands',
+			KEY_NAME = 'name',
+			KEY_DESCRIPTION = 'description',
+			KEY_PARAMS = 'params',
+			KEY_MASK = 'mask';
 			
 		/** @var  string[] */
 		protected $warnings = array();
@@ -30,6 +40,10 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @return	array|FALSE
+		 */
 		public function load($file)
 		{
 			$this->configuration = self::createConfiguration();
@@ -88,13 +102,14 @@
 		public static function createConfiguration()
 		{
 			return array(
-				'root' => NULL,
-				'inherit' => FALSE,
-				'output' => FALSE,
-				'parameters' => array(),
-				'sections' => array(
-					self::SECTION_BEFORE => array(),
-					self::SECTION_AFTER => array(),
+				self::KEY_ROOT => NULL,
+				self::KEY_INHERIT => FALSE,
+				self::KEY_OUTPUT => FALSE,
+				self::KEY_MESSAGE => FALSE,
+				self::KEY_PARAMETERS => array(),
+				self::KEY_SECTIONS => array(
+					self::SECTION_BEFORE => self::createSection(),
+					self::SECTION_AFTER => self::createSection(),
 				),
 			);
 		}
@@ -102,37 +117,50 @@
 		
 		
 		/**
-		 * @return	Heymaster\Config
+		 * @return	array
 		 */
-		public static function createConfig()
+		public static function createSection()
 		{
-			return new Config;
+			return array(
+				self::KEY_ROOT => NULL,
+				self::KEY_OUTPUT => NULL,
+				self::KEY_MESSAGE => NULL,
+				self::KEY_ACTIONS => array(),
+			);
 		}
 		
 		
 		
 		/**
-		 * @return	Heymaster\Action
+		 * @return	array
 		 */
 		public static function createAction()
 		{
-			$action = new Action;
-			$action->config = self::createConfig();
-			
-			return $action;
+			return array(
+				self::KEY_ROOT => NULL,
+				self::KEY_OUTPUT => NULL,
+				self::KEY_MESSAGE => NULL,
+				self::KEY_RUNNABLE => TRUE,
+				self::KEY_MASK => NULL,
+				self::KEY_COMMANDS => array(),
+			);
 		}
 		
 		
 		
 		/**
-		 * @return	Heymaster\Command
+		 * @return	array
 		 */
 		public static function createCommand()
 		{
-			$command = new Command;
-			$command->config = self::createConfig();
-			
-			return $command;
+			return array(
+				self::KEY_NAME => NULL,
+				self::KEY_DESCRIPTION => FALSE,
+				self::KEY_ROOT => NULL,
+				self::KEY_OUTPUT => NULL,
+				self::KEY_MESSAGE => NULL,
+				self::KEY_PARAMS => array(),
+			);
 		}
 	}
 
