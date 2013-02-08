@@ -1,5 +1,5 @@
 <?php
-/** @version	2012-12-02-2 */
+/** @version	2013-02-08-1 */
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';
@@ -33,4 +33,10 @@ Assert::false($config->message);
 
 $config->set('message', 'Hello!!!');
 Assert::same($config->message, 'Hello!!!');
+
+
+// Unknow option
+Assert::throws(function() use ($config) {
+	$config->set('unknow-option', 'Hello!!!');
+}, 'Heymaster\\ConfigUnknowException');
 
