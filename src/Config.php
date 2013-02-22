@@ -2,12 +2,13 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-22-1
+	 * @version		2013-02-22-2
 	 */
 	
 	namespace Heymaster;
+	use Nette;
 	
-	class Config extends \Nette\Object
+	class Config extends Nette\Object
 	{
 		/** @var  string */
 		public $root;
@@ -25,7 +26,7 @@
 		 * @throws	Heymaster\ConfigUnknowException
 		 * @return	void
 		 */
-		public function set($key, $value) // TODO: INHERIT VALUES
+		public function set($key, $value)
 		{
 			switch($key)
 			{
@@ -104,57 +105,6 @@
 			}
 			
 			return $this;
-#			if($value !== NULL) // konkretni hodnota
-#			{
-#				if($value instanceof static)
-#				{
-#					$value = $value->$property;
-#				}
-#				
-#				if($property === 'root')
-#				{
-#					$value = self::expandRoot($this->root, $value);
-#				}
-#				
-#				$this->$property = $this->$property === NULL ? $value : $this->$property;
-#			}
-#			else
-#			{
-#				$this->root = self::expandRoot($this->root, $property->root);
-#				$this->output = $this->output === NULL ? $property->output : $;//TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-#			}
-#			
-#			
-#			if(is_string($property)) // inherit one property
-#			{
-#				if($property === 'output' && $this->output !== NULL)
-#				{
-#					return;
-#				}
-#				
-#				$value = $config;
-#				
-#				if($config instanceof static)
-#				{
-#					$value = $config->$property;
-#				}
-#				
-#				if($property === 'root')	// TODO: co kdyz, chci zdedit celou hodnotu, ne ji jen expandovat?
-#				{
-#					$value = self::expandRoot($this->root, $value);
-#				}
-#				
-#				$this->set($property, $value);
-#			}
-#			elseif($config instanceof static) // inherit all config
-#			{
-#				$this->root = self::expandRoot($this->root, $config->root); // TODO: viz vyse
-#				
-#				if($this->output === NULL)
-#				{
-#					$this->output = $config->output;
-#				}
-#			}
 		}
 		
 		
