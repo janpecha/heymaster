@@ -2,7 +2,7 @@
 	/** Heymaster Scope
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-05-1
+	 * @version		2013-02-23-1
 	 */
 	
 	namespace Heymaster\Scopes;
@@ -32,7 +32,7 @@
 		/** @var  string */
 		private $root; // TODO: nastaveni
 		
-		/** @var  bool|NULL  NULL => inherit output */
+		/** @var  bool|NULL  NULL => inherit output, default NULL => FALSE */
 		private $output;
 		
 		/** @var  Heymaster\Logger\ILogger */
@@ -65,6 +65,28 @@
 		public function getRoot()
 		{
 			return $this->root;
+		}
+		
+		
+		
+		public function getLogger()
+		{
+			return $this->logger;
+		}
+		
+		
+		
+		public function getOutput()
+		{
+			return $this->output;
+		}
+		
+		
+		
+		public function setOutput($output = TRUE)
+		{
+			$this->output = (bool)$output;
+			return $this;
 		}
 		
 		
@@ -141,6 +163,7 @@
 			}
 			
 			$this->before = $before;
+			$this->before->scope = $this;
 			return $this;
 		}
 		
@@ -154,6 +177,7 @@
 			}
 			
 			$this->after = $after;
+			$this->after->scope = $this;
 			return $this;
 		}
 		
