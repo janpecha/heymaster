@@ -2,7 +2,7 @@
 	/** CSS Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-24-1
+	 * @version		2013-02-24-2
 	 */
 	
 	namespace Heymaster\Commands;
@@ -49,26 +49,16 @@
 		 */
 		public function commandCompress(Command $command, Config $config, $mask)
 		{
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
+			// promenna $mask je v Command::findFiles() pouzita automaticky
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$creator = $command->findFiles($maskParam)
+				->recursive();
 			
-			foreach($this->findFiles($mask, $actionMask, $command->config->root) as $file)
+			foreach($creator->find() as $file)
 			{
 				$content = file_get_contents($file);
 				file_put_contents($file, $this->minifier->minify($content));
 			}
-		}
-		
-		
-		
-		public function findFiles($mask, $actionMask, $root)
-		{
-			$finder = $this->heymaster->findFiles($mask)
-				->mask($actionMask);
-			
-			$finder->from($root)
-				->exclude('.git');
-			
-			return $finder;
 		}
 	}
 
