@@ -2,7 +2,7 @@
 	/** Heymaster Scope
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-23-1
+	 * @version		2013-02-24-1
 	 */
 	
 	namespace Heymaster\Scopes;
@@ -39,7 +39,7 @@
 		private $logger;
 		
 		/** @var  string[] */
-		private $ignorePaths = array('.git*');
+		private $ignorePaths = array('.git');
 		
 		/** @var  bool */
 		private $testingMode = FALSE;
