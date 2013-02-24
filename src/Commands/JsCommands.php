@@ -1,6 +1,5 @@
 <?php
 	/** JS Commands
-	 * REQUIRE JsShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
 	 * @version		2013-02-24-1
@@ -11,11 +10,22 @@
 	use Nette\Object,
 		Heymaster\Command,
 		Heymaster\Config,
-		Heymaster\InvalidException;
+		Heymaster\InvalidException,
+		Heymaster\Commands\Js\IJsShrink;
 	
 	class JsCommands extends CommandSet
 	{
 		const MASK = '*.js';
+		
+		/** @var  Heymaster\Commands\Js\IJsShrink */
+		private $jsShrink;
+		
+		
+		
+		public function __construct(IJsShrink $jsShrink)
+		{
+			$this->jsShrink = $jsShrink;
+		}
 		
 		
 		
@@ -40,12 +50,14 @@
 		 */
 		public function commandCompress(Command $command, Config $config, $mask)
 		{
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$creator = $command->findFiles($maskParam)
+				->recursive();
 			
-			foreach($this->findFiles($mask, $actionMask, $command->config->root) as $file)
+			foreach($creator->find() as $file)
 			{
 				$content = file_get_contents($file);
-				file_put_contents($file, jsShrink($content));
+				file_put_contents($file, $this->jsShrink($content));
 			}
 		}
 		
@@ -60,66 +72,22 @@
 		 */
 		public function commandCompile(Command $command, Config $config, $mask)
 		{
-			if(!isset($command->params['file']))
-			{
-				throw new InvalidException('Neni urceno jmeno souboru, do ktereho se ma kompilovat.');
-			}
-			
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
-			$recursive = isset($command->params['recursive']) ? (bool)$command->params['recursive'] : TRUE;
-			$filename = $command->params['file'];
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$recursive = (bool) $command->getParameter('recursive', TRUE);
+			$filename = (string) $command->getParameter('file', NULL, 'Js::compile: Neni urceno jmeno souboru, do ktereho se ma kompilovat.');
+			$creator = $command->findFiles($maskParam)
+				->recursive($recursive);
 			
 			$delimiter = '';
-			$filename = $command->config->root . '/' . $filename;
+			$filename = $config->root . '/' . $filename;
 			file_put_contents($filename, '');
 			
-			foreach($this->findFilesForMerge($mask, $actionMask, $command->config->root, $recursive) as $file)
+			foreach($creator->find() as $file)
 			{
 				$content = file_get_contents($file);
 				file_put_contents($filename, $delimiter . jsShrink($content), \FILE_APPEND);
 				$delimeter = "\n;";
 			}
-		}
-		
-		
-		
-		public function findFiles($mask, $actionMask, $root)
-		{
-			$finder = $this->heymaster->findFiles($mask)
-				->mask($actionMask);
-			
-			$finder->from($root)
-				->exclude('.git');
-			
-			return $finder;
-		}
-		
-		
-		
-		/**
-		 * @param	string|string[]
-		 * @param	string|string[]
-		 * @param	string
-		 * @param	bool
-		 * @return	Heymaster\Utils\Finder
-		 */
-		protected function findFilesForMerge($masks, $actionMasks, $root, $recursive = TRUE)
-		{
-			$finder = $this->heymaster->findFiles($masks)
-				->mask($actionMasks);
-			
-			if($recursive)
-			{
-				$finder->from($root);
-			}
-			else
-			{
-				$finder->in($root);
-			}
-			
-			$finder->exclude('.git');
-			
-			return $finder;
 		}
 	}
 
