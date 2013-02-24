@@ -2,7 +2,7 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-22-2
+	 * @version		2013-02-24-1
 	 */
 	
 	namespace Heymaster;
@@ -81,7 +81,7 @@
 				$this->root = self::expandRoot($this->root, $property->root);
 				$this->output = (bool)self::inheritValue($this->output, $property->output);
 			}
-			elseif(is_string($property) && $value !== NULL)
+			elseif(is_string($property))
 			{
 				if($value instanceof static)
 				{
@@ -101,7 +101,7 @@
 			}
 			else
 			{
-				throw new InvalidException('Prvni parametr musi byt string, nebo Heymaster\\Config, hodnota nesmi byt NULL.');
+				throw new InvalidException('Prvni parametr musi byt string, nebo Heymaster\\Config.');
 			}
 			
 			return $this;
