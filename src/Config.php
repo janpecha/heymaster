@@ -2,12 +2,13 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-01-1
+	 * @version		2013-02-22-2
 	 */
 	
 	namespace Heymaster;
+	use Nette;
 	
-	class Config extends \Nette\Object
+	class Config extends Nette\Object
 	{
 		/** @var  string */
 		public $root;
@@ -15,7 +16,7 @@
 		/** @var  string|FALSE */
 		public $message = FALSE;
 		
-		/** @var  bool */
+		/** @var  bool|NULL  TRUE = on|FALSE = off|NULL = inherit */
 		public $output;
 		
 		
@@ -60,32 +61,50 @@
 		
 		/**
 		 * @param	string|Heymaster\Config
-		 * @param	string|NULL
-		 * @return	void
+		 * @param	string|Heymaster\Config|NULL
+		 * @return	$this
 		 */
-		public function inherit($config, $property = NULL)
+		public function inherit($property, $value = NULL)
 		{
-			if(is_string($property))
+			/*
+				inherit('output', TRUE);
+				inherit('output', $config);
+				inherit($config);
+			*/
+			if($property instanceof static)
 			{
-				$value = $config;
-				
-				if($config instanceof static)
+				if($value !== NULL)
 				{
-					$value = $config->$property;
+					throw new InvalidException('Zmenil se zpusob pouzivani funkce inherit(). BC-BREAK! Prohodne parametry.');
 				}
 				
-				if($property === 'root')	// TODO: co kdyz, chci zdedit celou hodnotu, ne ji jen expandovat?
+				$this->root = self::expandRoot($this->root, $property->root);
+				$this->output = (bool)self::inheritValue($this->output, $property->output);
+			}
+			elseif(is_string($property) && $value !== NULL)
+			{
+				if($value instanceof static)
+				{
+					$value = $value->$property;	
+				}
+				
+				if($property === 'root')
 				{
 					$value = self::expandRoot($this->root, $value);
 				}
+				elseif($property === 'output')
+				{
+					$value = (bool)self::inheritValue($this->output, $value);
+				}
 				
-				$this->set($property, $value);
+				$this->$property = $value;
 			}
-			elseif($config instanceof static)
+			else
 			{
-				$this->root = self::expandRoot($this->root, $config->root); // TODO: viz vyse
-				$this->output = $config->output;
+				throw new InvalidException('Prvni parametr musi byt string, nebo Heymaster\\Config, hodnota nesmi byt NULL.');
 			}
+			
+			return $this;
 		}
 		
 		
@@ -119,6 +138,18 @@
 			}
 			
 			return $ret;
+		}
+		
+		
+		
+		protected static function inheritValue($myValue, $value)
+		{
+			if($myValue === NULL)
+			{
+				return $value;
+			}
+			
+			return $myValue;
 		}
 	}
 	
