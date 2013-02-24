@@ -2,13 +2,14 @@
 	/** Core Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-4
+	 * @version		2013-02-24-1
 	 */
 	
 	namespace Heymaster\Commands;
 	
 	use Nette\Object,
 		Heymaster\Command,
+		Heymaster\Config,
 		Heymaster\InvalidException;
 	
 	class CoreCommands extends CommandSet
@@ -33,12 +34,13 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	UnexpectedValueException
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandRun(Command $command, $mask)
+		public function commandRun(Command $command, Config $config, $mask)
 		{
 			$success = FALSE;
 			$throw = isset($command->params['fatal']) ? $command->params['fatal'] : TRUE;
@@ -86,11 +88,12 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandMerge(Command $command, $mask)
+		public function commandMerge(Command $command, Config $config, $mask)
 		{
 			if(!isset($command->params['mask']) && !isset($command->params['masks']))
 			{
@@ -126,11 +129,12 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandTouch(Command $command, $mask)
+		public function commandTouch(Command $command, Config $config, $mask)
 		{
 			if(!isset($command->params['mask']) && !isset($command->params['masks']))
 			{
@@ -176,10 +180,11 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @return	void
 		 */
-		public function commandSymlinks(Command $command, $mask) // ??OK
+		public function commandSymlinks(Command $command, Config $config, $mask)
 		{
 			if(!isset($command->params['mask']) && !isset($command->params['masks']))
 			{
@@ -203,10 +208,11 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @return	void
 		 */
-		public function commandRemove(Command $command, $mask)
+		public function commandRemove(Command $command, Config $config, $mask)
 		{
 			$this->processRemove($command, $mask, FALSE);
 		}
@@ -215,10 +221,11 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @return	void
 		 */
-		public function commandRemoveContent(Command $command, $mask)
+		public function commandRemoveContent(Command $command, Config $config, $mask)
 		{
 			$this->processRemove($command, $mask, TRUE);
 		}
@@ -227,11 +234,12 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandReplace(Command $command, $actionMask)
+		public function commandReplace(Command $command, Config $config, $mask)
 		{
 			if(!isset($command->params['files']) || !is_array($command->params['files']))
 			{

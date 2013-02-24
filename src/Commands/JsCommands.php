@@ -3,13 +3,14 @@
 	 * REQUIRE JsShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-2
+	 * @version		2013-02-24-1
 	 */
 	
 	namespace Heymaster\Commands;
 	
 	use Nette\Object,
 		Heymaster\Command,
+		Heymaster\Config,
 		Heymaster\InvalidException;
 	
 	class JsCommands extends CommandSet
@@ -32,11 +33,12 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandCompress(Command $command, $actionMask)
+		public function commandCompress(Command $command, Config $config, $mask)
 		{
 			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
 			
@@ -51,11 +53,12 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandCompile(Command $command, $actionMask)
+		public function commandCompile(Command $command, Config $config, $mask)
 		{
 			if(!isset($command->params['file']))
 			{
