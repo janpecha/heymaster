@@ -2,7 +2,7 @@
 	/** Heymaster Command Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-17-1
+	 * @version		2013-02-24-1
 	 */
 	
 	namespace Heymaster;
@@ -76,18 +76,20 @@
 		 */
 		public function getParameter($name, $default = NULL, $message = NULL)
 		{
-			$name = (string)$name;
-			if(!isset($this->params[$name]))
+			foreach((array) $name as $key)
 			{
-				if($default !== NULL)
+				if(isset($this->params[$key]))
 				{
-					return $default;
+					return $this->params[$key];
 				}
-				
-				throw new InvalidException($message !== NULL ? (string)$message : "Parameter $name is required.");
 			}
 			
-			return $this->params[$name];
+			if($default !== NULL)
+			{
+				return $default;
+			}
+			
+			throw new InvalidException($message !== NULL ? (string)$message : "Parameter $name is required.");
 		}
 		
 		
