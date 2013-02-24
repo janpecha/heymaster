@@ -2,10 +2,13 @@
 	/** Heymaster Command Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-02-1
+	 * @version		2013-02-17-1
 	 */
 	
 	namespace Heymaster;
+	use Heymaster\Scopes\Scope,
+		Heymaster\Config,
+		RuntimeException;
 	
 	class Command extends \Nette\Object
 	{
@@ -23,6 +26,45 @@
 		
 		/** @var  Config */
 		public $config;
+		
+		/** @var  Heymaster\Scopes\Scope */
+		private $scope;
+		
+		/** @var  bool */
+		private $processing = FALSE;
+		
+		/** @var  string|string[]|NULL */
+		private $processMask;
+		
+		/** @var  Heymaster\Config */
+		private $processConfig;
+		
+		
+		
+		/**
+		 * @return	Heymaster\Scopes\Scope|NULL
+		 */
+		public function getScope()
+		{
+			return $this->scope;
+		}
+		
+		
+		
+		/**
+		 * @param	Heymaster\Scopes\Scope
+		 * @return	$this
+		 */
+		public function setScope(Scope $scope)
+		{
+			if($scope !== NULL)
+			{
+				throw new RuntimeException('Command: Scope uz je nastaven.');
+			}
+			
+			$this->scope = $scope;
+			return $this;
+		}
 		
 		
 		
@@ -46,6 +88,51 @@
 			}
 			
 			return $this->params[$name];
+		}
+		
+		
+		
+		public function process(Scope $scope, Config $config, $mask)
+		{
+			$this->processConfig = clone $this->config;
+			$this->processConfig->inherit($config);
+			
+			$this->processMask = $mask;
+			
+			$this->setScope($scope);
+			
+			/* command, config, mask */
+			$this->processing = TRUE;
+			call_user_func($this->callback, $this, $this->processConfig, $this->processMask);
+			$this->processing = FALSE;
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]|NULL
+		 * @return	Heymaster\Scopes\FinderCreator
+		 */
+		public function findFiles($masks = NULL)
+		{
+			if(!$this->processing)
+			{
+				throw new RuntimeException('Command neni zpracovavan.');
+			}
+			
+			if(!$this->scope)
+			{
+				throw new RuntimeException('Command: scope not set.');
+			}
+			
+			if(!is_array($masks) && $masks !== NULL)
+			{
+				$masks = func_get_args();
+			}
+			
+			return $this->scope->findFiles($masks)
+				->files($tihs->processMask)
+				->directory($this->processConfig->root);
 		}
 	}
 
