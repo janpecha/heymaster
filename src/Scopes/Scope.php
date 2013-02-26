@@ -2,7 +2,7 @@
 	/** Heymaster Scope
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-24-1
+	 * @version		2013-02-26-1
 	 */
 	
 	namespace Heymaster\Scopes;
@@ -257,6 +257,29 @@
 			if($mask !== NULL)
 			{
 				$creator->files($mask);
+			}
+			
+			foreach($this->children as $dir => $child)
+			{
+				$creator->excludeDir($this->removeRoot($dir));
+			}
+			
+			return $creator;
+		}
+		
+		
+		
+		public function findDirectories($mask = NULL)
+		{
+			$creator = $this->createFinderCreator()
+				->directory($this->root)
+				->excludeDir($this->ignorePaths)
+				->excludeFile($this->ignorePaths)
+				->recursive();
+				
+			if($mask !== NULL)
+			{
+				$creator->dirs($mask);
 			}
 			
 			foreach($this->children as $dir => $child)
