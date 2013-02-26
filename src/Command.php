@@ -2,7 +2,7 @@
 	/** Heymaster Command Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-26-1
+	 * @version		2013-02-26-2
 	 */
 	
 	namespace Heymaster;
@@ -57,7 +57,7 @@
 		 */
 		public function setScope(Scope $scope)
 		{
-			if($scope !== NULL)
+			if($this->scope !== NULL)
 			{
 				throw new RuntimeException('Command: Scope uz je nastaven.');
 			}
@@ -133,7 +133,7 @@
 			}
 			
 			return $this->scope->findFiles($masks)
-				->files($tihs->processMask)
+				->files($this->processMask)
 				->directory($this->processConfig->root);
 		}
 		
