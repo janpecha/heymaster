@@ -2,7 +2,7 @@
 	/** Heymaster Command Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-24-1
+	 * @version		2013-02-26-1
 	 */
 	
 	namespace Heymaster;
@@ -134,6 +134,34 @@
 			
 			return $this->scope->findFiles($masks)
 				->files($tihs->processMask)
+				->directory($this->processConfig->root);
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]|NULL
+		 * @return	Heymaster\Scopes\FinderCreator
+		 */
+		public function findDirectories($masks = NULL)
+		{
+			if(!$this->processing)
+			{
+				throw new RuntimeException('Command neni zpracovavan.');
+			}
+			
+			if(!$this->scope)
+			{
+				throw new RuntimeException('Command: scope not set.');
+			}
+			
+			if(!is_array($masks) && $masks !== NULL)
+			{
+				$masks = func_get_args();
+			}
+			
+			return $this->scope->findDirectories($masks)
+				->dirs($this->processMask) // TODO: ?? OK ??
 				->directory($this->processConfig->root);
 		}
 	}
