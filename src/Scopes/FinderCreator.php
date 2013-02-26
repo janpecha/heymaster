@@ -2,7 +2,7 @@
 	/** Heymaster Finder Creator
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-05-1
+	 * @version		2013-02-24-1
 	 */
 	
 	namespace Heymaster\Scopes;
@@ -190,6 +190,16 @@
 		
 		
 		
+		/** Finds directories
+		 * @return	Heymaster\Utils\Finder
+		 */
+		public function findDirectories()
+		{
+			return $this->createFinderDirectories();
+		}
+		
+		
+		
 		protected function createFinder()
 		{
 			$finder = Finder::findFiles($this->fileMasks);
@@ -209,6 +219,27 @@
 			$finder->mask($this->dirMasks);
 			$finder->exclude($this->dirExclude);
 			self::applyFilters($finder, $this->dirFilters);
+			
+			return $finder;
+		}
+		
+		
+		
+		protected function createFinderDirectories()
+		{
+			$finder = Finder::findDirectories($this->dirMasks);
+			$finder->exclude($this->dirExclude);
+			self::applyFilters($finder, $this->dirFilters);
+			
+			if($this->recursive)
+			{
+				$finder->from($this->directories);
+				$finder->limitDepth($this->maxDepth);
+			}
+			else
+			{
+				$finder->in($this->directories);
+			}
 			
 			return $finder;
 		}
