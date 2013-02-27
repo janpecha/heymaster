@@ -2,7 +2,7 @@
 	/** Heymaster Scope
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-26-1
+	 * @version		2013-02-27-1
 	 */
 	
 	namespace Heymaster\Scopes;
@@ -31,6 +31,9 @@
 		
 		/** @var  string */
 		private $root; // TODO: nastaveni
+		
+		/** @var  string */
+		private $processRoot;
 		
 		/** @var  bool|NULL  NULL => inherit output, default NULL => FALSE */
 		private $output;
@@ -65,6 +68,25 @@
 		public function getRoot()
 		{
 			return $this->root;
+		}
+		
+		
+		
+		public function getProcessRoot()
+		{
+			return rtrim($this->root . '/' . $this->processRoot, '/');
+		}
+		
+		
+		
+		public function setProcessRoot($root)
+		{
+			if(!is_string($root))
+			{
+				throw new InvalidException('Naplatny process-root. Musi to by string.');
+			}
+			
+			$this->processRoot = $root;
 		}
 		
 		

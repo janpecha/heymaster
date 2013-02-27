@@ -2,7 +2,7 @@
 	/** Heymaster Action Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-11-1
+	 * @version		2013-02-27-1
 	 */
 	
 	namespace Heymaster;
@@ -31,7 +31,7 @@
 			}
 			
 			$clonedConfig = clone $this->config;
-			$clonedConfig->inherit('root', $this->scope->getRoot());
+			$clonedConfig->inherit('root', $this->scope->getProcessRoot());
 			$clonedConfig->inherit('output', $this->scope->getOutput());
 			
 			foreach($this->actions as $action)
