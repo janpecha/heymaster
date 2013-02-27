@@ -15,10 +15,6 @@
 	
 	class Heymaster extends \Nette\Object
 	{
-		const KEY_BEFORE = 'before',
-			KEY_AFTER = 'after';
-		
-		
 		/** @var  Heymaster\Logger\ILogger */
 		protected $logger;
 		
