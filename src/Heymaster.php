@@ -31,7 +31,6 @@
 		
 		/**
 		 * @param	Heymaster\Logger\ILogger
-		 * @param	Heymaster\Git\IGit
 		 * @param	Heymaster\Cli\IRunner
 		 * @param	string
 		 */
