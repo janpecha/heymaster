@@ -91,58 +91,6 @@
 		
 		
 		
-		
-		
-		
-		
-#		/**
-#		 * @param	string|string[]
-#		 * @return	Heymaster\Utils\Finder
-#		 */
-#		public function find($mask)
-#		{
-#			if(!is_array($mask))
-#			{
-#				$mask = func_get_args();
-#			}
-#			
-#			return Finder::find($mask);
-#		}
-		
-		
-		
-		/**
-		 * @param	string|string[]
-		 * @return	Heymaster\Utils\Finder
-		 */
-		public function findFiles($mask)
-		{
-			if(!is_array($mask))
-			{
-				$mask = func_get_args();
-			}
-			
-			return Finder::findFiles($mask);
-		}
-		
-		
-		
-		/**
-		 * @param	string|string[]
-		 * @return	Heymaster\Utils\Finder
-		 */
-		public function findDirectories($mask)
-		{
-			if(!is_array($mask))
-			{
-				$mask = func_get_args();
-			}
-			
-			return Finder::findDirectories($mask);
-		}
-		
-		
-		
 		/**
 		 * @param	string|string[]
 		 * @param	bool|var
