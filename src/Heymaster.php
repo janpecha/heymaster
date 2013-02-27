@@ -1,10 +1,8 @@
 <?php
 	/** Heymaster
 	 *
-	 * REQUIRE NETTE FINDER (in methods findFiles() & findDirectories()).
-	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-1
+	 * @version		2013-02-27-1
 	 */
 	
 	namespace Heymaster;
@@ -32,9 +30,6 @@
 		
 		/** @var  string */
 		protected $root;
-		
-		/** @var  array  'name' => handler */
-		protected $commands = array();
 		
 		/** @var  array */
 		protected $configuration;
@@ -100,22 +95,7 @@
 		
 		
 		
-		/**
-		 * @param	string
-		 * @param	callback  (Heymaster\Command $cmd, string $mask)
-		 * @return	$this
-		 */
-		public function addCommand($name, $callback) // ok
-		{
-			if(isset($this->commands[$name]))
-			{
-				throw new DuplicateKeyException("Prikaz '$name' uz je zaregistrovan.");
-			}
-			
-			$this->commands[$name] = $callback;
-			
-			return $this;
-		}
+		
 		
 		
 		
