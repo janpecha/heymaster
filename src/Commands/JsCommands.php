@@ -11,7 +11,8 @@
 		Heymaster\Command,
 		Heymaster\Config,
 		Heymaster\InvalidException,
-		Heymaster\Commands\Js\IJsShrink;
+		Heymaster\Commands\Js\IJsShrink,
+		Heymaster\Config\Configurator;
 	
 	class JsCommands extends CommandSet
 	{
@@ -29,15 +30,13 @@
 		
 		
 		
-		public static function install(\Heymaster\Heymaster $heymaster)
+		public function install(Configurator $configurator)
 		{
-			$me = new static($heymaster);
-			
-			$heymaster->addCommand('Js::compress', array($me, 'commandCompress'));
-			$heymaster->addCommand('Js::compile', array($me, 'commandCompile'));
+			$configurator->addCommand('Js::compress', array($this, 'commandCompress'));
+			$configurator->addCommand('Js::compile', array($this, 'commandCompile'));
 			// TODO: Js::hint
 			
-			return $me;
+			return $this;
 		}
 		
 		

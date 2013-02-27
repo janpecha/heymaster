@@ -12,7 +12,8 @@
 		Heymaster\Config,
 		Heymaster\InvalidException,
 		Heymaster\Logger\ILogger,
-		Heymaster\Cli\IRunner;
+		Heymaster\Cli\IRunner,
+		Heymaster\Config\Configurator;
 	
 	class PhpCommands extends CommandSet
 	{
@@ -38,15 +39,13 @@
 		
 		
 		
-		public static function install(\Heymaster\Heymaster $heymaster)
+		public function install(Configurator $configurator)
 		{
-			$me = new static($heymaster);
+			$configurator->addCommand('Php::lint', array($this, 'commandLint'));
+			$configurator->addCommand('Php::compress', array($this, 'commandCompress'));
+			$configurator->addCommand('Php::compile', array($this, 'commandCompile'));
 			
-			$heymaster->addCommand('Php::lint', array($me, 'commandLint'));
-			$heymaster->addCommand('Php::compress', array($me, 'commandCompress'));
-			$heymaster->addCommand('Php::compile', array($me, 'commandCompile'));
-			
-			return $me;
+			return $this;
 		}
 		
 		

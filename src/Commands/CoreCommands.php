@@ -12,7 +12,8 @@
 		Heymaster\Config,
 		Heymaster\InvalidException,
 		Heymaster\Cli\IRunner,
-		Heymaster\Files\FileManipulator;
+		Heymaster\Files\FileManipulator,
+		Heymaster\Config\Configurator;
 	
 	class CoreCommands extends CommandSet
 	{
@@ -31,20 +32,18 @@
 		
 		
 		
-		public static function install(\Heymaster\Heymaster $heymaster)
+		public function install(Configurator $configurator)
 		{
-			$me = new static($heymaster);
+			$configurator->addCommand('call', array($this, 'commandRun'));
+			$configurator->addCommand('run', array($this, 'commandRun'));
+			$configurator->addCommand('merge', array($this, 'commandMerge'));
+			$configurator->addCommand('touch', array($this, 'commandTouch'));
+			$configurator->addCommand('symlinks', array($this, 'commandSymlinks'));
+			$configurator->addCommand('remove', array($this, 'commandRemove'));
+			$configurator->addCommand('removeContent', array($this, 'commandRemoveContent'));
+			$configurator->addCommand('replace', array($this, 'commandReplace'));
 			
-			$heymaster->addCommand('call', array($me, 'commandRun'));
-			$heymaster->addCommand('run', array($me, 'commandRun'));
-			$heymaster->addCommand('merge', array($me, 'commandMerge'));
-			$heymaster->addCommand('touch', array($me, 'commandTouch'));
-			$heymaster->addCommand('symlinks', array($me, 'commandSymlinks'));
-			$heymaster->addCommand('remove', array($me, 'commandRemove'));
-			$heymaster->addCommand('removeContent', array($me, 'commandRemoveContent'));
-			$heymaster->addCommand('replace', array($me, 'commandReplace'));
-			
-			return $me;
+			return $this;
 		}
 		
 		

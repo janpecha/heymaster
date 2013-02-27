@@ -11,7 +11,8 @@
 		Heymaster\Command,
 		Heymaster\Config,
 		Heymaster\InvalidException,
-		Heymaster\Commands\Css\ICssMinifier;
+		Heymaster\Commands\Css\ICssMinifier,
+		Heymaster\Config\Configurator;
 	
 	class CssCommands extends CommandSet
 	{
@@ -29,13 +30,11 @@
 		
 		
 		
-		public static function install(\Heymaster\Heymaster $heymaster)
+		public function install(Configurator $configurator)
 		{
-			$me = new static($heymaster);
+			$configurator->addCommand('Css::compress', array($this, 'commandCompress'));
 			
-			$heymaster->addCommand('Css::compress', array($me, 'commandCompress'));
-			
-			return $me;
+			return $this;
 		}
 		
 		
