@@ -266,28 +266,6 @@
 		
 		
 		
-#		/**
-#		 * @param	Heymaster\Command
-#		 * @param	string
-#		 * @return	void
-#		 */
-#		protected function processCommand(Command $command, $mask) // ??ok
-#		{
-#			if($command->callback === NULL)
-#			{
-#				if(!isset($this->commands[$command->name]))
-#				{
-#					throw new NotFoundException("Prikaz '{$command->name}' nenalezen.");
-#				}
-#				
-#				$command->callback = $this->commands[$command->name];
-#			}
-#			
-#			call_user_func($command->callback, $command, $mask);
-#		}
-		
-		
-		
 		/**
 		 * @param	Heymaster\Config|string  message
 		 * @param	string|NULL  default message
