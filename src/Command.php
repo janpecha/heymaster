@@ -2,7 +2,7 @@
 	/** Heymaster Command Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-17-1
+	 * @version		2013-02-26-2
 	 */
 	
 	namespace Heymaster;
@@ -57,7 +57,7 @@
 		 */
 		public function setScope(Scope $scope)
 		{
-			if($scope !== NULL)
+			if($this->scope !== NULL)
 			{
 				throw new RuntimeException('Command: Scope uz je nastaven.');
 			}
@@ -76,18 +76,20 @@
 		 */
 		public function getParameter($name, $default = NULL, $message = NULL)
 		{
-			$name = (string)$name;
-			if(!isset($this->params[$name]))
+			foreach((array) $name as $key)
 			{
-				if($default !== NULL)
+				if(isset($this->params[$key]))
 				{
-					return $default;
+					return $this->params[$key];
 				}
-				
-				throw new InvalidException($message !== NULL ? (string)$message : "Parameter $name is required.");
 			}
 			
-			return $this->params[$name];
+			if($default !== NULL)
+			{
+				return $default;
+			}
+			
+			throw new InvalidException($message !== NULL ? (string)$message : "Parameter $name is required.");
 		}
 		
 		
@@ -131,7 +133,35 @@
 			}
 			
 			return $this->scope->findFiles($masks)
-				->files($tihs->processMask)
+				->files($this->processMask)
+				->directory($this->processConfig->root);
+		}
+		
+		
+		
+		/**
+		 * @param	string|string[]|NULL
+		 * @return	Heymaster\Scopes\FinderCreator
+		 */
+		public function findDirectories($masks = NULL)
+		{
+			if(!$this->processing)
+			{
+				throw new RuntimeException('Command neni zpracovavan.');
+			}
+			
+			if(!$this->scope)
+			{
+				throw new RuntimeException('Command: scope not set.');
+			}
+			
+			if(!is_array($masks) && $masks !== NULL)
+			{
+				$masks = func_get_args();
+			}
+			
+			return $this->scope->findDirectories($masks)
+				->dirs($this->processMask) // TODO: ?? OK ??
 				->directory($this->processConfig->root);
 		}
 	}

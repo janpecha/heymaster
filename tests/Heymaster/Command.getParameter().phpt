@@ -1,5 +1,5 @@
 <?php
-/** @version	2013-02-02-2 */
+/** @version	2013-02-24-1 */
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';
@@ -31,4 +31,12 @@ Assert::throws(function () use ($command) {
 Assert::throws(function () use ($command) {
 	$command->getParameter('nonexistent-parameter', NULL, 'My error message');
 }, 'Heymaster\\InvalidException', 'My error message');
+
+
+// More names
+Assert::throws(function () use ($command) {
+	$command->getParameter(array('nonexistent-parameter', 'nonexists-param2'), NULL, 'My error message');
+}, 'Heymaster\\InvalidException', 'My error message');
+
+Assert::same('Gandalf', $command->getParameter(array('nonexistent-parameter', 'name'), NULL, 'My error message'));
 

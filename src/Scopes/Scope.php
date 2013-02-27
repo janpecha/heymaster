@@ -2,7 +2,7 @@
 	/** Heymaster Scope
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-23-1
+	 * @version		2013-02-27-1
 	 */
 	
 	namespace Heymaster\Scopes;
@@ -32,6 +32,9 @@
 		/** @var  string */
 		private $root; // TODO: nastaveni
 		
+		/** @var  string */
+		private $processRoot;
+		
 		/** @var  bool|NULL  NULL => inherit output, default NULL => FALSE */
 		private $output;
 		
@@ -39,7 +42,7 @@
 		private $logger;
 		
 		/** @var  string[] */
-		private $ignorePaths = array('.git*');
+		private $ignorePaths = array('.git');
 		
 		/** @var  bool */
 		private $testingMode = FALSE;
@@ -65,6 +68,25 @@
 		public function getRoot()
 		{
 			return $this->root;
+		}
+		
+		
+		
+		public function getProcessRoot()
+		{
+			return rtrim($this->root . '/' . $this->processRoot, '/');
+		}
+		
+		
+		
+		public function setProcessRoot($root)
+		{
+			if(!is_string($root))
+			{
+				throw new InvalidException('Naplatny process-root. Musi to by string.');
+			}
+			
+			$this->processRoot = $root;
 		}
 		
 		
@@ -257,6 +279,29 @@
 			if($mask !== NULL)
 			{
 				$creator->files($mask);
+			}
+			
+			foreach($this->children as $dir => $child)
+			{
+				$creator->excludeDir($this->removeRoot($dir));
+			}
+			
+			return $creator;
+		}
+		
+		
+		
+		public function findDirectories($mask = NULL)
+		{
+			$creator = $this->createFinderCreator()
+				->directory($this->root)
+				->excludeDir($this->ignorePaths)
+				->excludeFile($this->ignorePaths)
+				->recursive();
+				
+			if($mask !== NULL)
+			{
+				$creator->dirs($mask);
 			}
 			
 			foreach($this->children as $dir => $child)

@@ -1,5 +1,5 @@
 <?php
-/** @version	2013-02-05-1 */
+/** @version	2013-02-24-1 */
 use Tester\Assert,
 	Heymaster\Utils\Finder,
 	Heymaster\Scopes\FinderCreator,
@@ -71,6 +71,7 @@ foreach($files as $file)
 }
 
 Assert::same(array(
+	'/.gitignore',
 	'/boot.php',
 	'/file.txt',
 	'/images/gif.php',

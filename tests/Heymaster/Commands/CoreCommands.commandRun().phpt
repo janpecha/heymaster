@@ -1,49 +1,46 @@
 <?php
-/** @version	2013-02-02-1 */
-use Tester\Assert;
+/** @version	2013-02-26-1 */
+use Tester\Assert,
+	Heymaster\Commands\CoreCommands,
+	Heymaster\Files\FileManipulator;
 
 require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../../src/Files/FileManipulator.php';
 require __DIR__ . '/../../../src/Cli/IRunner.php';
-require __DIR__ . '/../../../src/Cli/Runner.php';
+#require __DIR__ . '/../../../src/Cli/Runner.php';
+require __DIR__ . '/../../../src/Config.php';
 require __DIR__ . '/../../../src/Commands/CommandSet.php';
 require __DIR__ . '/../../../src/Commands/CoreCommands.php';
 require __DIR__ . '/../../../src/Command.php';
 
-class Runner
+class Runner implements Heymaster\Cli\IRunner
 {
 	public $returnCode = 1;
 	
 	
-	public function run()
+	public function run($cmd, &$output)
 	{
 		return $this->returnCode;
 	}
-}
-
-class CoreCommands extends Heymaster\Commands\CoreCommands
-{
-	public function __construct()
-	{
-		$this->heymaster = new stdClass;
-		$this->heymaster->runner = new Runner;
-	}
 	
-	
-	public function getRunner()
+	public static function escapeArg($arg)
 	{
-		return $this->heymaster->runner;
+		return escapeshellarg($arg);
 	}
 }
 
-$core = new CoreCommands;
+$runner = new Runner;
+$core = new CoreCommands($runner, new FileManipulator());
 $command = new Heymaster\Command;
 $command->params = array();
 $command->name = 'TestCommand';
 $command->config = new stdClass;
 $command->config->output = TRUE;
 
-Assert::throws(function() use ($core, $command) {
-	$core->commandRun($command, '');
+$config = new Heymaster\Config;
+
+Assert::throws(function() use ($core, $command, $config) {
+	$core->commandRun($command, $config, NULL);
 }, 'Heymaster\\InvalidException');
 
 
@@ -51,26 +48,26 @@ $command->params = array(
 	'cmd' => 'any-command -p',
 );
 
-Assert::throws(function() use ($core, $command) {
-	$core->commandRun($command, '');
+Assert::throws(function() use ($core, $command, $config) {
+	$core->commandRun($command, $config, NULL);
 }, 'UnexpectedValueException');
 
 
 $command->params['fatal'] = FALSE;
-$core->commandRun($command, '');
+$core->commandRun($command, $config, NULL);
 
 
 $command->params['fatal'] = TRUE;
 
-$core->getRunner()->returnCode = 0;
-$core->commandRun($command, '');
+$runner->returnCode = 0;
+$core->commandRun($command, $config, NULL);
 
 unset($command->params['fatal']);
-$core->commandRun($command, '');
+$core->commandRun($command, $config, NULL);
 
-$core->getRunner()->returnCode = 1;
-Assert::throws(function() use ($core, $command) {
-	$core->commandRun($command, '');
+$runner->returnCode = 1;
+Assert::throws(function() use ($core, $command, $config) {
+	$core->commandRun($command, $config, NULL);
 }, 'UnexpectedValueException');
 
 

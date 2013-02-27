@@ -1,20 +1,40 @@
 <?php
 	/** Php Commands
-	 * REQUIRE PhpShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-2
+	 * @version		2013-02-24-1
 	 */
 	
 	namespace Heymaster\Commands;
 	
 	use Nette\Object,
 		Heymaster\Command,
-		Heymaster\InvalidException;
+		Heymaster\Config,
+		Heymaster\InvalidException,
+		Heymaster\Logger\ILogger,
+		Heymaster\Cli\IRunner;
 	
 	class PhpCommands extends CommandSet
 	{
 		const MASK = '*.php';
+		
+		/** @var  Heymaster\Commands\Php\IPhpShrinkFactory */
+		private $phpShrinkFactory;
+		
+		/** @var  Heymaster\Logger\ILogger */
+		private $logger;
+		
+		/** @var  Heymaster\Cli\IRunner */
+		private $runner;
+		
+		
+		
+		public function __construct(IPhpShrinkFactory $shrinkFactory, ILogger $logger, IRunner $runner)
+		{
+			$this->phpShrinkFactory = $shrinkFactory;
+			$this->logger = $logger;
+			$this->runner = $runner;
+		}
 		
 		
 		
@@ -33,26 +53,31 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandLint(Command $command, $actionMask)
+		public function commandLint(Command $command, Config $config, $mask)
 		{
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$output = (bool)$config->output;
+			$creator = $command->findFiles($maskParam)
+				->recursive();
 			$error = FALSE;
-			$output = (bool)$command->config->output;
 			
-			foreach($this->findFiles($mask, $actionMask, $command->config->root) as $file)
+			foreach($creator->find() as $file)
 			{
-				$ret = $this->heymaster->runner->run(array(
+				$ret = $this->runner->run(array(
 					'php -l',
 					'-f' => (string)$file,
 				), $output);
 				
 				if($ret !== 0)
 				{
-					$this->heymaster->logger->error('PhpLint: ' . $file);
+					$this->logger->prefix('PHP')
+						->error('PhpLint: ' . $file)
+						->end();
 					$error = TRUE;
 				}
 			}
@@ -67,20 +92,23 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandCompress(Command $command, $actionMask)
+		public function commandCompress(Command $command, Config $config, $mask)
 		{
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$creator = $command->findFiles($maskParam)
+				->recursive();
 			
-			foreach($this->findFiles($mask, $actionMask, $command->config->root) as $file)
+			foreach($creator->find() as $file)
 			{
-				$shrink = self::createPhpShrink();
-				$shrink->addFile((string)$file);
+				$shrink = $this->phpShrinkFactory->createPhpShrink();
+				$shrink->addFile($file);
 				
-				file_put_contents((string)$file, $shrink->getOutput());
+				file_put_contents($file, $shrink->getOutput());
 			}
 		}
 		
@@ -88,51 +116,25 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandCompile(Command $command, $actionMask)
+		public function commandCompile(Command $command, Config $config, $mask)
 		{
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$outputFile = (string)$command->getParameter('file', NULL, 'Php::Compile: Nebylo zadano jmeno souboru, do ktereho se ma kompilovat.');
+			$creator = $command->findFiles($maskParam)
+				->recursive();
+			$shrink = $this->phpShrinkFactory->createPhpShrink();
 			
-			if(isset($command->params['file']) && !is_string($command->params['file']))
+			foreach($creator->find() as $file)
 			{
-				throw new InvalidException('Nebylo zadano jmeno souboru, do ktereho se ma kompilovat.');
+				$shrink->addFile($file);
 			}
 			
-			$outputFile = $command->params['file'];
-			$shrink = self::createPhpShrink();
-			
-			foreach($this->findFiles($mask, $actionMask, $command->config->root) as $file)
-			{
-				$shrink->addFile((string)$file);
-			}
-			
-			file_put_contents(self::generatePath($outputFile, $command->config->root), $shrink->getOutput());
-		}
-		
-		
-		
-		public function findFiles($mask, $actionMask, $root)
-		{
-			$finder = $this->heymaster->findFiles($mask)
-				->mask($actionMask);
-			
-			$finder->from($root)
-				->exclude('.git');
-			
-			return $finder;
-		}
-		
-		
-		
-		protected static function createPhpShrink()
-		{
-			$shrink = new \PhpShrink;
-			$shrink->useNamespaces = TRUE;
-			
-			return $shrink;
+			file_put_contents(self::generatePath($outputFile, $config->root), $shrink->getOutput());
 		}
 		
 		
