@@ -28,9 +28,6 @@
 		/** @var  string */
 		protected $root;
 		
-		/** @var  array */
-		protected $configuration;
-		
 		/** @var  bool */
 		private $testingMode;
 		
