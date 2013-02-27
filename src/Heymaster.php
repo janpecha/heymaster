@@ -2,7 +2,7 @@
 	/** Heymaster
 	 *
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-27-2
+	 * @version		2013-02-27-3
 	 */
 	
 	namespace Heymaster;
@@ -21,9 +21,6 @@
 		
 		/** @var  Heymaster\Logger\ILogger */
 		protected $logger;
-		
-		/** @var  Heymaster\Git\IGit */
-		protected $git;
 		
 		/** @var  Heymaster\Cli\IRunner */
 		protected $runner;
@@ -45,10 +42,9 @@
 		 * @param	Heymaster\Cli\IRunner
 		 * @param	string
 		 */
-		public function __construct(ILogger $logger, IGit $git, IRunner $runner, $root) // ok
+		public function __construct(ILogger $logger, IRunner $runner, $root) // ok
 		{
 			$this->logger = $logger;
-			$this->git = $git;
 			$this->runner = $runner;
 			$this->root = (string)$root;
 		}
