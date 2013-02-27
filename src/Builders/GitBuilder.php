@@ -76,7 +76,7 @@
 		
 		
 		/**
-		 * @param	string
+		 * @param	string|bool  string => name|TRUE => auto tag|FALSE => no tag
 		 * @param	Heymaster\Configs\FileConfig
 		 * @param	void
 		 */

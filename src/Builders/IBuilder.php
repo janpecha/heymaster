@@ -24,7 +24,7 @@
 		
 		
 		/**
-		 * @param	string
+		 * @param	string|bool  string => name|TRUE => auto tag|FALSE => no tag
 		 */
 		function startup($tag);
 		
