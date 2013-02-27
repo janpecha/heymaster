@@ -237,35 +237,6 @@
 		
 		
 		
-#		/**
-#		 * @param	Heymaster\Section
-#		 * @return	void
-#		 */
-#		protected function process(Section $section) // ??ok
-#		{
-#			if(is_array($section->actions))
-#			{
-#				foreach($section->actions as $action)
-#				{
-#					$action->config->inherit($section->config);
-#				
-#					if($action->runnable)
-#					{
-#						$this->printMessage($action->config, 'Akce: ' . $action->name);
-#					
-#						foreach($action->commands as $command)
-#						{
-#							$command->config->inherit($action->config);
-#							$this->printMessage($command->config, 'Prikaz: ' . $command->name . ' (' . $command->description . ')');
-#							$this->processCommand($command, $action->mask);
-#						}
-#					}
-#				}
-#			}
-#		}
-		
-		
-		
 		/**
 		 * @param	Heymaster\Config|string  message
 		 * @param	string|NULL  default message
