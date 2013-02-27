@@ -35,6 +35,7 @@
 			
 			$heymaster->addCommand('Js::compress', array($me, 'commandCompress'));
 			$heymaster->addCommand('Js::compile', array($me, 'commandCompile'));
+			// TODO: Js::hint
 			
 			return $me;
 		}
