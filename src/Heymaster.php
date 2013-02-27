@@ -217,31 +217,5 @@
 #			// Done.
 #			$this->logger->success('Hotovo.');
 #		}
-		
-		
-		
-		/**
-		 * @param	Heymaster\Config|string  message
-		 * @param	string|NULL  default message
-		 * @return	void
-		 */
-		protected function printMessage($config, $default = NULL)	// ?,OK , TODO: prvni param jen Config???
-		{
-			$message = $default;
-			
-			if(is_string($config))
-			{
-				$message = $config;
-			}
-			elseif(($config instanceof Config) && is_string($config->message) && $config->message !== '')
-			{
-				$message = $config->message;
-			}
-			
-			if(is_string($message))
-			{
-				$this->logger->log($message);
-			}
-		}
 	}
 
