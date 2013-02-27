@@ -9,8 +9,6 @@
 	
 	use Heymaster\Utils\Finder,
 		Heymaster\Logger\ILogger,
-		Heymaster\Git\IGit,
-		Heymaster\Git\GitException,
 		Heymaster\Config\Configurator,
 		Heymaster\Cli\IRunner;
 	
