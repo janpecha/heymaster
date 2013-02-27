@@ -91,18 +91,6 @@
 		
 		
 		
-		/**
-		 * @param	string|string[]
-		 * @param	bool|var
-		 * @return	int  return code
-		 */
-		public function runExternal($cmd, &$output = FALSE)
-		{
-			return $this->runner->run($cmd, $output);
-		}
-		
-		
-		
 #		/**
 #		 * @param	array
 #		 * @param	string|NULL|TRUE  tag name, no tag, auto tag
