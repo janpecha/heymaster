@@ -2,7 +2,7 @@
 	/** Heymaster
 	 *
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-27-1
+	 * @version		2013-02-27-2
 	 */
 	
 	namespace Heymaster;
@@ -453,26 +453,6 @@
 			{
 				$this->logger->log($message);
 			}
-		}
-		
-		
-		
-		/**
-		 * @param	array
-		 * @return	TRUE
-		 * @throws	Heymaster\InvalidException
-		 */
-		protected static function checkValid(array $configuration) // ok
-		{
-			if(isset($configuration['config'])
-				&& isset($configuration['sections'])
-				&& isset($configuration['sections'][self::KEY_BEFORE])
-				&& isset($configuration['sections'][self::KEY_AFTER]))
-			{
-				return TRUE;
-			}
-			
-			throw new InvalidException('Konfigurace je nevalidni.');
 		}
 	}
 
