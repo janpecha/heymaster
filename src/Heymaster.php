@@ -220,23 +220,6 @@
 		
 		
 		
-#		/**
-#		 * @param	string
-#		 * @return	void
-#		 */
-#		protected function processSectionBlock($name)	// ??OK
-#		{
-#			$this->logger->log("Zpracovavam sekci '$name'");
-#			
-#			$section = $this->configuration['sections'][$name];
-#			$section->config->inherit($this->configuration['config']);
-#			$this->printMessage($section->config);
-#			$this->process($section);
-#			$this->logger->success("Sekce '$name' uspesne zpracovana.");
-#		}
-		
-		
-		
 		/**
 		 * @param	Heymaster\Config|string  message
 		 * @param	string|NULL  default message
