@@ -2,7 +2,7 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-07-1
+	 * @version		2013-02-27-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -69,7 +69,13 @@
 				{
 					case self::SECTION_BEFORE:
 					case self::SECTION_AFTER:
-						$this->processSection($key, $value);
+						$res = $this->processSection($key, $value);
+						
+						if($res === NULL) // empty section
+						{
+							// remove section
+							$this->configuration[self::KEY_SECTIONS][$key] = NULL;
+						}
 						continue;
 					
 					case self::KEY_PARAMETERS:
@@ -96,7 +102,7 @@
 		 * 
 		 * @param	string  section name
 		 * @param	array
-		 * @return	void
+		 * @return	TRUE|NULL
 		 */
 		protected function processSection($key, $value)
 		{
@@ -146,6 +152,8 @@
 						$this->processAction($key, $skey, $value); /* sectionName, actionName, actionContent */
 				}
 			}
+			
+			return TRUE;
 		}
 		
 		
