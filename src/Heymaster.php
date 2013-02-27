@@ -11,6 +11,7 @@
 		Heymaster\Logger\ILogger,
 		Heymaster\Git\IGit,
 		Heymaster\Git\GitException,
+		Heymaster\Config\Configurator,
 		Heymaster\Cli\IRunner;
 	
 	class Heymaster extends \Nette\Object
@@ -30,11 +31,12 @@
 		
 		
 		/**
+		 * @param	Heymaster\Config\Configurator
 		 * @param	Heymaster\Logger\ILogger
 		 * @param	Heymaster\Cli\IRunner
 		 * @param	string
 		 */
-		public function __construct(ILogger $logger, IRunner $runner, $root) // ok
+		public function __construct(Configurator $configurator, ILogger $logger, IRunner $runner, $root) // ok
 		{
 			$this->logger = $logger;
 			$this->runner = $runner;
