@@ -43,9 +43,6 @@
 		/** @var  string[] */
 		private $ignorePaths = array('.git');
 		
-		/** @var  bool */
-		private $testingMode = FALSE;
-		
 		/** @var  array */
 		private $parameters = array();
 		
@@ -127,21 +124,6 @@
 				}
 			}
 			
-			return $this;
-		}
-		
-		
-		
-		public function isTestingMode()
-		{
-			return $this->testingMode;
-		}
-		
-		
-		
-		public function setTestingMode($testingMode = TRUE)
-		{
-			$this->testingMode = (bool)$testingMode;
 			return $this;
 		}
 		
