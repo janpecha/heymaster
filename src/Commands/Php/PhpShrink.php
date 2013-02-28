@@ -14,7 +14,7 @@
 		
 		
 		
-		public function __construct(PhpShrink $shrink = NULL)
+		public function __construct(\PhpShrink $shrink = NULL)
 		{
 			if($shrink === NULL)
 			{
