@@ -13,6 +13,8 @@
 		Heymaster\Config,
 		Heymaster\Action,
 		Heymaster\Command,
+		Heymaster\InvalidException,
+		Heymaster\DuplicateKeyException,
 		Nette\Config\Helpers;
 	
 	class Configurator extends Nette\Object
