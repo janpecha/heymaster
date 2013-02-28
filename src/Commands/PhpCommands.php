@@ -30,7 +30,7 @@
 		
 		
 		
-		public function __construct(IPhpShrinkFactory $shrinkFactory, ILogger $logger, IRunner $runner)
+		public function __construct(Php\IPhpShrinkFactory $shrinkFactory, ILogger $logger, IRunner $runner)
 		{
 			$this->phpShrinkFactory = $shrinkFactory;
 			$this->logger = $logger;
