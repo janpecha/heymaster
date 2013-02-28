@@ -246,22 +246,44 @@
 		/**
 		 * @return	void
 		 */
-		public function process()
+		public function processBefore()
 		{
 			$this->logger->prefix('scope')
-				->info($this->root);
+				->info('before - ' . $this->root);
 			
 			if($this->before)
 			{
 				$this->before->process();
 			}
+			else
+			{
+				$this->logger->info('Section is empty');
+			}
 			
-			if(!$this->testingMode && $this->after)
+			$this->logger->success('Done \'before\' section. ' . $this->root)
+				->end();
+		}
+		
+		
+		
+		/**
+		 * @return	void
+		 */
+		public function processAfter()
+		{
+			$this->logger->prefix('scope')
+				->info('after - ' . $this->root);
+				
+			if($this->after)
 			{
 				$this->after->process();
 			}
+			else
+			{
+				$this->logger->info('Section is empty');
+			}
 			
-			$this->logger->success('Done. ' . $this->root)
+			$this->logger->success('Done \'after\' section. ' . $this->root)
 				->end();
 		}
 		
