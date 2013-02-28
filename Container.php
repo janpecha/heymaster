@@ -102,21 +102,7 @@
 		
 		
 		
-		protected function createServiceConfigLoader()
-		{
-			return new Heymaster\Config\Loader($this->adapter);
-		}
-		
-		
-		
-		protected function createServiceLogger()
-		{
-			return new Heymaster\Logger\DefaultLogger;
-		}
-		
-		
-		
-		protected function createBuilder($builderId)
+		public function createBuilder($builderId)
 		{
 			if($builderId === self::BUILDER_GIT)
 			{
@@ -128,6 +114,20 @@
 #			}
 			
 			throw new InvalidException('Unknow Builder ID: ' . $builderId);
+		}
+		
+		
+		
+		protected function createServiceConfigLoader()
+		{
+			return new Heymaster\Config\Loader($this->adapter);
+		}
+		
+		
+		
+		protected function createServiceLogger()
+		{
+			return new Heymaster\Logger\DefaultLogger;
 		}
 		
 		
