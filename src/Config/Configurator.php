@@ -12,7 +12,8 @@
 		Heymaster\Section,
 		Heymaster\Config,
 		Heymaster\Action,
-		Heymaster\Command;
+		Heymaster\Command,
+		Nette\Config\Helpers;
 	
 	class Configurator extends Nette\Object
 	{
@@ -25,12 +26,38 @@
 		/** @var  Heymaster\Config\ILoader */
 		protected $loader;
 		
+		/** @var  array */
+		private $parameters;
+		
 		
 		
 		public function __construct(ILoader $loader, ILogger $logger)
 		{
 			$this->loader = $loader;
 			$this->logger = $logger;
+			$this->parameters = self::getDefaultParameters();
+		}
+		
+		
+		
+		/**
+		 * @return	array
+		 */
+		public function getParameters()
+		{
+			return $this->parameters;
+		}
+		
+		
+		
+		/**
+		 * @param	array
+		 * @return	$this
+		 */
+		public function addParameters(array $parameters)
+		{
+			$this->parameters = Helpers::merge($parameters, $this->parameters);
+			return $this;
 		}
 		
 		
@@ -316,6 +343,18 @@
 		protected function createConfig()
 		{
 			return new Config;
+		}
+		
+		
+		
+		protected static function getDefaultParameters()
+		{
+			return array(
+				'tag' => TRUE,
+				'testingMode' => FALSE,
+				'root' => FALSE,
+				'builder' => 'git',
+			);
 		}
 	}
 
