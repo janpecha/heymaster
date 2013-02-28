@@ -29,6 +29,9 @@
 		/** @var  array */
 		private $parameters;
 		
+		/** @var  Heymaster\Builders\IBuilder */
+		private $builder;
+		
 		
 		
 		public function __construct(ILoader $loader, ILogger $logger)
@@ -58,6 +61,33 @@
 		{
 			$this->parameters = Helpers::merge($parameters, $this->parameters);
 			return $this;
+		}
+		
+		
+		
+		/**
+		 * @param	Heymaster\Builders\IBuilder
+		 * @return	$this
+		 */
+		public function setBuilder(IBuilder $builder)
+		{
+			if($this->builder)
+			{
+				throw new InvalidException('Configurator: Builder je jiz nastaven.');
+			}
+			
+			$this->builder = $builder;
+			return $this;
+		}
+		
+		
+		
+		/**
+		 * @return	Heymaster\Builders\IBuilder
+		 */
+		public function getBuilder()
+		{
+			return $this->builder;
 		}
 		
 		
