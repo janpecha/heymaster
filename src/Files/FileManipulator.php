@@ -63,9 +63,10 @@
 		 * @param	string	from
 		 * @param	string	to
 		 * @param	string|string[] list of names to ignore
+		 * @param	bool
 		 * @return	void
 		 */
-		public function copy($from, $to, $ignore = NULL)
+		public function copy($from, $to, $ignore = NULL, $copyMode = FALSE)
 		{
 			if($ignore === NULL)
 			{
@@ -90,10 +91,20 @@
 			{
 				@mkdir(dirname($to), 0777, TRUE); // adresar uz muze existovat
 				copy($from, $to);
+				
+				if($copyMode)
+				{
+					$this->chmod($to, $from);
+				}
 			}
 			elseif(is_dir($from))
 			{
 				@mkdir($to, 0777, TRUE); // adresar uz muze existovat
+				
+				if($copyMode)
+				{
+					$this->chmod($to, $from);
+				}
 				//$this->unlink($to, TRUE); // remove content TODO: is OK?
 				
 				foreach($this->find('*')->in($from) as $file)
@@ -101,6 +112,34 @@
 					$this->copy((string)$file, $to . '/' . $file->getBasename(), $ignore);
 				}
 			}
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 * @param	string|int	string => by file|int => 0777, etc.
+		 * @return	bool
+		 */
+		public function chmod($file, $mode = 0777)
+		{
+			if(is_string($mode))
+			{
+				$mode = $this->getmod($mode);
+			}
+			
+			return chmod($file, $mode);
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 * @return	int
+		 */
+		public function getmod($file)
+		{
+			return octdec('0' . substr(sprintf('%o', fileperms($file)), -3));
 		}
 		
 		

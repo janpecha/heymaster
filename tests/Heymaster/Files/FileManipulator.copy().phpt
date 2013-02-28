@@ -103,3 +103,18 @@ $tempDirContent = removeRoot($tempDirContent, $tempDir);
 purge($tempDir);
 Assert::same($filesDirContent, $tempDirContent);
 
+
+// Copy mods
+$file = "$tempDir/testing.txt";
+$file2 = "$tempDir/copy.txt";
+file_put_contents($file, 'Lorem Ipsum dolor sit');
+
+chmod($file, 0777);
+$mode = $manipulator->getmod($file);
+Assert::same(0777, $mode);
+
+$manipulator->copy($file, $file2, NULL, TRUE);
+
+Assert::same($mode, $manipulator->getmod($file2));
+
+
