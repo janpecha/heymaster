@@ -13,7 +13,6 @@
 		
 		public $parameters = array(
 			'root' => NULL,
-			'builder' => self::BUILDER_GIT,
 			//'cacheDir' => (string),
 		);
 		
@@ -117,18 +116,18 @@
 		
 		
 		
-		protected function createServiceBuilder()
+		protected function createBuilder($builderId)
 		{
-			if($this->parameters['builder'] === self::BUILDER_GIT)
+			if($builderId === self::BUILDER_GIT)
 			{
 				return $this->gitBuilder;
 			}
-#			elseif($this->parameters['builder'] === self::BUILDER_ZIP)
+#			elseif($builderId === self::BUILDER_ZIP)
 #			{
 #				return $this->zipBuilder;
 #			}
 			
-			throw new InvalidException('Unknow builder ID: ' . $this->parameters['builder']);
+			throw new InvalidException('Unknow Builder ID: ' . $builderId);
 		}
 		
 		
