@@ -14,6 +14,7 @@
 		public $parameters = array(
 			'root' => NULL,
 			'builder' => self::BUILDER_GIT,
+			//'cacheDir' => (string),
 		);
 		
 		
