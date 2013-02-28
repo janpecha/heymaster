@@ -122,7 +122,7 @@
 				throw new DuplicateKeyException("Prikaz '$name' uz je zaregistrovan.");
 			}
 			
-			$this->commands[$name] = $callback;
+			$this->commands[$name] = $handler;
 			
 			return $this;
 		}
