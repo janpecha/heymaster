@@ -244,6 +244,11 @@
 			
 			$this->logger->success('Done \'before\' section. ' . $this->root)
 				->end();
+			
+			foreach($this->children as $child)
+			{
+				$child->processBefore();
+			}
 		}
 		
 		
