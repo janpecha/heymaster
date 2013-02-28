@@ -7,7 +7,7 @@
 	
 	namespace Heymaster\Config;
 	use Heymaster\InvalidException,
-		Hwymaster\Adapters\IAdapter;
+		Heymaster\Adapters\IAdapter;
 	
 	class Loader implements ILoader
 	{
