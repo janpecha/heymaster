@@ -16,7 +16,8 @@
 	{
 		const MSG_PREFIX = 'git',
 			TEMP_BRANCH_PREFIX = 'heymaster-build-branch-',
-			AUTO_BUILD_PREFIX = 'build-';
+			AUTO_BUILD_PREFIX = 'build-',
+			DEFAULT_BRANCH = 'master';
 		
 		/** @var  string  master branch */
 		private $branch;
@@ -56,6 +57,12 @@
 		public function setParameters(array $parameters)
 		{
 			$this->parameters = $parameters;
+			
+			if(!isset($this->parameters['branch']))
+			{
+				$this->parameters['branch'] = self::DEFAULT_BRANCH;
+			}
+			
 			return $this;
 		}
 		
