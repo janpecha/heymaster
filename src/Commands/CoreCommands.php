@@ -252,8 +252,10 @@
 					$to = $config->root . '/' . $to;
 				}
 				
+				$mode = $this->fileManipulator->getmod($what);
 				$this->fileManipulator->unlink($what);
 				$this->fileManipulator->copy($to, $what);
+				$this->fileManipulator->chmod($what, $mode);
 			}
 		}
 		
@@ -271,7 +273,7 @@
 				$to = (string)$file;
 				
 				$this->fileManipulator->unlink($file);
-				$this->fileManipulator->copy($from, $to);
+				$this->fileManipulator->copy($from, $to, NULL, TRUE);
 			}
 		}
 		
