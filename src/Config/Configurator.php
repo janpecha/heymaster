@@ -7,7 +7,7 @@
 	
 	namespace Heymaster\Config;
 	use Nette,
-		Heymaster\Cli\ILogger,
+		Heymaster\Logger\ILogger,
 		Heymaster\Scopes\Scope,
 		Heymaster\Section,
 		Heymaster\Config,
@@ -27,6 +27,9 @@
 		
 		/** @var  Heymaster\Config\ILoader */
 		protected $loader;
+		
+		/** @var  Heymaster\Logger\ILoader */
+		protected $logger;
 		
 		/** @var  array */
 		private $parameters;
