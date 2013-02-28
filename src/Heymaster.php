@@ -102,20 +102,7 @@
 				}
 				
 				$builder->finish();				
-			
-#			/**/$builder->startup();
-#			
-#			/**/$builder->preprocess();
-#			
-#			$this->processSectionBlock(self::KEY_BEFORE);
-#			
-#			/**/$builder->postprocess();
-#			
-#			$this->processSectionBlock(self::KEY_AFTER);
-#			
-#			/**/$builder->finish();
-#			Hotovo.
-			
+				
 				
 				// Hotovo
 				$this->logger->success('Done.');
