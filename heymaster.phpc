@@ -1,98 +1,102 @@
 <?php
-	/** Heymaster runner
+	/** Heymaster Runner
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-1
 	 */
 	
 #	error_reporting(0);
 	set_time_limit(0);
 	
-	require __DIR__ . '/libs/Php-Cli/Cli.php';
-	require __DIR__ . '/libs/Neon/Neon.php';
 	require __DIR__ . '/libs/Nette/loader.php';
-	
 	require __DIR__ . '/tools/loader.php';
+	require __DIR__ . '/Container.php';
 	
-	require __DIR__ . '/loader.php';
+	$rootDir = getcwd();
 	
-	use Heymaster\Cli\Cli,
-		Heymaster\Commands;
+	// Create DI Container
+	$container = new HeymasterContainer(array(
+		'cacheDir' => __DIR__ . '/temp/temp',
+		'root' => $rootDir,
+	));
 	
-	$logger = new Heymaster\Logger\DefaultLogger;
 	
-	if(($args = Cli::parseParams($_SERVER['argv'])) !== FALSE)
+	// Register RobotLoader
+	$robotLoader = $container->robotLoader;
+	$robotLoader->addDirectory(__DIR__ . '/tools')
+		->addDirectory(__DIR__ . '/libs')
+		->addDirectory(__DIR__ . '/src')
+		->register();
+	
+	
+	// Create logger
+	$logger = $container->logger;
+	
+	
+	// Parse parameters from command line
+	$cli = $container->cli;
+	
+	if(($args = $cli::parseParams($_SERVER['argv'])) !== FALSE)
 	{
-		if(isset($args[0]))
+		// Build
+		$tag = FALSE;
+		$testingMode = FALSE;
+		$builderId = 'git';
+		
+		if(isset($args['tag']) && ($args['tag'] === TRUE || is_string($args['tag'])))
 		{
-			try
-			{
-				$adapter = new Heymaster\Adapters\NeonAdapter;
-				$configuration = $adapter->load($args[0]);
-			
-				if($configuration === FALSE)
-				{
-					$logger->error('Konfiguracni soubor neexistuje, nebo je prazdny.');
-					exit(100);
-				}
-				
-				// print warnings
-				foreach($adapter->getWarnings() as $msg)
-				{
-					$logger->warn('[warn] ' . $msg);
-				}
-				
-				$git = new Heymaster\Git\Git;
-				$runner = new Heymaster\Cli\Runner;
-				$root = getcwd();
-				
-				$heymaster = new Heymaster\Heymaster($logger, $git, $runner, is_string($root) ? $root : NULL);
-				// Register commands
-				Commands\CoreCommands::install($heymaster);
-				Commands\PhpCommands::install($heymaster);
-				Commands\JsCommands::install($heymaster);
-				Commands\CssCommands::install($heymaster);
-				
-				// Build
-				$tag = NULL;
-				$isTest = FALSE;
-				
-				if(isset($args['tag']) && ($args['tag'] === TRUE || is_string($args['tag'])))
-				{
-					$tag = $args['tag'];
-				}
-				
-				if(isset($args['t']))
-				{
-					$isTest = TRUE;
-					$logger->info('Testing mode...');
-				}
-				
-				$heymaster->build($configuration, $tag, $isTest);
-			}
-			catch(Exception $e)
-			{
-				$logger->error($e->getMessage() . "\n (". $e->getLine() . ': ' . $e->getFile() . ')');
-				exit(500);	// pouzit $e->getCode() ???
-			}
-		}
-		else
-		{
-			$logger->error('Musite predat cestu ke konfiguracnimu souboru!');
-			exit(102);
+			$tag = $args['tag'];
 		}
 		
-		exit;
+		if(isset($args['t']))
+		{
+			$testingMode = TRUE;
+			$logger->info('Testing mode: active');
+		}
+		
+		if(isset($args['b']))
+		{
+			if(!in_array($args['b'], array('git')))
+			{
+				$logger->error('Neznana konfiguracni hodnota v parametru \'builder\' (-b): ' . $args['b']);
+				exit(111);
+			}
+			
+			$logger->info('Builder: ' . $args['b']);
+			$builderId = $args['b'];
+		}
+		
+		
+		// Create Builder
+		$builder = $container->createBuilder($builderId);
+		
+		
+		// Create Configurator
+		$configurator = $container->configurator;
+		$configurator->addParameters(array(
+			'tag' => $tag,
+			'testingMode' => $testingMode,
+			'root' => $rootDir,
+			'builder' => $builderId,
+		));
+		
+		$configurator->setBuilder($builder);
+		
+		
+		// Create Heymaster - build
+		$heymaster = $container->heymaster;
+		$heymaster->build($configurator);
+		
+		exit(0);
 	}
 ?>
 
-Heymaster (2012-12-15-1)
+Heymaster (2013-02-28-1)
 ************************
 
 Usage:
-	php -f /path/to/heymaster.phpc -- heymaster.neon
+	php -f /path/to/heymaster.phpc -- [<parameters>]
 	OR
-	heymaster heymaster.neon (see file bin/readme.md)
+	heymaster [<parameters>] (see file bin/readme.md)
 
 
 Parameters:
@@ -101,5 +105,5 @@ Parameters:
 
 
 Examples:
-	php -f /path/to/heymaster.phpc -- heymaster.neon --tag "new-build"
+	php -f /path/to/heymaster.phpc -- --tag "new-build" -t
 
