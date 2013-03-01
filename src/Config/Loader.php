@@ -31,7 +31,7 @@
 		{
 			if(substr($file, -5) === '.neon')
 			{
-				return $adapter->load($file);
+				return $this->adapter->load($file);
 			}
 			
 			throw new InvalidException("Neznama pripona souboru: $file");
