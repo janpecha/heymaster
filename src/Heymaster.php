@@ -70,7 +70,7 @@
 				
 				
 				// Hledam konfiguracni soubory
-				$this->logger->info('Hledam konfiguracni soubory');
+				$this->logger->info("Hledam konfiguracni soubory v $root");
 				
 				foreach(Finder::findFiles('heymaster.neon')->from($root) as $file)
 				{
