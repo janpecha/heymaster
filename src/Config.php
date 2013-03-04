@@ -121,7 +121,7 @@
 		{
 			$value = NULL;
 			
-			if($toExpand[0] === '/') // absolute path
+			if(isset($toExpand[0]) && $toExpand[0] === '/') // $toExpand !== ('' or NULL) && absolute path
 			{
 				$value = $toExpand;
 			}
