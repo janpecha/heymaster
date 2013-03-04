@@ -202,7 +202,7 @@
 			*/
 			foreach($value as $key => $command)
 			{
-				switch($key)
+				switch((string)$key)
 				{
 					case self::KEY_ROOT:
 					case self::KEY_OUTPUT:
