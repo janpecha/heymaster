@@ -105,6 +105,7 @@
 			
 			/* command, config, mask */
 			$this->processing = TRUE;
+			// TODO: if($callback !== NULL) => Exception ???
 			call_user_func($this->callback, $this, $this->processConfig, $this->processMask);
 			$this->processing = FALSE;
 		}
