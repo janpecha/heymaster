@@ -85,7 +85,7 @@
 				
 				
 				// Predani parametru do builderu
-				$builder->setParameters($scope->getParameter($builderId));
+				$builder->setParameters($scope->getParameter($builderId, array()));
 				
 				
 				// Vytvarim sestaveni
