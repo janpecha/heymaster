@@ -77,9 +77,9 @@
 		
 		public function setProcessRoot($root)
 		{
-			if(!is_string($root))
+			if(!is_string($root) && !is_null($root))
 			{
-				throw new InvalidException('Naplatny process-root. Musi to by string.');
+				throw new InvalidException('Naplatny process-root. Musi by typu string, nebo NULL.');
 			}
 			
 			$this->processRoot = $root;
