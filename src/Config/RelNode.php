@@ -93,6 +93,30 @@
 		
 		
 		/**
+		 * @return	array
+		 */
+		public function getNearestChildren()
+		{
+			$nearest = array();
+			
+			foreach($this->children as $childNode)
+			{
+				if($childNode->scope !== NULL)
+				{
+					$nearest[] = $childNode;
+				}
+				else
+				{
+					$nearest = array_merge($nearest, $childNode->getNearestChildren());
+				}
+			}
+			
+			return $nearest;
+		}
+		
+		
+		
+		/**
 		 * @param	string
 		 * @param	mixed|NULL
 		 * @return	RelNode
