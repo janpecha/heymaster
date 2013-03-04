@@ -113,6 +113,11 @@
 					->error($e->getMessage())
 					->error('File: ' . $e->getFile())
 					->error('Line: ' . $e->getLine());
+				
+				foreach($e->getTrace() as $entry)
+				{
+					$this->logger->error('File: ' . $entry['file'] . ' (' . $entry['line'] . ')');
+				}
 			}
 			
 			$this->logger->end();
