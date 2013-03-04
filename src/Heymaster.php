@@ -116,7 +116,9 @@
 				
 				foreach($e->getTrace() as $entry)
 				{
-					$this->logger->error('File: ' . $entry['file'] . ' (' . $entry['line'] . ')');
+					$file = (isset($entry['file']) && $entry['file'] !== '') ? $entry['file'] : 'unknow file';
+					$line = (isset($entry['line'])) ? (' (' . $entry['line'] . ')') : '';
+					$this->logger->error("File: $file $line");
 				}
 			}
 			
