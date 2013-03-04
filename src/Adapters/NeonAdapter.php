@@ -231,7 +231,9 @@
 			
 			if(is_int($commandName)) // simple command syntax (command without params)
 			{
-				$command[self::KEY_NAME] = $value;
+				$extractedName = self::extractCommandName($value);
+				$command[self::KEY_NAME] = $extractedName['name'];
+				$command[self::KEY_DESCRIPTION] = $extractedName['description'];
 			}
 			elseif(is_array($value) || $value === NULL)
 			{
