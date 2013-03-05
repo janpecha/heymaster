@@ -28,6 +28,17 @@
 		
 		
 		/**
+		 * @return	$this
+		 */
+		public function reset()
+		{
+			$this->items = array();
+			return $this;
+		}	
+		
+		
+		
+		/**
 		 * @param	string
 		 * @return	bool
 		 */
