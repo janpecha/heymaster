@@ -105,6 +105,7 @@
 		public function commandCompress(Command $command, Config $config, $mask)
 		{
 			$maskParam = $command->getParameter('mask', self::MASK);
+			$useNamespaces = (bool) $command->getParameter('useNamespaces', FALSE);
 			$creator = $command->findFiles($maskParam)
 				->recursive();
 			
@@ -113,6 +114,7 @@
 			foreach($creator->find() as $file)
 			{
 				$shrink = $this->phpShrinkFactory->createPhpShrink();
+				$shrink->useNamespaces($useNamespaces);
 				$shrink->addFile($file);
 				
 				file_put_contents($file, $shrink->getOutput());
@@ -135,9 +137,11 @@
 		{
 			$maskParam = $command->getParameter('mask', self::MASK);
 			$outputFile = (string)$command->getParameter('file', NULL, 'Php::Compile: Nebylo zadano jmeno souboru, do ktereho se ma kompilovat.');
+			$useNamespaces = (bool) $command->getParameter('useNamespaces', FALSE);
 			$creator = $command->findFiles($maskParam)
 				->recursive();
 			$shrink = $this->phpShrinkFactory->createPhpShrink();
+			$shrink->useNamespaces($useNamespaces);
 			
 			$this->logger->prefix('Php::compile')
 				->log('Start...');
