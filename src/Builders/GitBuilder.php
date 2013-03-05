@@ -162,7 +162,10 @@
 			$this->createTag();
 			
 			// Checkout on old (dev) branch
-			$this->checkoutOnOld();
+			if(!$this->testingMode)
+			{
+				$this->checkoutOnOld();
+			}
 		}
 		
 		
