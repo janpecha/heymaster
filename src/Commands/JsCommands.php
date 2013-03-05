@@ -12,6 +12,8 @@
 		Heymaster\Config,
 		Heymaster\InvalidException,
 		Heymaster\Commands\Js\IJsShrink,
+		Heymaster\Cli\IRunner,
+		Heymaster\Logger\ILogger,
 		Heymaster\Config\Configurator;
 	
 	class JsCommands extends CommandSet
@@ -21,11 +23,19 @@
 		/** @var  Heymaster\Commands\Js\IJsShrink */
 		private $jsShrink;
 		
+		/** @var  Heymaster\Cli\IRunner */
+		private $runner;
+		
+		/** @var  Heymaster\Logger\ILogger */
+		private $logger;
 		
 		
-		public function __construct(IJsShrink $jsShrink)
+		
+		public function __construct(IJsShrink $jsShrink, IRunner $runner, ILogger $logger)
 		{
 			$this->jsShrink = $jsShrink;
+			$this->runner = $runner;
+			$this->logger = $logger;
 		}
 		
 		
@@ -34,7 +44,7 @@
 		{
 			$configurator->addCommand('Js::compress', array($this, 'commandCompress'));
 			$configurator->addCommand('Js::compile', array($this, 'commandCompile'));
-			// TODO: Js::hint
+			$configurator->addCommand('Js::hint', array($this, 'commandHint'));
 			
 			return $this;
 		}
@@ -87,6 +97,52 @@
 				$content = file_get_contents($file);
 				file_put_contents($filename, $delimiter . jsShrink($content), \FILE_APPEND);
 				$delimeter = "\n;";
+			}
+		}
+		
+		
+		
+		/**
+		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
+		 * @param	string
+		 * @throws	Heymaster\InvalidException
+		 * @return	void
+		 */
+		public function commandHint(Command $command, Config $config, $mask)
+		{
+			$maskParam = $command->getParameter('mask', self::MASK);
+			// TODO: config file
+			$creator = $command->findFiles($maskParam)
+				->recursive();
+			
+			$this->logger->prefix('JS::hint');
+			$errors = FALSE;
+			
+			foreach($creator->find() as $file)
+			{
+				$this->logger->log((string) $file);
+				$output = array();
+				$retCode = $this->runner->run(array(
+					'jshint',
+					$file,
+				), $output);
+				
+				if($retCode)
+				{
+					$errors = TRUE;
+					foreach($output as $line)
+					{
+						$this->logger->error($line);
+					}
+				}
+			}
+			
+			$this->logger->end();
+			
+			if($errors)
+			{
+				throw new InvalidException('Any invalid files');
 			}
 		}
 	}

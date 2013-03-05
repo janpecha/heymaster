@@ -69,7 +69,11 @@
 		
 		public function createServiceJsCommands()
 		{
-			return new Heymaster\Commands\JsCommands($this->jsShrink);
+			return new Heymaster\Commands\JsCommands(
+				$this->jsShrink,
+				$this->runner,
+				$this->logger
+			);
 		}
 		
 		
