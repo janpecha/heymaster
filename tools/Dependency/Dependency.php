@@ -11,6 +11,10 @@
 	{
 		private $items = array();
 		
+		private $result = array();
+		
+		private $cache = array();
+		
 		
 		
 		/**
@@ -33,71 +37,58 @@
 		public function reset()
 		{
 			$this->items = array();
+			$this->result = array();
+			$this->cache = array();
 			return $this;
-		}	
-		
-		
-		
-		/**
-		 * @param	string
-		 * @return	bool
-		 */
-		protected function checkDependencies($item)
-		{
-			if(!isset($this->items[$item]))
-			{
-				return FALSE;
-			}
-
-			foreach($this->items[$item] as $depend)
-			{
-				if(!$this->checkDependencies($depend))
-				{
-					return FALSE;
-				}
-			}
-
-			return TRUE;
 		}
 		
 		
 		
-		/**
-		 * @return	string[]
-		 */
 		public function getResolved()
 		{
-			$result = array();
+			$this->result = array();
+			$this->cache = array();
 			
-			foreach($this->items as $item => $depends)
+			array_walk($this->items, array($this, 'applyWalk'));
+			return $this->result;
+		}
+		
+		
+		
+		protected function solve($key, $value)
+		{
+			if(isset($this->cache[$key]))
 			{
-				if($this->checkDependencies($item))
+				return;
+			}
+			
+			$this->cache[$key] = TRUE;
+			
+			foreach($value as $v)
+			{
+				$v = (string) $v;
+				if(isset($this->items[$v]))
 				{
-					$result[] = $item;
+					$this->solve($v, $this->items[$v]);
+				}
+				elseif(!isset($this->cache[$v]))
+				{
+					$this->cache[$v] = TRUE;
+					$this->result[] = $v; // nedefinovany sirotek
 				}
 			}
 			
-			return $result;
+			$this->result[] = $key;
 		}
 		
 		
 		
 		/**
-		 * @return	string[]
+		 * @internal
 		 */
-		public function getUnresolved()
+		public function applyWalk($value, $key)
 		{
-			$result = array();
-			
-			foreach($this->items as $item => $depends)
-			{
-				if(!$this->checkDependencies($item))
-				{
-					$result[] = $item;
-				}
-			}
-			
-			return $result;
+			$this->solve($key, $value);
 		}
 	}
 
