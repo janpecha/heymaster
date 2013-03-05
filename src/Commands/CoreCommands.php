@@ -293,12 +293,12 @@
 			
 			if($ignore !== FALSE)
 			{
-				$creator->exclude($ignore);
+				$creator->excludeFile($ignore);
 			}
 			
 			foreach($creator->find() as $item)
 			{
-				$this->unlink($item, $onlyContent);
+				$this->fileManipulator->unlink($item, $onlyContent);
 			}
 			
 			// Remove dirs
@@ -306,12 +306,12 @@
 			
 			if($ignore !== FALSE)
 			{
-				$creator->exclude($ignore);
+				$creator->excludeDir($ignore);
 			}
 			
 			foreach($creator->findDirectories() as $item)
 			{
-				$this->unlink($item, $onlyContent);
+				$this->fileManipulator->unlink($item, $onlyContent);
 			}
 		}
 	}
