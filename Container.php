@@ -74,6 +74,13 @@
 		
 		
 		
+		public function createServiceNeonCommands()
+		{
+			return new Heymaster\Commands\NeonCommands($this->logger);
+		}
+		
+		
+		
 		public function createServicePhpCommands()
 		{
 			return new Heymaster\Commands\PhpCommands(
@@ -95,6 +102,7 @@
 			$this->coreCommands->install($configurator);
 			$this->cssCommands->install($configurator);
 			$this->jsCommands->install($configurator);
+			$this->neonCommands->install($configurator);
 			$this->phpCommands->install($configurator);
 			
 			return $configurator;
