@@ -65,6 +65,9 @@
 				->recursive();
 			$error = FALSE;
 			
+			$this->logger->prefix('Php::lint')
+				->log('Start...');
+			
 			foreach($creator->find() as $file)
 			{
 				$ret = $this->runner->run(array(
@@ -85,6 +88,9 @@
 			{
 				throw new InvalidException('Php::lint: Any invalid files.');
 			}
+			
+			$this->logger->success('Done.')
+				->end();
 		}
 		
 		
@@ -102,13 +108,18 @@
 			$creator = $command->findFiles($maskParam)
 				->recursive();
 			
+			$this->logger->prefix('Php::compress');
+			
 			foreach($creator->find() as $file)
 			{
 				$shrink = $this->phpShrinkFactory->createPhpShrink();
 				$shrink->addFile($file);
 				
 				file_put_contents($file, $shrink->getOutput());
+				$this->logger->success($file);
 			}
+			
+			$this->logger->end();
 		}
 		
 		
@@ -128,12 +139,18 @@
 				->recursive();
 			$shrink = $this->phpShrinkFactory->createPhpShrink();
 			
+			$this->logger->prefix('Php::compile')
+				->log('Start...');
+			
 			foreach($creator->find() as $file)
 			{
+				$this->logger->log("Added file: $file");
 				$shrink->addFile($file);
 			}
 			
 			file_put_contents(self::generatePath($outputFile, $config->root), $shrink->getOutput());
+			$this->logger->success('Done.')
+				->end();
 		}
 		
 		
