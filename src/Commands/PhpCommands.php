@@ -188,7 +188,7 @@
 			{
 				$depFiles = array();
 				
-				foreach($depends as $depend)
+				foreach($depends as $depend => $value)
 				{
 					if(isset($classes[$depend]))
 					{
@@ -206,14 +206,10 @@
 				$this->logger->log("Added file: $file");
 			}
 			
-			foreach($this->dependency->getUnresolved() as $file)
-			{
-				$shrink->addFile($file);
-				$this->logger->warn("Added unresolved file: $file");
-			}
+			$path = self::generatePath($outputFile, $config->root);
 			
-			file_put_contents(self::generatePath($outputFile, $config->root), $shrink->getOutput());
-			$this->logger->success("Done. $outputFile")
+			file_put_contents($path, $shrink->getOutput());
+			$this->logger->success("Done. $path")
 				->end();
 		}
 		
