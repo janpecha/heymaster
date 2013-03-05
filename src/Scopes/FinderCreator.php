@@ -241,6 +241,8 @@
 				$finder->in($this->directories);
 			}
 			
+			$finder->exclude($this->dirExclude);
+			
 			return $finder;
 		}
 		
