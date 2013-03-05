@@ -90,7 +90,9 @@
 			return new Heymaster\Commands\PhpCommands(
 				$this->phpShrinkFactory,
 				$this->logger,
-				$this->runner
+				$this->runner,
+				$this->phpDepend,
+				$this->jpDependency
 			);
 		}
 		
@@ -207,6 +209,20 @@
 		protected function createServiceRobotLoaderCache()
 		{
 			return new Nette\Caching\Storages\FileStorage($this->parameters['cacheDir']);
+		}
+		
+		
+		
+		protected function createServicePhpDepend()
+		{
+			return new Cz\PhpDepend;
+		}
+		
+		
+		
+		protected function createServiceJpDependency()
+		{
+			return new Jp\Dependency;
 		}
 	}
 

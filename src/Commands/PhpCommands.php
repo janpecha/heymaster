@@ -8,6 +8,8 @@
 	namespace Heymaster\Commands;
 	
 	use Nette\Object,
+		Cz,
+		Jp,
 		Heymaster\Command,
 		Heymaster\Config,
 		Heymaster\InvalidException,
@@ -28,13 +30,25 @@
 		/** @var  Heymaster\Cli\IRunner */
 		private $runner;
 		
+		/** @var  Cz\PhpDepend */
+		private $phpDepend;
+		
+		/** @var  Jp\Dependency */
+		private $dependency;
 		
 		
-		public function __construct(Php\IPhpShrinkFactory $shrinkFactory, ILogger $logger, IRunner $runner)
+		
+		public function __construct(Php\IPhpShrinkFactory $shrinkFactory,
+			ILogger $logger,
+			IRunner $runner,
+			Cz\PhpDepend $phpDepend,
+			Jp\Dependency $dependency)
 		{
 			$this->phpShrinkFactory = $shrinkFactory;
 			$this->logger = $logger;
 			$this->runner = $runner;
+			$this->phpDepend = $phpDepend;
+			$this->dependency = $dependency;
 		}
 		
 		
@@ -135,25 +149,71 @@
 		 */
 		public function commandCompile(Command $command, Config $config, $mask)
 		{
+			// get params
 			$maskParam = $command->getParameter('mask', self::MASK);
 			$outputFile = (string)$command->getParameter('file', NULL, 'Php::Compile: Nebylo zadano jmeno souboru, do ktereho se ma kompilovat.');
 			$useNamespaces = (bool) $command->getParameter('useNamespaces', FALSE);
+			
+			// settings of services
 			$creator = $command->findFiles($maskParam)
 				->recursive();
 			$shrink = $this->phpShrinkFactory->createPhpShrink();
 			$shrink->useNamespaces($useNamespaces);
+			$this->dependency->reset();
 			
+			// variables
+			$classes = array();
+			$files = array();
+			
+			// compile
 			$this->logger->prefix('Php::compile')
 				->log('Start...');
 			
+			// scan
 			foreach($creator->find() as $file)
 			{
-				$this->logger->log("Added file: $file");
+				$this->logger->log("$file");
+				$this->phpDepend->parse(file_get_contents($file));
+				
+				foreach($this->phpDepend->getClasses() as $class)
+				{
+					$classes[$class] = (string) $file;
+				}
+				
+				$files[(string)$file] = $this->phpDepend->getDependencies();
+			}
+			
+			// build depends
+			foreach($files as $file => $depends)
+			{
+				$depFiles = array();
+				
+				foreach($depends as $depend)
+				{
+					if(isset($classes[$depend]))
+					{
+						$depFiles[] = $classes[$depend];
+					}
+				}
+				
+				$this->dependency->add($file, $depFiles);
+			}
+			
+			// compile
+			foreach($this->dependency->getResolved() as $file)
+			{
 				$shrink->addFile($file);
+				$this->logger->log("Added file: $file");
+			}
+			
+			foreach($this->dependency->getUnresolved() as $file)
+			{
+				$shrink->addFile($file);
+				$this->logger->warn("Added unresolved file: $file");
 			}
 			
 			file_put_contents(self::generatePath($outputFile, $config->root), $shrink->getOutput());
-			$this->logger->success('Done.')
+			$this->logger->success("Done. $outputFile")
 				->end();
 		}
 		
