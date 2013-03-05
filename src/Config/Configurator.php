@@ -15,6 +15,7 @@
 		Heymaster\Command,
 		Heymaster\InvalidException,
 		Heymaster\DuplicateKeyException,
+		Heymaster\NotFoundException,
 		Heymaster\Builders\IBuilder,
 		Nette\Config\Helpers;
 	
@@ -149,10 +150,55 @@
 					continue; // TODO: throw error?
 				}
 				
-				$scopes[] = $this->process(dirname($file), $configuration);
+				$dir = dirname($file);
+				$scopes[$dir] = $this->process($dir, $configuration);
 			}
 			
-			return $scopes;
+			// navazani vztahu mezi Scopy
+			$relNode = $this->findRelations($scopes);
+			$mainScope = $this->makeRelations($relNode);
+			
+			return $mainScope;
+		}
+		
+		
+		
+		/**
+		 * @param	array
+		 * @return	Heymaster\Config\RelNode
+		 */
+		protected function findRelations(array $scopes)
+		{
+			$root = $this->createRelNode(''/*FS ROOT*/, NULL);
+			
+			foreach($scopes as $dir => $scope)
+			{
+				$root->addChild($dir, $scope);
+			}
+			
+			return $root->getFirstFilled();
+		}
+		
+		
+		
+		/**
+		 * @param	Heymaster\Config\RelNode
+		 * @return	Heymaster\Scopes\Scope
+		 */
+		protected function makeRelations($relNode)
+		{
+			$mainScope = $relNode->scope;
+			
+			foreach($relNode->getNearestChildren() as $childNode)
+			{
+				if($childNode->scope instanceof Scope)
+				{
+					$mainScope->addChild($childNode->scope);
+					$this->makeRelations($childNode);
+				}
+			}
+			
+			return $mainScope;
 		}
 		
 		
@@ -328,6 +374,15 @@
 				}
 			}
 			
+			if(isset($this->commands[$command->name]))
+			{
+				$command->callback = $this->commands[$command->name];
+			}
+			else
+			{
+				throw new NotFoundException("Unknow command: '{$command->name}'");
+			}
+			
 			return $command;
 		}
 		
@@ -379,6 +434,16 @@
 		protected function createConfig()
 		{
 			return new Config;
+		}
+		
+		
+		
+		/**
+		 * @return	Heymaster\Config\RelNode
+		 */
+		protected function createRelNode($dir, $scope)
+		{
+			return RelNode::create($dir, $scope);
 		}
 		
 		
