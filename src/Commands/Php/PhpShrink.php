@@ -22,7 +22,19 @@
 			}
 			
 			$this->phpShrink = $shrink;
-			$this->phpShrink->useNamespaces = TRUE;
+			$this->phpShrink->useNamespaces = FALSE;
+		}
+		
+		
+		
+		/**
+		 * @param	bool
+		 * @return	$this
+		 */
+		public function useNamespaces($useNS = TRUE)
+		{
+			$this->phpShrink->useNamespaces = (bool) $useNS;
+			return $this;
 		}
 		
 		
