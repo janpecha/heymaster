@@ -160,8 +160,6 @@
 					continue;
 				}
 				
-				@mkdir($config->root . "/$directory", 0777, TRUE); // @ - adresar uz muze existovat (a mel by existovat)
-				
 				foreach($command->findDirectories($directory)->findDirectories() as $dir)
 				{
 					$touchFileName = "$dir/$filename";
