@@ -117,11 +117,16 @@
 		
 		/**
 		 * @param	string
-		 * @param	string|int	string => by file|int => 0777, etc.
+		 * @param	string|int|FALSE	string => by file|int => 0777, etc.|FALSE => no action
 		 * @return	bool
 		 */
 		public function chmod($file, $mode = 0777)
 		{
+			if($mode === FALSE)
+			{
+				return FALSE;
+			}
+			
 			if(is_string($mode))
 			{
 				$mode = $this->getmod($mode);
@@ -134,11 +139,18 @@
 		
 		/**
 		 * @param	string
-		 * @return	int
+		 * @return	int|FALSE
 		 */
 		public function getmod($file)
 		{
-			return octdec('0' . substr(sprintf('%o', fileperms($file)), -3));
+			$perms = @fileperms($file); // @ - soubor nemusi existovat
+			
+			if($perms === FALSE)
+			{
+				return FALSE;
+			}
+			
+			return octdec('0' . substr(sprintf('%o', $perms), -3));
 		}
 		
 		
