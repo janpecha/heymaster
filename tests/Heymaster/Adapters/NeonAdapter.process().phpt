@@ -102,6 +102,11 @@ $adapter->process(array(
 	'after' => NULL,
 ));
 
-Assert::same($adapter::createConfiguration(), $adapter->configuration);
+$configuration = $adapter::createConfiguration();
+$configuration['sections'] = array(
+	'before' => NULL,
+	'after' => NULL,
+);
+Assert::same($configuration, $adapter->configuration);
 
 

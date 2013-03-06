@@ -55,5 +55,10 @@ Assert::false($adapter->load('number'));
 
 
 // valid empty file
-Assert::same($adapter::testCreateConfiguration(), $adapter->load('valid-empty-file'));
+$configuration = $adapter::testCreateConfiguration();
+$configuration['sections'] = array(
+	'before' => NULL,
+	'after' => NULL,
+);
+Assert::same($configuration, $adapter->load('valid-empty-file'));
 
