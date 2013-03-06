@@ -90,8 +90,8 @@
 	}
 ?>
 
-Heymaster (2013-02-28-1)
-************************
+Heymaster
+*********
 
 Usage:
 	php -f /path/to/heymaster.phpc -- [<parameters>]
