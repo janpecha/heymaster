@@ -41,7 +41,7 @@ $command->callback = array($core, 'commandTouch');
 $command->process($scope, $config, NULL);
 
 Assert::true(file_exists(TEMP_DIR . '/.gitignore'));
-Assert::true(file_exists(TEMP_DIR . '/subdir/readme.txt'));
+Assert::false(file_exists(TEMP_DIR . '/subdir/readme.txt'));
 purge(TEMP_DIR);
 
 
