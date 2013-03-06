@@ -220,6 +220,11 @@
 			$finder->exclude($this->dirExclude);
 			self::applyFilters($finder, $this->dirFilters);
 			
+			if($this->childFirst)
+			{
+				$finder->childFirst();
+			}
+			
 			return $finder;
 		}
 		
@@ -242,6 +247,11 @@
 			}
 			
 			$finder->exclude($this->dirExclude);
+			
+			if($this->childFirst)
+			{
+				$finder->childFirst();
+			}
 			
 			return $finder;
 		}
