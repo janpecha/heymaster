@@ -23,7 +23,6 @@ $scope = new Scope($root, $logger);
 
 // default settings
 Assert::same($root, $scope->getRoot());
-Assert::false($scope->isTestingMode());
 Assert::false($scope->getInherit());
 
 // set parent
@@ -37,12 +36,6 @@ Assert::throws(function() use ($scope, $parent) {
 
 // set next parent - not fatal
 $scope->setParent($parent, FALSE);
-
-// set testing mode
-$scope->setTestingMode();
-Assert::true($scope->isTestingMode());
-$scope->setTestingMode(FALSE);
-Assert::false($scope->isTestingMode());
 
 // set inherit
 $scope->setInherit();
@@ -80,12 +73,16 @@ function coloredString($str, $color)
 }
 
 ob_start();
-$scope->process();
+$scope->processBefore();
+$scope->processAfter();
 
 $output = ob_get_contents();
-Assert::same(coloredString("[scope] $root", Cli::COLOR_INFO)
-	. "section\nsection\n"
-	. coloredString("[scope] Done. $root", Cli::COLOR_SUCCESS)
+Assert::same(coloredString("[scope] before - $root", Cli::COLOR_INFO)
+	. "section\n"
+	. coloredString("[scope] Done 'before' section. $root", Cli::COLOR_SUCCESS)
+	. coloredString("[scope] after - $root", Cli::COLOR_INFO)
+	. "section\n"
+	. coloredString("[scope] Done 'after' section. $root", Cli::COLOR_SUCCESS)
 , $output);
 ob_end_clean();
 
