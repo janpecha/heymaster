@@ -176,11 +176,14 @@
 		
 		protected function createServiceGitBuilder()
 		{
-			return new Heymaster\Builders\GitBuilder(
+			$builder = new Heymaster\Builders\GitBuilder(
 				$this->git,
 				$this->logger,
 				$this->simpleManipulator
 			);
+			
+			$builder->setRoot($this->parameters['root']);
+			return $builder;
 		}
 		
 		

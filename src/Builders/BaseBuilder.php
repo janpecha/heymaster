@@ -17,6 +17,27 @@
 		/** @var  string */
 		protected $tag;
 		
+		/** @var  string|NULL */
+		protected $root;
+		
+		
+		
+		/**
+		 * @param	string
+		 * @return	$this
+		 */
+		public function setRoot($root)
+		{
+			$this->root = realpath($root);
+			
+			if($this->root === FALSE)
+			{
+				throw new BuilderException('Adresar neexistuje: ' . $root);
+			}
+			
+			return $this;
+		}
+		
 		
 		
 		/**

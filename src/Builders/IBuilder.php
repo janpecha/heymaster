@@ -17,6 +17,13 @@
 		
 		
 		/**
+		 * @param	string
+		 */
+		function setRoot($root);
+		
+		
+		
+		/**
 		 * @param	bool
 		 */
 		function setTestingMode($testingMode);

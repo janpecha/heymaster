@@ -40,9 +40,6 @@
 		/** @var  Heymaster\Files\SimpleManipulator */
 		private $manipulator;
 		
-		/** @var  string */
-		private $root;
-		
 		
 		
 		public function __construct(IGit $git, ILogger $logger, SimpleManipulator $manipulator)
@@ -61,20 +58,6 @@
 			if(!isset($this->parameters['branch']))
 			{
 				$this->parameters['branch'] = self::DEFAULT_BRANCH;
-			}
-			
-			return $this;
-		}
-		
-		
-		
-		public function setRoot($root)
-		{
-			$this->root = realpath($root);
-			
-			if($this->root === FALSE)
-			{
-				throw new BuilderException('Adresar neexistuje: ' . $root);
 			}
 			
 			return $this;
