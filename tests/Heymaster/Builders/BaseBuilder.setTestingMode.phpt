@@ -13,6 +13,11 @@ class MyBuilder extends Heymaster\Builders\BaseBuilder
 		return $this->testingMode;
 	}
 	
+	public function getWorkingRoot()
+	{
+		return $this->root;
+	}
+	
 	function setParameters(array $parameters){}
 	function preprocess(){}
 	function postprocess(){}

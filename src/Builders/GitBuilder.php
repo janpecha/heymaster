@@ -66,6 +66,16 @@
 		
 		
 		/**
+		 * @return	string
+		 */
+		public function getWorkingRoot()
+		{
+			return $this->root;
+		}
+		
+		
+		
+		/**
 		 * @param	string|bool  string => name|TRUE => auto tag|FALSE => no tag
 		 * @param	Heymaster\Configs\FileConfig
 		 * @param	void

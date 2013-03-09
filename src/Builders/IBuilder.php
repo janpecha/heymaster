@@ -17,6 +17,13 @@
 		
 		
 		/**
+		 * @return	string
+		 */
+		function getWorkingRoot();
+		
+		
+		
+		/**
 		 * @param	string
 		 */
 		function setRoot($root);
