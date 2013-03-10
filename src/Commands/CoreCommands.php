@@ -88,6 +88,8 @@
 			
 			if($cmd[0] === '/' || substr($cmd, 0, 2) === './' || substr($cmd, 0, 3) === '../')
 			{
+				// TODO: mozna problem s '../' - pokud budeme chytit spustit prikaz mimo nejvyssi workingRoot, chtelo by to upravit chovani
+				// TODO: take by mozna stalo za to nepridavat $root  k prikazu, ktery zacina jen na '/'
 				$cmd = $config->root . '/' . $cmd;
 			}
 			
