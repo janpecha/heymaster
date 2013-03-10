@@ -55,7 +55,7 @@
 		
 		if(isset($args['b']))
 		{
-			if(!in_array($args['b'], array('git')))
+			if(!in_array($args['b'], array('git', 'dir')))
 			{
 				$logger->error('Neznana konfiguracni hodnota v parametru \'builder\' (-b): ' . $args['b']);
 				exit(111);
