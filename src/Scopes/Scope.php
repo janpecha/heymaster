@@ -32,6 +32,9 @@
 		private $root; // TODO: nastaveni
 		
 		/** @var  string */
+		private $workingRoot;
+		
+		/** @var  string */
 		private $processRoot;
 		
 		/** @var  bool|NULL  NULL => inherit output, default NULL => FALSE */
@@ -57,6 +60,8 @@
 			{
 				throw new InvalidException('Spatna cesta pro Scope - adresar neexistuje: ' . $root);
 			}
+			
+			$this->workingRoot = $this->root;
 		}
 		
 		
@@ -68,9 +73,26 @@
 		
 		
 		
+		public function setWorkingRoot($root)
+		{
+			if($root !== NULL)
+			{
+				$this->workingRoot = realpath($root);
+			
+				if($this->workingRoot === FALSE)
+				{
+					throw new InvalidException("Pracovni adresar neexistuje: $root");
+				}
+			}
+			
+			return $this;
+		}
+		
+		
+		
 		public function getProcessRoot()
 		{
-			return rtrim($this->root . '/' . $this->processRoot, '/');
+			return rtrim($this->workingRoot . '/' . $this->processRoot, '/');
 		}
 		
 		
@@ -245,8 +267,9 @@
 			$this->logger->success('Done \'before\' section. ' . $this->root)
 				->end();
 			
-			foreach($this->children as $child)
+			foreach($this->children as $dir => $child)
 			{
+				$child->setWorkingRoot($this->workingRoot . '/' . $this->removeRoot($dir));
 				$child->processBefore();
 			}
 		}
@@ -279,7 +302,7 @@
 		public function findFiles($mask = NULL)
 		{
 			$creator = $this->createFinderCreator()
-				->directory($this->root)
+				->directory($this->getProcessRoot())
 				->excludeDir($this->ignorePaths)
 				->excludeFile($this->ignorePaths)
 				->recursive();
@@ -302,7 +325,7 @@
 		public function findDirectories($mask = NULL)
 		{
 			$creator = $this->createFinderCreator()
-				->directory($this->root)
+				->directory($this->getProcessRoot())
 				->excludeDir($this->ignorePaths)
 				->excludeFile($this->ignorePaths)
 				->recursive();
