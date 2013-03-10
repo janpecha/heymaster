@@ -9,7 +9,7 @@
 	class HeymasterContainer extends DI\Container
 	{
 		const BUILDER_GIT = 'git',
-			BUILDER_ZIP = 'zip';
+			BUILDER_DIR = 'dir';
 		
 		public $parameters = array(
 			'root' => NULL,
@@ -122,10 +122,10 @@
 			{
 				return $this->gitBuilder;
 			}
-#			elseif($builderId === self::BUILDER_ZIP)
-#			{
-#				return $this->zipBuilder;
-#			}
+			elseif($builderId === self::BUILDER_DIR)
+			{
+				return $this->dirBuilder;
+			}
 			
 			throw new InvalidException('Unknow Builder ID: ' . $builderId);
 		}
@@ -180,6 +180,19 @@
 				$this->git,
 				$this->logger,
 				$this->simpleManipulator
+			);
+			
+			$builder->setRoot($this->parameters['root']);
+			return $builder;
+		}
+		
+		
+		
+		protected function createServiceDirBuilder()
+		{
+			$builder = new Heymaster\Builders\DirBuilder(
+				$this->logger,
+				$this->fileManipulator
 			);
 			
 			$builder->setRoot($this->parameters['root']);
