@@ -2,7 +2,6 @@
 	/** Heymaster CLI Runner
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-07-1
 	 */
 	
 	namespace Heymaster\Cli;

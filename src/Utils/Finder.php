@@ -2,7 +2,6 @@
 	/** Heymaster File & Directory Finder
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-05-1
 	 */
 	
 	namespace Heymaster\Utils;

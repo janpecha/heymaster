@@ -2,7 +2,6 @@
 	/** CSS Commands
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-24-2
 	 */
 	
 	namespace Heymaster\Commands;

@@ -2,7 +2,6 @@
 	/** Heymaster Configurator
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-27-1
 	 */
 	
 	namespace Heymaster\Config;

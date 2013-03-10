@@ -2,7 +2,6 @@
 	/** Default Git Handler
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-11-1
 	 */
 	
 	namespace Heymaster\Git;

@@ -2,7 +2,6 @@
 	/** Default Logger
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-04-1
 	 */
 	
 	namespace Heymaster\Logger;

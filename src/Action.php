@@ -2,7 +2,6 @@
 	/** Heymaster Action Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-11-1
 	 */
 	
 	namespace Heymaster;

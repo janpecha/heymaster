@@ -2,7 +2,6 @@
 	/** Heymaster Builder Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-06-1
 	 */
 	
 	namespace Heymaster\Builders;

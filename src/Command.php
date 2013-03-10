@@ -2,7 +2,6 @@
 	/** Heymaster Command Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-02-26-2
 	 */
 	
 	namespace Heymaster;

@@ -2,7 +2,6 @@
 	/** Cli Helper
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-30-1
 	 */
 	
 	namespace Heymaster\Cli;
