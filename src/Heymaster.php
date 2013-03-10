@@ -83,7 +83,6 @@
 				$this->logger->info('Zpracovavam nalezene soubory');
 				$scope = $configurator->buildScopes(); // returns main scope
 				
-				
 				// Predani parametru do builderu
 				$builder->setParameters($scope->getParameter($builderId, array()));
 				
@@ -92,6 +91,8 @@
 				$this->logger->info('Vytvarim sestaveni');
 				
 				$builder->startup($tag);
+				$scope->setWorkingRoot($builder->getWorkingRoot());
+				
 				$builder->preprocess();
 				$scope->processBefore();
 				$builder->postprocess();
@@ -102,7 +103,6 @@
 				}
 				
 				$builder->finish();				
-				
 				
 				// Hotovo
 				$this->logger->success('Done.');
