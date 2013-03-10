@@ -65,7 +65,7 @@
 		 */
 		public function startup($tag)
 		{
-			if($tag === TRUE)
+			if(is_bool($tag)) // TRUE or FALSE
 			{
 				$tag = self::AUTO_BUILD_PREFIX . date('YmdHis');
 			}
