@@ -1,20 +1,23 @@
 <?php
-/** @version	2013-02-24-1 */
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';
+require __DIR__ . '/../../src/Scopes/Scope.php';
+require __DIR__ . '/inc/DummyLogger.php';
 require __DIR__ . '/../../src/Config.php';
 require __DIR__ . '/../../src/Action.php';
 
+$logger = new DummyLogger;
 $config = new Heymaster\Config;
+$scope = new Heymaster\Scopes\Scope(TEMP_DIR, $logger);
 $action = new Heymaster\Action;
 $action->config = new Heymaster\Config;
-Assert::null($action->process($dummyScope = NULL, $config));
+Assert::null($action->process($scope, $config));
 
 
 $action->runnable = FALSE;
 $action->commands = array();
-Assert::null($action->process($dummyScope = NULL, $config));
+Assert::null($action->process($scope, $config));
 
 
 class DummyCommand
@@ -29,5 +32,5 @@ $dummyCommand = new DummyCommand;
 
 $action->commands[] = $dummyCommand;
 $action->runnable = TRUE;
-Assert::true($action->process($dummyScope = NULL, $config));
+Assert::true($action->process($scope, $config));
 
