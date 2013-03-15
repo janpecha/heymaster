@@ -39,6 +39,9 @@
 		
 		
 		
+		/**
+		 * @return	$this
+		 */
 		public function install(Configurator $configurator)
 		{
 			$configurator->addCommand('Js::compress', array($this, 'commandCompress'));

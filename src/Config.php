@@ -141,6 +141,11 @@
 		
 		
 		
+		/**
+		 * @param	mixed
+		 * @param	mixed
+		 * @return	mixed
+		 */
 		protected static function inheritValue($myValue, $value)
 		{
 			if($myValue === NULL)

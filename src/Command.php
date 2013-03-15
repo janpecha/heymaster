@@ -93,6 +93,12 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Scopes\Scope
+		 * @param	Heymaster\Config
+		 * @param	string|string[]
+		 * @return	void
+		 */
 		public function process(Scope $scope, Config $config, $mask)
 		{
 			$this->processConfig = clone $this->config;

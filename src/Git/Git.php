@@ -10,6 +10,10 @@
 	
 	class Git extends \Nette\Object implements IGit
 	{
+		/**
+		 * @param	string
+		 * @return	$this
+		 */
 		public function tag($name)
 		{
 			$this->run("git tag", $name);
@@ -18,6 +22,11 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	string[]|string
+		 * @return	$this
+		 */
 		public function merge($branch, $options = NULL)
 		{
 			$this->run("git merge", $options, $branch);
@@ -26,6 +35,11 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	bool
+		 * @return	$this
+		 */
 		public function branchCreate($name, $checkout = FALSE)
 		{
 			// git branch $name
@@ -41,6 +55,10 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @return	$this
+		 */
 		public function branchRemove($name)
 		{
 			$this->run("git branch", array(
@@ -51,6 +69,11 @@
 		
 		
 		
+		/**
+		 * Gets current branch name
+		 * @return	string
+		 * @throws	GitException
+		 */
 		public function branchName()
 		{
 			$output = array();
@@ -74,6 +97,10 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @return	$this
+		 */
 		public function checkout($name)
 		{
 			$this->run("git checkout", $name);
@@ -82,6 +109,10 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @return	$this
+		 */
 		public function remove($file)
 		{
 			$this->run("git rm", $file, '-r');
@@ -90,6 +121,10 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @return	$this
+		 */
 		public function add($file)
 		{
 			$this->run("git add", $file);
@@ -98,6 +133,11 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	string|string[]|NULL
+		 * @return	$this
+		 */
 		public function commit($message, $params = NULL)
 		{
 			if(!is_array($params))

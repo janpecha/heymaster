@@ -29,6 +29,9 @@
 		
 		
 		
+		/**
+		 * @return	$this
+		 */
 		public function install(Configurator $configurator)
 		{
 			$configurator->addCommand('Css::compress', array($this, 'commandCompress'));

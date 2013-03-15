@@ -50,6 +50,10 @@
 		
 		
 		
+		/**
+		 * @param	array
+		 * @return	$this
+		 */
 		public function setParameters(array $parameters)
 		{
 			$this->parameters = $parameters;
@@ -248,6 +252,9 @@
 		
 		
 		
+		/**
+		 * @return	void
+		 */
 		private function createTag()
 		{
 			$tag = $this->tag;
@@ -275,6 +282,9 @@
 		
 		
 		
+		/**
+		 * @return	void
+		 */
 		private function checkoutOnOld()
 		{
 			if(is_string($this->oldBranch))
@@ -327,6 +337,9 @@
 		
 		
 		
+		/**
+		 * @return	void
+		 */
 		private function removeOldFiles($fileList)
 		{
 			$this->logger->log('...odstranuji prebytecne soubory v hlavni vetvi');

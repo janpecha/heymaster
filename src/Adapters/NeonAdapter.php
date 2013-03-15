@@ -157,6 +157,13 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	string
+		 * @param	array|NULL  NULL => empty action
+		 * @throws	AdapterException
+		 * @return	void
+		 */
 		protected function processAction($sectionName, $actionName, $value)
 		{
 			/*
@@ -224,6 +231,14 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	string
+		 * @param	string
+		 * @param	mixed
+		 * @return	array
+		 * @throws	AdapterException
+		 */
 		protected function processCommand($sectionName, $actionName, $commandName, $value)
 		{
 			$command = self::createCommand();
@@ -253,6 +268,7 @@
 		
 		/**
 		 * @param	array
+		 * @return 	void
 		 */
 		protected function processParameters(array $parameters = NULL)
 		{

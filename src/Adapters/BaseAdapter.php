@@ -73,6 +73,11 @@
 		
 		
 		
+		/**
+		 * @param	string   'name-of-parameter' OR 'parent.child.parameter'
+		 * @param	mixed
+		 * @return	$this
+		 */
 		protected function addParameter($name, $value)
 		{
 			if(!isset($this->configuration[self::KEY_PARAMETERS]))

@@ -248,6 +248,11 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Scopes\Scope
+		 * @param	array
+		 * @return	void
+		 */
 		protected function processSections(Scope $scope, $arr)
 		{
 			foreach($arr as $key => $value)
@@ -306,6 +311,12 @@
 		}
 		
 		
+		
+		/**
+		 * @param	string
+		 * @param	array
+		 * @return	Heymaster\Action
+		 */
 		protected function processAction($name, $arr)
 		{
 			$action = $this->createAction();
@@ -344,6 +355,10 @@
 		
 		
 		
+		/**
+		 * @param	array
+		 * @return	Heymaster\Command
+		 */
 		protected function processCommand($arr)
 		{
 			$command = $this->createCommand();
@@ -447,6 +462,9 @@
 		
 		
 		
+		/**
+		 * @return	array
+		 */
 		protected static function getDefaultParameters()
 		{
 			return array(

@@ -22,6 +22,9 @@
 		
 		
 		
+		/**
+		 * @return	TRUE|NULL
+		 */
 		public function process()
 		{
 			if(!is_array($this->actions))

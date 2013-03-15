@@ -51,6 +51,10 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @param	Heymaster\Logger\ILogger
+		 */
 		public function __construct($root, ILogger $logger)
 		{
 			$this->root = realpath($root);
@@ -66,6 +70,9 @@
 		
 		
 		
+		/**
+		 * @return	string|NULL
+		 */
 		public function getRoot()
 		{
 			return $this->root;
@@ -73,6 +80,11 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @return	$this
+		 * @throws	Heymaster\InvalidException
+		 */
 		public function setWorkingRoot($root)
 		{
 			if($root !== NULL)
@@ -90,6 +102,9 @@
 		
 		
 		
+		/**
+		 * @return	string
+		 */
 		public function getProcessRoot()
 		{
 			return rtrim($this->workingRoot . '/' . $this->processRoot, '/');
@@ -97,6 +112,11 @@
 		
 		
 		
+		/**
+		 * @param	string|NULL
+		 * @return	$this
+		 * @throws	Heymaster\InvalidException
+		 */
 		public function setProcessRoot($root)
 		{
 			if(!is_string($root) && !is_null($root))
@@ -105,10 +125,14 @@
 			}
 			
 			$this->processRoot = $root;
+			return $this;
 		}
 		
 		
 		
+		/**
+		 * @return	Heymaster\Logger\ILogger
+		 */
 		public function getLogger()
 		{
 			return $this->logger;
@@ -116,6 +140,9 @@
 		
 		
 		
+		/**
+		 * @return	bool
+		 */
 		public function getOutput()
 		{
 			return $this->output;
@@ -123,6 +150,10 @@
 		
 		
 		
+		/**
+		 * @param	bool
+		 * @return	$this
+		 */
 		public function setOutput($output = TRUE)
 		{
 			$this->output = (bool)$output;
@@ -131,6 +162,12 @@
 		
 		
 		
+		/**
+		 * @param	Scope
+		 * @param	bool
+		 * @return	$this
+		 * @throws	Heymaster\InvalidException
+		 */
 		public function setParent(Scope $parent, $fatal = TRUE)
 		{
 			if(!$this->parent)
@@ -151,6 +188,9 @@
 		
 		
 		
+		/**
+		 * @return	bool
+		 */
 		public function getInherit()
 		{
 			return $this->inherit;
@@ -158,6 +198,10 @@
 		
 		
 		
+		/**
+		 * @param	bool
+		 * @return	$this
+		 */
 		public function setInherit($inherit = TRUE)
 		{
 			$this->inherit = (bool)$inherit;
@@ -166,6 +210,10 @@
 		
 		
 		
+		/**
+		 * @param	Scope
+		 * @return	$this
+		 */
 		public function addChild(Scope $child)
 		{
 			$directory = (string)$child->getRoot();
@@ -180,6 +228,10 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Section
+		 * @return	$this
+		 */
 		public function setBefore(Section $before)
 		{
 			if($this->before)
@@ -194,6 +246,10 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Section
+		 * @return	$this
+		 */
 		public function setAfter(Section $after)
 		{
 			if($this->after)
@@ -208,6 +264,10 @@
 		
 		
 		
+		/**
+		 * @param	array
+		 * @return	$this
+		 */
 		public function addParameters(array $params)
 		{
 			$this->parameters = Helpers::merge($params, $this->parameters);
@@ -216,6 +276,9 @@
 		
 		
 		
+		/**
+		 * @return	array
+		 */
 		public function getParameters()
 		{
 			return $this->parameters;
@@ -299,6 +362,10 @@
 		
 		
 		
+		/**
+		 * @param	string|string[]|NULL
+		 * @return	Heymaster\Scopes\FinderCreator
+		 */
 		public function findFiles($mask = NULL)
 		{
 			$creator = $this->createFinderCreator()
@@ -322,6 +389,10 @@
 		
 		
 		
+		/**
+		 * @param	string|string[]|NULL
+		 * @return	Heymaster\Scopes\FinderCreator
+		 */
 		public function findDirectories($mask = NULL)
 		{
 			$creator = $this->createFinderCreator()
@@ -345,6 +416,9 @@
 		
 		
 		
+		/**
+		 * @return	Heymaster\Scopes\FinderCreator
+		 */
 		protected function createFinderCreator()
 		{
 			return new FinderCreator;
@@ -352,6 +426,10 @@
 		
 		
 		
+		/**
+		 * @param	string
+		 * @return	string
+		 */
 		protected function removeRoot($value)
 		{
 			$root = $this->getRoot();

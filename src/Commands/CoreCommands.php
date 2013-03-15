@@ -19,6 +19,7 @@
 		/** @var  Heymaster\Cli\IRunner */
 		private $runner;
 		
+		/** @var  Heymaster\Files\FileManipulator */
 		private $fileManipulator;
 		
 		
@@ -31,6 +32,9 @@
 		
 		
 		
+		/**
+		 * @return	$this
+		 */
 		public function install(Configurator $configurator)
 		{
 			$configurator->addCommand('call', array($this, 'commandRun'));

@@ -5,6 +5,7 @@
 	 */
 	
 	namespace Heymaster;
+	use Heymaster\Scopes\Scope;
 	
 	class Action extends \Nette\Object
 	{
@@ -25,7 +26,12 @@
 		
 		
 		
-		public function process($scope, $config)
+		/**
+		 * @param	Heymaster\Scopes\Scope
+		 * @param	Heymaster\Config
+		 * @return	TRUE|NULL
+		 */
+		public function process(Scope $scope, Config $config)
 		{
 			if(!is_array($this->commands) || !$this->runnable)
 			{

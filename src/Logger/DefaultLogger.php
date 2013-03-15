@@ -98,6 +98,9 @@
 		
 		
 		
+		/**
+		 * @return	string
+		 */
 		protected function getPrefix()
 		{
 			$prefix = end($this->prefixes);

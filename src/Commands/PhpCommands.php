@@ -52,6 +52,9 @@
 		
 		
 		
+		/**
+		 * @return	$this
+		 */
 		public function install(Configurator $configurator)
 		{
 			$configurator->addCommand('Php::lint', array($this, 'commandLint'));

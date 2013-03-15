@@ -154,6 +154,10 @@
 		
 		
 		
+		/**
+		 * @param	string|string[]
+		 * @return	$this
+		 */
 		public function directory($dir)
 		{
 			if(!is_array($dir))
@@ -199,6 +203,9 @@
 		
 		
 		
+		/**
+		 * @return	Heymaster\Utils\Finder
+		 */
 		protected function createFinder()
 		{
 			$finder = Finder::findFiles($this->fileMasks);
@@ -229,6 +236,9 @@
 		
 		
 		
+		/**
+		 * @return	Heymaster\Utils\Finder
+		 */
 		protected function createFinderDirectories()
 		{
 			$finder = Finder::findDirectories($this->dirMasks);
@@ -257,6 +267,11 @@
 		
 		
 		
+		/**
+		 * @param	Heymaster\Utils\Finder
+		 * @param	callback[]
+		 * @return	void
+		 */
 		protected static function applyFilters($finder, $filters)
 		{
 			foreach($filters as $filter)
