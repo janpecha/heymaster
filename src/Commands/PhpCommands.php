@@ -155,6 +155,7 @@
 			$maskParam = $command->getParameter('mask', self::MASK);
 			$outputFile = (string)$command->getParameter('file', NULL, 'Php::Compile: Nebylo zadano jmeno souboru, do ktereho se ma kompilovat.');
 			$useNamespaces = (bool) $command->getParameter('useNamespaces', FALSE);
+			$netteRobots = (bool) $command->getParameter('netteRobots', TRUE);
 			
 			// settings of services
 			$creator = $command->findFiles($maskParam)
@@ -208,9 +209,20 @@
 				$this->logger->log("Added file: $file");
 			}
 			
+			$content = $shrink->getOutput();
+			
+			if($netteRobots)
+			{
+				$netteRobots = '//netterobots=' . implode(',', array_keys($classes));
+				$content = substr_replace($content, "<?php $netteRobots\n", 0, 5);
+			}
+			
+			$content = str_replace("\r\n", "\n", $content);
+			$content = trim(preg_replace("#[\t ]+(\r?\n)#", '$1', $content)); // right trim
+			
 			$path = self::generatePath($outputFile, $config->root);
 			
-			file_put_contents($path, $shrink->getOutput());
+			file_put_contents($path, $content);
 			$this->logger->success("Done. $path")
 				->end();
 		}
