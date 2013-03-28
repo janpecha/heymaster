@@ -1,5 +1,6 @@
 <?php
 	/** Heymaster Dir Builder
+	 * REQUIRED Nette\Utils\Strings::random();
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
 	 */
@@ -67,7 +68,8 @@
 		{
 			if(is_bool($tag)) // TRUE or FALSE
 			{
-				$tag = self::AUTO_BUILD_PREFIX . date('YmdHis');
+				// build-YmdHis-random
+				$tag = self::AUTO_BUILD_PREFIX . date('YmdHis') . '-' . \Nette\Utils\Strings::random(6);
 			}
 			
 			parent::startup($tag);
