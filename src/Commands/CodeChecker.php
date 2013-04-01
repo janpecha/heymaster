@@ -82,7 +82,6 @@
 			
 			foreach($creator->find() as $file)
 			{
-				$this->logger->log((string) $file);
 				$cmd['-d'] = (string) $file;
 				$return = $this->runner->run($cmd, $output);
 				
