@@ -60,6 +60,16 @@
 		
 		
 		
+		public function createServiceCodeCheckerCommands()
+		{
+			return new Heymaster\Commands\CodeCheckerCommands(
+				$this->runner,
+				$this->logger
+			);
+		}
+		
+		
+		
 		public function createServiceCssCommands()
 		{
 			return new Heymaster\Commands\CssCommands($this->cssMinifier);
@@ -110,6 +120,7 @@
 			$this->jsCommands->install($configurator);
 			$this->neonCommands->install($configurator);
 			$this->phpCommands->install($configurator);
+			$this->codeCheckerCommands->install($configurator);
 			
 			return $configurator;
 		}
