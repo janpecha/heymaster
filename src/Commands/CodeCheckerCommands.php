@@ -61,7 +61,8 @@
 			$convertLines = $command->getParameter('convertLines', FALSE);
 			$fixes = $command->getParameter('fixesFiles', FALSE);
 			$creator = $command->findFiles($maskParam)
-				->recursive();
+				->recursive()
+				->excludeFile('heymaster.neon');
 			$output = TRUE;
 			
 			$cmd = array(
@@ -80,8 +81,11 @@
 				$cmd[] = '-l';
 			}
 			
+			$this->logger->prefix('CodeChecker');
+			
 			foreach($creator->find() as $file)
 			{
+				$this->logger->log((string) $file);
 				$cmd['-d'] = (string) $file;
 				$return = $this->runner->run($cmd, $output);
 				
@@ -89,6 +93,7 @@
 				{
 					$this->logger->error('Failed.')
 						->end();
+					throw new InvalidException('Code Checker failed');
 				}
 			}
 			
