@@ -100,8 +100,9 @@ Usage:
 
 
 Parameters:
-	--tag [<name>]  tag name
-	-t              testing mode
+	--tag [<name>]     tag name
+	-t                 testing mode
+	-b <builder=git>   builder id (git, dir)
 
 
 Examples:
