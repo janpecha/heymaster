@@ -72,7 +72,11 @@
 		
 		public function createServiceCssCommands()
 		{
-			return new Heymaster\Commands\CssCommands($this->cssMinifier);
+			return new Heymaster\Commands\CssCommands(
+				$this->cssMinifier,
+				$this->runner,
+				$this->logger
+			);
 		}
 		
 		
