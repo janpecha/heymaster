@@ -1,16 +1,18 @@
 <?php
 	/** Css Minifier - simple CSS minifier
 	 * 
-	 * @author		Jan Pecha, <janpecha@email.cz>
+	 * @author		David Grudl, 2011
+	 * @author		Jan Pecha, <janpecha@email.cz>, 2012
 	 * @license		New BSD License
-	 * @version		2012-12-13-1
-	 * @link		http://github.com/janpecha/typro
 	 */
 	
 	class CssMinifier
 	{
+		const S_NORMAL = 0,
+			S_STRING = 1;
+		
 		/**
-		 * @link	https://github.com/nette/build-tools/blob/master/tasks/minifyJs.php#L50
+		 * @link	https://github.com/nette/build-tools/blob/master/tasks/minifyJs.php#L51-L56
 		 * @param	string
 		 * @return	string
 		 */
@@ -23,17 +25,18 @@
 			$s = str_replace(';}', '}', $s); // remove leading semicolon
 			$s = trim($s);
 			
-			$state = 'normal';
+			// replace SPACE => NEW LINE
+			$state = self::S_NORMAL;
 			$stringChar = '';
 			$len = strlen($s);
 			
 			for($i = 0; $i < $len; $i++)
 			{
-				if($state === 'normal')
+				if($state === self::S_NORMAL)
 				{
 					if($s[$i] === '\'' || $s[$i] === '"')
 					{
-						$state = 'string';
+						$state = self::S_STRING;
 						$stringChar = $s[$i];
 					}
 					elseif($s[$i] === ' ')
@@ -41,11 +44,11 @@
 						$s[$i] = "\n";
 					}
 				}
-				elseif($state === 'string')
+				elseif($state === self::S_STRING)
 				{
 					if($s[$i] === $stringChar)
 					{
-						$state = 'normal';
+						$state = self::S_NORMAL;
 						$stringChar = '';
 					}
 				}
