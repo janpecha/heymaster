@@ -69,7 +69,7 @@
 			foreach($creator->find() as $file)
 			{
 				$content = file_get_contents($file);
-				file_put_contents($file, $this->jsShrink($content));
+				file_put_contents($file, $this->jsShrink->shrink($content));
 			}
 		}
 		
@@ -97,7 +97,7 @@
 			foreach($creator->find() as $file)
 			{
 				$content = file_get_contents($file);
-				file_put_contents($filename, $delimiter . jsShrink($content), \FILE_APPEND);
+				file_put_contents($filename, $delimiter . $this->jsShrink->shrink($content), \FILE_APPEND);
 				$delimeter = "\n;";
 			}
 		}
