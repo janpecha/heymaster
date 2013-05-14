@@ -1,5 +1,5 @@
 <?php
-	/** Heymaster Action Class
+	/** Heymaster Section Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
 	 */
