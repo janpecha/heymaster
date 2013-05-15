@@ -320,7 +320,15 @@
 			
 			if($this->before)
 			{
+				$cwd = getcwd();
+				chdir($this->getProcessRoot());
+				
 				$this->before->process();
+				
+				if($cwd !== FALSE)
+				{
+					chdir($cwd);
+				}
 			}
 			else
 			{
