@@ -2,34 +2,45 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-2
 	 */
 	
 	namespace Heymaster\Adapters;
 	
-	use Heymaster\Config,
-		Heymaster\Section,
-		Heymaster\Action,
-		Heymaster\Adapters\Exception,
-		Heymaster\ConfigUnknowException;
+	use Heymaster\Adapters\Exception,
+		Nette\Utils\Neon;
 	
 	class NeonAdapter extends BaseAdapter
 	{
 		/**
 		 * @param	string
 		 * @return	array|FALSE
-		 * @todo	2012-11-25  melo by vyhazovat vyjimku
 		 */
 		public function load($filename)
 		{
-			$res = \Neon::decode(file_get_contents($filename));
+			parent::load($filename);
+			$res = $this->fromFile($filename);
 			
 			if(is_array($res))
 			{
-				return $this->process($res);
+				$this->process($res);
+				return $this->configuration;
 			}
 			
 			return FALSE;
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 * @return	mixed
+		 */
+		protected function fromFile($filename)
+		{
+			return Neon::decode(@file_get_contents($filename)); /* @ - soubor nemusi existovat
+				v tu chvili vyhodi Neon vyjimku protoze mu bude z funkce file_get_contents
+				predana hodnota FALSE.
+			*/
 		}
 		
 		
@@ -40,63 +51,181 @@
 		 */
 		protected function process(array $array)
 		{
-			$res = self::createConfiguration();
-			
+			/*
+				root: (value)
+				output: (value)
+				inherit: (value)
+				message: (value)
+				
+				parameters: (array)
+				
+				before: (array|NULL)
+				after: (array|NULL)
+			*/
 			foreach($array as $key => $value)
 			{
-				if($key === self::SECTION_BEFORE || $key === self::SECTION_AFTER)
+				switch($key)
 				{
-					if(is_array($value))
-					{
-						$this->processSection($value, $res['sections'][$key]);
-					}
-					elseif($value !== NULL)
-					{
-						throw new \UnexpectedValueException("Sekce '$key' neni validni.");
-					}
-				}
-				else
-				{
-					$res['config']->set($key, $value);
+					case self::SECTION_BEFORE:
+					case self::SECTION_AFTER:
+						$res = $this->processSection($key, $value);
+						
+						if($res === NULL) // empty section
+						{
+							// remove section
+							$this->configuration[self::KEY_SECTIONS][$key] = NULL;
+						}
+						continue;
+					
+					case self::KEY_PARAMETERS:
+						$this->processParameters($value);
+						continue;
+					
+					case self::KEY_ROOT:
+					case self::KEY_INHERIT:
+					case self::KEY_OUTPUT:
+					case self::KEY_MESSAGE:
+						$this->configuration[$key] = $value;
+						continue;
+					
+					default:
+						throw new AdapterException("Neznama volba '$key'.");
 				}
 			}
-			
-			return $res;
 		}
 		
 		
 		
-		/** Zpracuje $array (sekci 'before' (resp. 'after') z configu) a vysledek ulozi do $section
+		/** Zpracuje $value (sekci 'before' (resp. 'after') z configu) a vysledek
+		 *  ulozi do odpovidajici polozky v $configuration
 		 * 
+		 * @param	string  section name
 		 * @param	array
+		 * @return	TRUE|NULL
+		 */
+		protected function processSection($key, $value)
+		{
+			/*
+				<section>: NULL #empty section
+				
+				## For example
+				before: #nothing
+				after: NULL
+			*/
+			if($value === NULL)
+			{
+				return;
+			}
+			
+			/*
+				<section>: 'Hello!'
+				<section>: 10
+				<section>: entity(params)
+			*/
+			if(!is_array($value))
+			{
+				throw new AdapterException("Neplatny obsah sekce '$key'");
+			}
+			
+			/*
+				<section>:
+					root: (value)
+					message: (value)
+					output: (value)
+					
+					<action name 1>: (array|NULL)
+					<action name 2>: (array|NULL)
+					...
+			*/
+			foreach($value as $skey => $value)
+			{
+				switch($skey)
+				{
+					case self::KEY_ROOT:
+					case self::KEY_MESSAGE:
+					case self::KEY_OUTPUT:
+						$this->configuration[self::KEY_SECTIONS][$key][$skey] = $value;
+						continue;
+					
+					default:
+						$this->processAction($key, $skey, $value); /* sectionName, actionName, actionContent */
+				}
+			}
+			
+			return TRUE;
+		}
+		
+		
+		
+		/**
+		 * @param	string
+		 * @param	string
+		 * @param	array|NULL  NULL => empty action
+		 * @throws	AdapterException
 		 * @return	void
 		 */
-		protected function processSection(array $array, Section $section)
+		protected function processAction($sectionName, $actionName, $value)
 		{
-			foreach($array as $key => $value)
+			/*
+				<action name>: NULL
+				<action name>: #nothing
+			*/
+			if($value === NULL) // empty value (NULL) is ignored
+			{	
+				$this->addWarning("Akce '$actionName' v sekci '{$sectionName}' je prazdna.");
+				return;
+			}
+			
+			/*
+				<action name>: 'Hello!'
+				<action name>: 10
+				<action name>: entity(params)
+			*/
+			if(!is_array($value))
 			{
-				try
+				throw new AdapterException("Akce '$actionName' v sekci '{$sectionName}' neni validni.");
+			}
+			
+			if(isset($this->configuration[self::KEY_SECTIONS][$sectionName][self::KEY_ACTIONS][$actionName]))
+			{
+				throw new AdapterException("Zdvojeny klic - akce '$actionName' je v sekci '$sectionName' uvedena dvakrat.");
+			}
+			
+			$configuration = &$this->configuration[self::KEY_SECTIONS][$sectionName][self::KEY_ACTIONS][$actionName];
+			$configuration = self::createAction();
+			
+			/*
+				<action name>:
+					root: (value)
+					output: (value)
+					message: (value)
+					runnable: (value)
+					mask: (value)
+					
+					TODO: zachovat klic actions? Nyni BC-BREAK!!!
+					<command name>: (array|NULL) # command with params
+					- <command name> # command without params
+			*/
+			foreach($value as $key => $command)
+			{
+				switch((string)$key)
 				{
-					$section->config->set($key, $value);
-				}
-				catch(ConfigUnknowException $e)
-				{
-					if(isset($section->actions[$key]))
-					{
-						throw new Exception("Zdvojeny klic - akce '$key' je v konfiguracnim souboru uvedena dvakrat.");
-					}
-					elseif($value === NULL) // empty value (NULL) is ignored
-					{
-						$this->addWarning("Akce '$key' v sekci '{$section->name}' je prazdna.");
+					case self::KEY_ROOT:
+					case self::KEY_OUTPUT:
+					case self::KEY_MESSAGE:
+					case self::KEY_RUNNABLE:
+					case self::KEY_MASK:
+						$configuration[$key] = $command;
 						continue;
-					}
-					elseif(!is_array($value))
-					{
-						throw new Exception("Akce '$key' v sekci '{$section->name}' neni validni.");
-					}
 					
-					$section->actions[$key] = $this->processAction($key, $value);
+					default:
+						$configuration[self::KEY_COMMANDS][] = $this->processCommand($sectionName, $actionName, $key, $command);
 				}
+			}
+			
+			if(count($configuration[self::KEY_COMMANDS]) === 0)
+			{
+				$this->addWarning("Akce '$actionName' neobsahuje zadne prikazy.");
 			}
 		}
 		
@@ -104,79 +233,54 @@
 		
 		/**
 		 * @param	string
-		 * @param	array
-		 * @return	Heymaster\Action
+		 * @param	string
+		 * @param	string
+		 * @param	mixed
+		 * @return	array
+		 * @throws	AdapterException
 		 */
-		protected function processAction($name, array $array)
+		protected function processCommand($sectionName, $actionName, $commandName, $value)
 		{
-			$action = self::createAction();
-			$action->name = (string)$name;
+			$command = self::createCommand();
 			
-			foreach($array as $key => $value)
+			if(is_int($commandName)) // simple command syntax (command without params)
 			{
-				if($key === self::KEY_ACTIONS)
-				{
-					if(!is_array($value))
-					{
-						throw new Exception("Akce '$name' neobsahuje zadne prikazy, nebo jsou prikazy chybne zapsany.");
-					}
-					
-					$action->commands = $this->processCommands($value, $name);
-				}
-				elseif($key === self::KEY_RUNNABLE)
-				{
-					$action->runnable = (bool)$value;
-				}
-				else
-				{
-					$action->config->set($key, $value);
-				}
+				$extractedName = self::extractCommandName($value);
+				$command[self::KEY_NAME] = $extractedName['name'];
+				$command[self::KEY_DESCRIPTION] = $extractedName['description'];
+			}
+			elseif(is_array($value) || $value === NULL)
+			{
+				$extractedName = self::extractCommandName($commandName);
+				$command[self::KEY_NAME] = $extractedName['name'];
+				$command[self::KEY_DESCRIPTION] = $extractedName['description'];
+				$command[self::KEY_PARAMS] = $value;
+			}
+			else // TODO: add support for instance of NeonEntity
+			{
+				throw new AdapterException("Prikaz '$commandName' v akci '$actionName' v sekci '$sectionName' neni validni.");
 			}
 			
-			if(!is_array($action->commands) || count($action->commands) === 0)
-			{
-				throw new Exception("Akce '$name' neobsahuje zadne prikazy.");
-			}
-			
-			return $action;
+			return $command;
 		}
 		
 		
 		
 		/**
 		 * @param	array
-		 * @param	string
-		 * @return	Heymaster\Command[]
-		 * @todo	2012-11-25  pridat podporu pro NeonEntity
+		 * @return 	void
 		 */
-		protected function processCommands(array $array, $parentName)
+		protected function processParameters(array $parameters = NULL)
 		{
-			$res = array();
-			
-			foreach($array as $key => $value)
+			if($parameters === NULL)
 			{
-				$command = self::createCommand();
-				
-				if(is_int($key)) // simple command syntax
-				{
-					$command->name = $value;
-				}
-				elseif(is_array($value)) // complex command syntax
-				{
-					$extractedName = self::extractCommandName($key);
-					$command->name = $extractedName['name'];
-					$command->description = $extractedName['description'];
-					$command->params = $value;
-				}
-				else
-				{
-					throw new Exception("Prikaz '$key' v akci '$parentName' je prazdny, nebo neni validni.");
-				}
-				
-				$res[] = $command;
+				return;
 			}
 			
-			return $res;
+			foreach($parameters as $key => $value)
+			{
+				$this->addParameter($key, $value);
+			}
 		}
 		
 		

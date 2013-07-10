@@ -2,7 +2,6 @@
 	/** ILogger interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-06-1
 	 */
 	
 	namespace Heymaster\Logger;
@@ -12,34 +11,45 @@
 		/**
 		 * @param	string
 		 */
-		public function log($str);
+		function log($str);
 		
 		
 		
 		/**
 		 * @param	string
 		 */
-		public function error($str);
+		function error($str);
 		
 		
 		
 		/**
 		 * @param	string
 		 */
-		public function success($str);
+		function success($str);
 		
 		
 		
 		/**
 		 * @param	string
 		 */
-		public function warn($str);
+		function warn($str);
 		
 		
 		
 		/**
 		 * @param	string
 		 */
-		public function info($str);
+		function info($str);
+		
+		
+		
+		/**
+		 * @param	string
+		 */
+		function prefix($prefix);
+		
+		
+		
+		function end();
 	}
 

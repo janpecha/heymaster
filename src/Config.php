@@ -2,12 +2,12 @@
 	/** Heymaster Config Class
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-17-1
 	 */
 	
 	namespace Heymaster;
+	use Nette;
 	
-	class Config extends \Nette\Object
+	class Config extends Nette\Object
 	{
 		/** @var  string */
 		public $root;
@@ -15,7 +15,7 @@
 		/** @var  string|FALSE */
 		public $message = FALSE;
 		
-		/** @var  bool */
+		/** @var  bool|NULL  TRUE = on|FALSE = off|NULL = inherit */
 		public $output;
 		
 		
@@ -60,37 +60,57 @@
 		
 		/**
 		 * @param	string|Heymaster\Config
-		 * @param	string|NULL
-		 * @return	void
+		 * @param	string|Heymaster\Config|NULL
+		 * @return	$this
 		 */
-		public function inherit($config, $property = NULL)
+		public function inherit($property, $value = NULL)
 		{
-			if(is_string($property))
+			/*
+				inherit('output', TRUE);
+				inherit('output', $config);
+				inherit($config);
+			*/
+			if($property instanceof static)
 			{
-				$value = $config;
-				
-				if($config instanceof static)
+				if($value !== NULL)
 				{
-					$value = $config->$property;
+					throw new InvalidException('Zmenil se zpusob pouzivani funkce inherit(). BC-BREAK! Prohodne parametry.');
+				}
+				
+				$this->root = self::expandRoot($this->root, $property->root);
+				$this->output = (bool)self::inheritValue($this->output, $property->output);
+			}
+			elseif(is_string($property))
+			{
+				if($value instanceof static)
+				{
+					$value = $value->$property;	
 				}
 				
 				if($property === 'root')
 				{
 					$value = self::expandRoot($this->root, $value);
 				}
+				elseif($property === 'output')
+				{
+					$value = (bool)self::inheritValue($this->output, $value);
+				}
 				
-				$this->set($property, $value);
+				$this->$property = $value;
 			}
-			elseif($config instanceof static)
+			else
 			{
-				$this->root = self::expandRoot($this->root, $config->root);
-				$this->output = $config->output;
+				throw new InvalidException('Prvni parametr musi byt string, nebo Heymaster\\Config.');
 			}
+			
+			return $this;
 		}
 		
 		
 		
 		/** Rozsiri relativni cestu v prvnim parametru o hodnotu druheho parametru
+		 *  Cesta musi existovat.
+		 * 
 		 * @param	string
 		 * @param	string
 		 * @return	string
@@ -100,7 +120,7 @@
 		{
 			$value = NULL;
 			
-			if($toExpand[0] === '/') // absolute path
+			if(isset($toExpand[0]) && $toExpand[0] === '/') // $toExpand !== ('' or NULL) && absolute path
 			{
 				$value = $toExpand;
 			}
@@ -117,6 +137,23 @@
 			}
 			
 			return $ret;
+		}
+		
+		
+		
+		/**
+		 * @param	mixed
+		 * @param	mixed
+		 * @return	mixed
+		 */
+		protected static function inheritValue($myValue, $value)
+		{
+			if($myValue === NULL)
+			{
+				return $value;
+			}
+			
+			return $myValue;
 		}
 	}
 	

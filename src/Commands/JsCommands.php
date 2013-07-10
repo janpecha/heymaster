@@ -1,49 +1,75 @@
 <?php
 	/** JS Commands
-	 * REQUIRE JsShrink!
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-12-18-2
 	 */
 	
 	namespace Heymaster\Commands;
 	
 	use Nette\Object,
 		Heymaster\Command,
-		Heymaster\InvalidException;
+		Heymaster\Config,
+		Heymaster\InvalidException,
+		Heymaster\Commands\Js\IJsShrink,
+		Heymaster\Cli\IRunner,
+		Heymaster\Logger\ILogger,
+		Heymaster\Config\Configurator;
 	
 	class JsCommands extends CommandSet
 	{
 		const MASK = '*.js';
 		
+		/** @var  Heymaster\Commands\Js\IJsShrink */
+		private $jsShrink;
+		
+		/** @var  Heymaster\Cli\IRunner */
+		private $runner;
+		
+		/** @var  Heymaster\Logger\ILogger */
+		private $logger;
 		
 		
-		public static function install(\Heymaster\Heymaster $heymaster)
+		
+		public function __construct(IJsShrink $jsShrink, IRunner $runner, ILogger $logger)
 		{
-			$me = new static($heymaster);
+			$this->jsShrink = $jsShrink;
+			$this->runner = $runner;
+			$this->logger = $logger;
+		}
+		
+		
+		
+		/**
+		 * @return	$this
+		 */
+		public function install(Configurator $configurator)
+		{
+			$configurator->addCommand('Js::compress', array($this, 'commandCompress'));
+			$configurator->addCommand('Js::compile', array($this, 'commandCompile'));
+			$configurator->addCommand('Js::hint', array($this, 'commandHint'));
 			
-			$heymaster->addCommand('Js::compress', array($me, 'commandCompress'));
-			$heymaster->addCommand('Js::compile', array($me, 'commandCompile'));
-			
-			return $me;
+			return $this;
 		}
 		
 		
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandCompress(Command $command, $actionMask)
+		public function commandCompress(Command $command, Config $config, $mask)
 		{
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$creator = $command->findFiles($maskParam)
+				->recursive();
 			
-			foreach($this->findFiles($mask, $actionMask, $command->config->root) as $file)
+			foreach($creator->find() as $file)
 			{
 				$content = file_get_contents($file);
-				file_put_contents($file, jsShrink($content));
+				file_put_contents($file, $this->jsShrink->shrink($content));
 			}
 		}
 		
@@ -51,72 +77,75 @@
 		
 		/**
 		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
 		 * @throws	Heymaster\InvalidException
 		 * @return	void
 		 */
-		public function commandCompile(Command $command, $actionMask)
+		public function commandCompile(Command $command, Config $config, $mask)
 		{
-			if(!isset($command->params['file']))
-			{
-				throw new InvalidException('Neni urceno jmeno souboru, do ktereho se ma kompilovat.');
-			}
-			
-			$mask = isset($command->params['mask']) ? $command->params['mask'] : self::MASK;
-			$recursive = isset($command->params['recursive']) ? (bool)$command->params['recursive'] : TRUE;
-			$filename = $command->params['file'];
+			$maskParam = $command->getParameter('mask', self::MASK);
+			$recursive = (bool) $command->getParameter('recursive', TRUE);
+			$filename = (string) $command->getParameter('file', NULL, 'Js::compile: Neni urceno jmeno souboru, do ktereho se ma kompilovat.');
+			$creator = $command->findFiles($maskParam)
+				->recursive($recursive);
 			
 			$delimiter = '';
-			$filename = $command->config->root . '/' . $filename;
+			$filename = $config->root . '/' . $filename;
 			file_put_contents($filename, '');
 			
-			foreach($this->findFilesForMerge($mask, $actionMask, $command->config->root, $recursive) as $file)
+			foreach($creator->find() as $file)
 			{
 				$content = file_get_contents($file);
-				file_put_contents($filename, $delimiter . jsShrink($content), \FILE_APPEND);
+				file_put_contents($filename, $delimiter . $this->jsShrink->shrink($content), \FILE_APPEND);
 				$delimeter = "\n;";
 			}
 		}
 		
 		
 		
-		public function findFiles($mask, $actionMask, $root)
-		{
-			$finder = $this->heymaster->findFiles($mask)
-				->mask($actionMask);
-			
-			$finder->from($root)
-				->exclude('.git');
-			
-			return $finder;
-		}
-		
-		
-		
 		/**
-		 * @param	string|string[]
-		 * @param	string|string[]
+		 * @param	Heymaster\Command
+		 * @param	Heymaster\Config
 		 * @param	string
-		 * @param	bool
-		 * @return	Heymaster\Utils\Finder
+		 * @throws	Heymaster\InvalidException
+		 * @return	void
 		 */
-		protected function findFilesForMerge($masks, $actionMasks, $root, $recursive = TRUE)
+		public function commandHint(Command $command, Config $config, $mask)
 		{
-			$finder = $this->heymaster->findFiles($masks)
-				->mask($actionMasks);
+			$maskParam = $command->getParameter('mask', self::MASK);
+			// TODO: config file
+			$creator = $command->findFiles($maskParam)
+				->recursive();
 			
-			if($recursive)
+			$this->logger->prefix('JS::hint');
+			$errors = FALSE;
+			
+			foreach($creator->find() as $file)
 			{
-				$finder->from($root);
+				$this->logger->log((string) $file);
+				$output = array();
+				$retCode = $this->runner->run(array(
+					'jshint',
+					$file,
+				), $output);
+				
+				if($retCode)
+				{
+					$errors = TRUE;
+					foreach($output as $line)
+					{
+						$this->logger->error($line);
+					}
+				}
 			}
-			else
+			
+			$this->logger->end();
+			
+			if($errors)
 			{
-				$finder->in($root);
+				throw new InvalidException('Any invalid files');
 			}
-			
-			$finder->exclude('.git');
-			
-			return $finder;
 		}
 	}
 

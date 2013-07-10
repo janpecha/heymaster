@@ -2,7 +2,6 @@
 	/** Heymaster Base Adapter
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2013-01-19-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -19,10 +18,35 @@
 			SECTION_AFTER = 'after';
 		
 		const KEY_ACTIONS = 'actions',
-			KEY_RUNNABLE = 'run';
+			KEY_RUNNABLE = 'run',
+			KEY_PARAMETERS = 'parameters',
+			KEY_ROOT = 'root',
+			KEY_OUTPUT = 'output',
+			KEY_MESSAGE = 'message',
+			KEY_INHERIT = 'inherit',
+			KEY_SECTIONS = 'sections',
+			KEY_COMMANDS = 'commands',
+			KEY_NAME = 'name',
+			KEY_DESCRIPTION = 'description',
+			KEY_PARAMS = 'params',
+			KEY_MASK = 'mask';
 			
 		/** @var  string[] */
 		protected $warnings = array();
+		
+		/** @var  array */
+		protected $configuration;
+		
+		
+		
+		/**
+		 * @param	string
+		 * @return	array|FALSE
+		 */
+		public function load($file)
+		{
+			$this->configuration = self::createConfiguration();
+		}
 		
 		
 		
@@ -50,73 +74,97 @@
 		
 		
 		/**
+		 * @param	string   'name-of-parameter' OR 'parent.child.parameter'
+		 * @param	mixed
+		 * @return	$this
+		 */
+		protected function addParameter($name, $value)
+		{
+			if(!isset($this->configuration[self::KEY_PARAMETERS]))
+			{
+				throw new AdapterException('Adapter neni pripraven, nelze pridat parametr.');
+			}
+			
+			$parts = explode('.', $name);
+			$first = array_shift($parts);
+			$parent = &$this->configuration[self::KEY_PARAMETERS][$first];
+			
+			foreach($parts as $part)
+			{
+				$parent = &$parent[$part];
+			}
+			
+			$parent = $value;
+			return $this;
+		}
+		
+		
+		
+		/**
 		 * @return	array
 		 */
 		public static function createConfiguration()
 		{
-			$config = array(
-				'config' => new FileConfig,
-				'sections' => array(
+			return array(
+				self::KEY_ROOT => NULL,
+				self::KEY_INHERIT => FALSE,
+				self::KEY_OUTPUT => FALSE,
+				self::KEY_MESSAGE => FALSE,
+				self::KEY_PARAMETERS => array(),
+				self::KEY_SECTIONS => array(
 					self::SECTION_BEFORE => self::createSection(),
 					self::SECTION_AFTER => self::createSection(),
 				),
 			);
-			
-			$config['config']->output = TRUE;
-			
-			$config['sections'][self::SECTION_BEFORE]->name = self::SECTION_BEFORE;
-			$config['sections'][self::SECTION_AFTER]->name = self::SECTION_AFTER;
-			
-			return $config;
 		}
 		
 		
 		
 		/**
-		 * @return	Heymaster\Config
-		 */
-		public static function createConfig()
-		{
-			return new Config;
-		}
-		
-		
-		
-		/**
-		 * @return	Heymaster\Action
-		 */
-		public static function createAction()
-		{
-			$action = new Action;
-			$action->config = self::createConfig();
-			
-			return $action;
-		}
-		
-		
-		
-		/**
-		 * @return	Heymaster\Command
-		 */
-		public static function createCommand()
-		{
-			$command = new Command;
-			$command->config = self::createConfig();
-			
-			return $command;
-		}
-		
-		
-		
-		/**
-		 * @return	Heymaster\Section
+		 * @return	array
 		 */
 		public static function createSection()
 		{
-			$section = new Section;
-			$section->config = self::createConfig();
-			
-			return $section;
+			return array(
+				self::KEY_ROOT => NULL,
+				self::KEY_OUTPUT => NULL,
+				self::KEY_MESSAGE => NULL,
+				self::KEY_ACTIONS => array(),
+			);
+		}
+		
+		
+		
+		/**
+		 * @return	array
+		 */
+		public static function createAction()
+		{
+			return array(
+				self::KEY_ROOT => NULL,
+				self::KEY_OUTPUT => NULL,
+				self::KEY_MESSAGE => NULL,
+				self::KEY_RUNNABLE => TRUE,
+				self::KEY_MASK => NULL,
+				self::KEY_COMMANDS => array(),
+			);
+		}
+		
+		
+		
+		/**
+		 * @return	array
+		 */
+		public static function createCommand()
+		{
+			return array(
+				self::KEY_NAME => NULL,
+				self::KEY_DESCRIPTION => FALSE,
+				self::KEY_ROOT => NULL,
+				self::KEY_OUTPUT => NULL,
+				self::KEY_MESSAGE => NULL,
+				self::KEY_PARAMS => array(),
+			);
 		}
 	}
 

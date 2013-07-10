@@ -2,7 +2,6 @@
 	/** Heymaster Adapter Interface
 	 * 
 	 * @author		Jan Pecha, <janpecha@email.cz>
-	 * @version		2012-11-25-1
 	 */
 	
 	namespace Heymaster\Adapters;
@@ -12,12 +11,27 @@
 		/**
 		 * @param	string
 		 * @return	array|FALSE
-		 * @todo	2012-11-25  melo by vyhazovat vyjimku
 		 */
-		public function load($filename);
+		function load($filename);
+		
+		
+		
+		/**
+		 * @param	string
+		 */
+		function addWarning($msg);
+		
+		
+		
+		/**
+		 * @return	string[]
+		 */
+		public function getWarnings();
 	}
 	
-	class Exception extends \Exception
+	
+	
+	class AdapterException extends \Exception
 	{
 	}
 
